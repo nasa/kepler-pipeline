@@ -37,7 +37,7 @@ radii, masses and densities of short-period giant planets;
 This repository contains the source code of the Science Data
 Processing Pipeline.
 
-This repository contains the following files:
+The top-level directory contains the following files:
 
 * [kscrm.pdf](kscrm.pdf)  
 The Kepler Source Code Road Map. This document contains most of the
