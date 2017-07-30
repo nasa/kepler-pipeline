@@ -56,10 +56,10 @@ The license for every other file.
 ## Contact Info
 
 * For questions on the science, algorithms, and MATLAB code, please
-  contact Jon Jenkins <Jon.Jenkins@nasa.gov>, Co-Investigator for Data
+  contact Jon Jenkins \<<Jon.Jenkins@nasa.gov>\>, Co-Investigator for Data
   Processing.
 * For questions on the "plumbing" and Java code, please contact Bill
-  Wohler <Bill.Wohler@nasa.gov>, Senior Software Engineer.
+  Wohler \<<Bill.Wohler@nasa.gov>\>, Senior Software Engineer.
 
 ## Copyright and Notices
 
