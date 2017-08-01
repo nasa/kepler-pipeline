@@ -1,1 +1,1 @@
-# Kepler-Science-Data-Processing-Pipeline
+# Kepler Science Data Processing Pipeline
