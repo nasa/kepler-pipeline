@@ -1,0 +1,11 @@
+# This file contains the target categories, one per line.
+# Any text following a pound sign, #, is ignored. 
+# Leading and trailing white space is trimmed.
+# This is used by KeplerUtilitiesTest.testReadFileAsList.
+
+  
+  foo  
+  foo bar    
+  foo  bar
+  foo bar           # comment
+foo

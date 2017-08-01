@@ -1,0 +1,440 @@
+/*
+ * Copyright 2017 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ * 
+ * This file is available under the terms of the NASA Open Source Agreement
+ * (NOSA). You should have received a copy of this agreement with the
+ * Kepler source code; see the file NASA-OPEN-SOURCE-AGREEMENT.doc.
+ * 
+ * No Warranty: THE SUBJECT SOFTWARE IS PROVIDED "AS IS" WITHOUT ANY
+ * WARRANTY OF ANY KIND, EITHER EXPRESSED, IMPLIED, OR STATUTORY,
+ * INCLUDING, BUT NOT LIMITED TO, ANY WARRANTY THAT THE SUBJECT SOFTWARE
+ * WILL CONFORM TO SPECIFICATIONS, ANY IMPLIED WARRANTIES OF
+ * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, OR FREEDOM FROM
+ * INFRINGEMENT, ANY WARRANTY THAT THE SUBJECT SOFTWARE WILL BE ERROR
+ * FREE, OR ANY WARRANTY THAT DOCUMENTATION, IF PROVIDED, WILL CONFORM
+ * TO THE SUBJECT SOFTWARE. THIS AGREEMENT DOES NOT, IN ANY MANNER,
+ * CONSTITUTE AN ENDORSEMENT BY GOVERNMENT AGENCY OR ANY PRIOR RECIPIENT
+ * OF ANY RESULTS, RESULTING DESIGNS, HARDWARE, SOFTWARE PRODUCTS OR ANY
+ * OTHER APPLICATIONS RESULTING FROM USE OF THE SUBJECT SOFTWARE.
+ * FURTHER, GOVERNMENT AGENCY DISCLAIMS ALL WARRANTIES AND LIABILITIES
+ * REGARDING THIRD-PARTY SOFTWARE, IF PRESENT IN THE ORIGINAL SOFTWARE,
+ * AND DISTRIBUTES IT "AS IS."
+
+ * Waiver and Indemnity: RECIPIENT AGREES TO WAIVE ANY AND ALL CLAIMS
+ * AGAINST THE UNITED STATES GOVERNMENT, ITS CONTRACTORS AND
+ * SUBCONTRACTORS, AS WELL AS ANY PRIOR RECIPIENT. IF RECIPIENT'S USE OF
+ * THE SUBJECT SOFTWARE RESULTS IN ANY LIABILITIES, DEMANDS, DAMAGES,
+ * EXPENSES OR LOSSES ARISING FROM SUCH USE, INCLUDING ANY DAMAGES FROM
+ * PRODUCTS BASED ON, OR RESULTING FROM, RECIPIENT'S USE OF THE SUBJECT
+ * SOFTWARE, RECIPIENT SHALL INDEMNIFY AND HOLD HARMLESS THE UNITED
+ * STATES GOVERNMENT, ITS CONTRACTORS AND SUBCONTRACTORS, AS WELL AS ANY
+ * PRIOR RECIPIENT, TO THE EXTENT PERMITTED BY LAW. RECIPIENT'S SOLE
+ * REMEDY FOR ANY SUCH MATTER SHALL BE THE IMMEDIATE, UNILATERAL
+ * TERMINATION OF THIS AGREEMENT.
+ */
+
+body {
+  font: 13px Trebuchet MS, Lucida Sans Unicode, Arial, sans-serif;
+  height: auto;
+}
+
+#cssbody {
+  margin: 0;
+  padding: 0;
+  height: auto;
+}
+
+a {
+  color: #0D2075;
+}
+
+a:hover {
+  color: #a8a8a8;
+}
+
+acronym {
+  border: none;
+}
+
+#container {
+  margin: 0 auto;
+  width: 98%;
+  position: relative;
+  background: #fff;
+  padding: 0 0px 0 0px;
+  text-align: left;
+}
+
+#pageHeader {
+  padding-top: 5px;
+  padding-left: 5px;
+}
+
+#pageHeader h1 {
+  background: url($home/layout/images/logo.gif);
+  width: 175px;
+  height: 25px;
+  margin: 0;
+}
+
+#pageHeader h1 span {
+  display: none;
+}
+
+h2 {
+  font-size: 12px;
+  margin: 0;
+}
+
+#quickSummary .p2 {
+  font-size: 12px;
+  margin: 0;
+}
+
+#greenbox {
+  font-size: 11px;
+  height: 171px;
+  background: url($home/layout/images/greenbox.jpg) no-repeat;
+  margin: 0px;
+  width: 215px;
+  color: #fff;
+  font: 12px/150% Trebuchet MS;
+}    
+
+#quickSummary .p1 {
+  padding: 10px 0 0 10px;
+  
+  font: 12px/150% Trebuchet MS;
+}
+  
+#growheader {
+  margin: 0;
+  width: 100%;
+  padding-top: 10px;
+}    
+  
+table#growheader td {
+  padding: 0px;
+  border: 0px;
+}       
+
+#greenspan {
+  background: url($home/layout/images/greenline.jpg);
+  height: 171px;
+  margin: 0;
+}
+
+#flowerbox {
+  background: url($home/layout/images/flower.jpg);
+  width: 505px;
+  height: 171px;
+  margin: 0;
+}
+
+#preamble h3, #explanation h3, #participation h3, #benefits h3, #requirements h3 {
+  text-align: left;
+  height: 24px;
+  margin: 40px 0 10px 0;
+}
+
+#preamble h3 {
+}
+
+#explanation h3 {
+}
+
+#participation h3 {
+}
+
+#benefits h3 {
+}
+
+#requirements h3 {
+}
+
+#requirements {
+  margin-bottom: 40px;
+}
+
+#linkList {
+  position: absolute;
+  top: 0px;
+  left: 0;
+  margin-top: 100px;
+  width: 210px;
+  height: auto;
+}
+
+#supportingText {
+  position: absolute;
+  top: 0px;
+  left: 210px;
+  margin-top: 100px;
+  overflow: auto;
+}
+
+#supportingText p {
+  line-height: 150%;
+  margin: 10px 0 10px 0;
+}
+
+#rightList {
+  position: absolute;
+  top: 0px;
+  left: 800px;
+  margin-top: 100px;
+  width: 180px;
+  overflow: hidden;
+}
+
+#lselect {
+  margin: 10px 0 5px 10px;
+}
+  
+#lselect ul, #larchives ul, #lresources ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0 0 0 10px;
+}
+
+#lselect ul li {
+  display: block;
+  font-size: 13px;
+}
+
+#lselect ul li.c, #lselect ul li a.c {
+  display: inline;
+  font-size: 12px;
+  color: #333;
+}
+
+#lselect ul li a.c {
+  text-decoration: none;
+}
+
+#lselect ul li a.c:hover {
+  color: #0D2075;
+}
+
+#lselect ul li {
+  font-size: 12px;
+}
+
+.lselected {
+  text-decoration: none;
+  color: #0D2075;
+  font-size: 13px;
+  font-weight: bold;
+}    
+
+#linkList #larchives ul li {
+  font-size: 13px;
+  display: block;
+  padding: 5px 0;
+}
+
+#linkList #lresources ul li {
+  font-size: 13px;
+  display: block;
+  padding: 5px 0;
+}
+
+#rightList #larchives ul li {
+  font-size: 13px;
+  display: block;
+  padding: 5px 0;
+}
+
+#rightList #lresources ul li {
+  font-size: 13px;
+  display: block;
+  padding: 5px 0;
+}
+
+#lresources {
+  width: 69px;
+  height: 15px;
+  margin: 30px 0 5px 40px;
+}
+
+#larchives h3.archives {
+  width: 69px;
+  height: 15px;
+  margin: 30px 0 5px 40px;
+}
+
+#footer {
+  position: absolute;
+  top: auto;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 30px;
+  background-color: #222;
+  color: #fff;
+  text-align: left;
+  padding: 0 0px 0 0px;
+  line-height: 26px;
+  font-size: 11px;
+  margin: 15px 0 0 0;
+}
+
+#footer a {
+  color: #fff;
+  text-decoration: none;
+}
+
+#footer a:hover {
+  text-decoration: underline;
+}
+
+.feature {
+  margin-top: 15px;
+  margin-left: 5px;
+  border: solid 1px #cccccc;
+}
+
+.feature div.header {
+  color:#99CCFF;
+  font-size:11px;
+  font-weight: bold;
+  margin: 3px 0 0 0;
+}
+
+.feature div.details {
+  font-size: 11px;
+  margin: 2px 0 0 0;
+  color: #666666;
+}
+
+.divided-box {
+  padding: 0px; 
+  margin-bottom: 10px; 
+  border-spacing: 0px; 
+  width: 100%; 
+}
+
+.divided-box-title {
+  padding-left: 18px;
+  padding-top: 5px;
+  padding-bottom: 5px; 
+  color: #FFFFFF;
+  background-color: #666666;
+  border-top: thin solid black;
+  border-left: thin solid black;
+  border-right: thin solid black;
+  font-weight: bold;
+  font-style: italic;
+}
+
+.divided-box-white {
+  padding: 10px; 
+  color: black;
+  background-color: #FFFFFF;
+  border-top: thin solid black;
+  border-left: thin solid black;
+  border-bottom: thin solid black;
+  width: 33%;
+}
+
+.divided-box-blue {
+  padding: 0px;
+  color: #FFFFFF;
+  background-color: #336699;
+  border: thin solid black;
+}
+
+.standard-button {
+  padding: 3px; 
+  font-weight: bold;
+  font-size: 8pt; 
+  text-align: left;
+  text-transform: uppercase;
+  color: #FFFFFF;
+  background-color: #B8B8B8;
+  text-decoration: none;
+  text-align: center;
+  border-style: outset;
+  border-color: #AAAAAA;
+}
+
+.standard-button:hover {
+  background-color: #CCCCCC;
+}
+
+.standard-button:active {
+  border-style: inset;
+  border-color: #EEEEEE;
+}
+
+.icon-button {
+  padding: 0px; 
+  font-weight: bold;
+  font-size: 8pt; 
+  text-align: left;
+  text-transform: uppercase;
+  color: #EEEEEE;
+  text-decoration: none;
+  border-style: outset;
+  background-color: #E3E3E3;
+  border-color: #999999;
+}
+
+.icon-button:hover {
+  background-color: #FFFFFF;
+}
+
+.icon-button:active {
+  border-style: inset;
+  border-color: #FFFFFF;
+}
+
+.oe-module-title {
+  padding: 5px; 
+  font-weight: bold; 
+  text-align: left;
+  color: #EEEEEE;
+  background-color: black;
+  font-size: 8pt;
+}
+
+/* 
+ * Marker class. Use with report parameter fieldset element so that
+ * the following selectors take effect. 
+ */
+.report-parameters {
+}
+
+.report-parameters legend {
+  font-size: 135%;
+  font-weight: bold;
+}
+
+.report-parameters h2 {
+  font-size: 120%;
+  margin-top: 1em;
+  margin-bottom: .25em;
+}
+
+.report-parameters select {
+  font-family:monospace;
+}
+
+.submit-button {
+  margin-top: 1em;
+
+  /* Override OpenEdit's values. */
+  font-size: 100%;
+  font-weight: normal;
+  text-align: center;
+  color: black;
+  text-decoration: none;
+  border-style: outset;
+}
+
+.submit-button:active {
+  border-style: inset;
+}

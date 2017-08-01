@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Copyright 2017 United States Government as represented by the
+  Administrator of the National Aeronautics and Space Administration.
+  All Rights Reserved.
+  
+  This file is available under the terms of the NASA Open Source Agreement
+  (NOSA). You should have received a copy of this agreement with the
+  Kepler source code; see the file NASA-OPEN-SOURCE-AGREEMENT.doc.
+  
+  No Warranty: THE SUBJECT SOFTWARE IS PROVIDED "AS IS" WITHOUT ANY
+  WARRANTY OF ANY KIND, EITHER EXPRESSED, IMPLIED, OR STATUTORY,
+  INCLUDING, BUT NOT LIMITED TO, ANY WARRANTY THAT THE SUBJECT SOFTWARE
+  WILL CONFORM TO SPECIFICATIONS, ANY IMPLIED WARRANTIES OF
+  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, OR FREEDOM FROM
+  INFRINGEMENT, ANY WARRANTY THAT THE SUBJECT SOFTWARE WILL BE ERROR
+  FREE, OR ANY WARRANTY THAT DOCUMENTATION, IF PROVIDED, WILL CONFORM
+  TO THE SUBJECT SOFTWARE. THIS AGREEMENT DOES NOT, IN ANY MANNER,
+  CONSTITUTE AN ENDORSEMENT BY GOVERNMENT AGENCY OR ANY PRIOR RECIPIENT
+  OF ANY RESULTS, RESULTING DESIGNS, HARDWARE, SOFTWARE PRODUCTS OR ANY
+  OTHER APPLICATIONS RESULTING FROM USE OF THE SUBJECT SOFTWARE.
+  FURTHER, GOVERNMENT AGENCY DISCLAIMS ALL WARRANTIES AND LIABILITIES
+  REGARDING THIRD-PARTY SOFTWARE, IF PRESENT IN THE ORIGINAL SOFTWARE,
+  AND DISTRIBUTES IT "AS IS."
+
+  Waiver and Indemnity: RECIPIENT AGREES TO WAIVE ANY AND ALL CLAIMS
+  AGAINST THE UNITED STATES GOVERNMENT, ITS CONTRACTORS AND
+  SUBCONTRACTORS, AS WELL AS ANY PRIOR RECIPIENT. IF RECIPIENT'S USE OF
+  THE SUBJECT SOFTWARE RESULTS IN ANY LIABILITIES, DEMANDS, DAMAGES,
+  EXPENSES OR LOSSES ARISING FROM SUCH USE, INCLUDING ANY DAMAGES FROM
+  PRODUCTS BASED ON, OR RESULTING FROM, RECIPIENT'S USE OF THE SUBJECT
+  SOFTWARE, RECIPIENT SHALL INDEMNIFY AND HOLD HARMLESS THE UNITED
+  STATES GOVERNMENT, ITS CONTRACTORS AND SUBCONTRACTORS, AS WELL AS ANY
+  PRIOR RECIPIENT, TO THE EXTENT PERMITTED BY LAW. RECIPIENT'S SOLE
+  REMEDY FOR ANY SUCH MATTER SHALL BE THE IMMEDIATE, UNILATERAL
+  TERMINATION OF THIS AGREEMENT.
+-->
+
+<project basedir="." default="build" name="tad">
+
+  <import file="../include/ant/standard.xml" />
+  <import file="${targets}/gen-xmlbeans.xml" />
+
+  <property name="gen-proxy.modules" value="Coa,Ama,Amt,Bpa,Rpts" />
+
+  <property name="gen-proxy.module.Coa.mfilesGenDir" value="${matlab.dir}/coa/${build}/generated/mfiles" />
+  <property name="gen-proxy.module.Coa.mfilesDir" value="${matlab.dir}/coa/mfiles" />
+  <property name="gen-proxy.module.Coa.incDir" value="${matlab.dir}/coa/${build}/generated" />
+  <property name="gen-proxy.module.Coa.srcDir" value="${matlab.dir}/coa/${build}/generated" />
+  <property name="gen-proxy.module.Coa.controllerIncDir" value="${matlab.dir}/coa/include" />
+  <property name="gen-proxy.module.Coa.controllerSrcDir" value="${matlab.dir}/coa/src" />
+  <property name="gen-proxy.module.Coa.classes" value="gov.nasa.kepler.tad.peer.coa.CoaInputs,gov.nasa.kepler.tad.peer.coa.CoaOutputs" />
+
+  <property name="gen-proxy.module.Ama.mfilesGenDir" value="${matlab.dir}/ama/${build}/generated/mfiles" />
+  <property name="gen-proxy.module.Ama.mfilesDir" value="${matlab.dir}/ama/mfiles" />
+  <property name="gen-proxy.module.Ama.incDir" value="${matlab.dir}/ama/${build}/generated" />
+  <property name="gen-proxy.module.Ama.srcDir" value="${matlab.dir}/ama/${build}/generated" />
+  <property name="gen-proxy.module.Ama.controllerIncDir" value="${matlab.dir}/ama/include" />
+  <property name="gen-proxy.module.Ama.controllerSrcDir" value="${matlab.dir}/ama/src" />
+  <property name="gen-proxy.module.Ama.classes" value="gov.nasa.kepler.tad.peer.ama.AmaInputs,gov.nasa.kepler.tad.peer.ama.AmaOutputs" />
+
+  <property name="gen-proxy.module.Amt.mfilesGenDir" value="${matlab.dir}/amt/${build}/generated/mfiles" />
+  <property name="gen-proxy.module.Amt.mfilesDir" value="${matlab.dir}/amt/mfiles" />
+  <property name="gen-proxy.module.Amt.incDir" value="${matlab.dir}/amt/${build}/generated" />
+  <property name="gen-proxy.module.Amt.srcDir" value="${matlab.dir}/amt/${build}/generated" />
+  <property name="gen-proxy.module.Amt.controllerIncDir" value="${matlab.dir}/amt/include" />
+  <property name="gen-proxy.module.Amt.controllerSrcDir" value="${matlab.dir}/amt/src" />
+  <property name="gen-proxy.module.Amt.classes" value="gov.nasa.kepler.tad.peer.amt.AmtInputs,gov.nasa.kepler.tad.peer.amt.AmtOutputs" />
+
+  <property name="gen-proxy.module.Bpa.mfilesGenDir" value="${matlab.dir}/bpa/${build}/generated/mfiles" />
+  <property name="gen-proxy.module.Bpa.mfilesDir" value="${matlab.dir}/bpa/mfiles" />
+  <property name="gen-proxy.module.Bpa.incDir" value="${matlab.dir}/bpa/${build}/generated" />
+  <property name="gen-proxy.module.Bpa.srcDir" value="${matlab.dir}/bpa/${build}/generated" />
+  <property name="gen-proxy.module.Bpa.controllerIncDir" value="${matlab.dir}/bpa/include" />
+  <property name="gen-proxy.module.Bpa.controllerSrcDir" value="${matlab.dir}/bpa/src" />
+  <property name="gen-proxy.module.Bpa.classes" value="gov.nasa.kepler.tad.peer.bpa.BpaInputs,gov.nasa.kepler.tad.peer.bpa.BpaOutputs" />
+
+  <property name="gen-proxy.module.Rpts.mfilesGenDir" value="${matlab.dir}/rpts/${build}/generated/mfiles" />
+  <property name="gen-proxy.module.Rpts.mfilesDir" value="${matlab.dir}/rpts/mfiles" />
+  <property name="gen-proxy.module.Rpts.incDir" value="${matlab.dir}/rpts/${build}/generated" />
+  <property name="gen-proxy.module.Rpts.srcDir" value="${matlab.dir}/rpts/${build}/generated" />
+  <property name="gen-proxy.module.Rpts.controllerIncDir" value="${matlab.dir}/rpts/include" />
+  <property name="gen-proxy.module.Rpts.controllerSrcDir" value="${matlab.dir}/rpts/src" />
+  <property name="gen-proxy.module.Rpts.classes" value="gov.nasa.kepler.tad.peer.rpts.RptsInputs,gov.nasa.kepler.tad.peer.rpts.RptsOutputs" />
+
+  <target name="compile-pre" depends="gen-xmlbeans" >
+    <mkdir dir="${matlab.dir}/coa/${build}/generated" />
+    <mkdir dir="${matlab.dir}/ama/${build}/generated" />
+    <mkdir dir="${matlab.dir}/amt/${build}/generated" />
+    <mkdir dir="${matlab.dir}/bpa/${build}/generated" />
+    <mkdir dir="${matlab.dir}/rpts/${build}/generated" />
+  </target>
+
+  <target name="compile-post" depends="gen-proxy" />
+
+</project>

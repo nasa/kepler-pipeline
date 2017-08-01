@@ -1,0 +1,98 @@
+/*
+ * Copyright 2017 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ * 
+ * This file is available under the terms of the NASA Open Source Agreement
+ * (NOSA). You should have received a copy of this agreement with the
+ * Kepler source code; see the file NASA-OPEN-SOURCE-AGREEMENT.doc.
+ * 
+ * No Warranty: THE SUBJECT SOFTWARE IS PROVIDED "AS IS" WITHOUT ANY
+ * WARRANTY OF ANY KIND, EITHER EXPRESSED, IMPLIED, OR STATUTORY,
+ * INCLUDING, BUT NOT LIMITED TO, ANY WARRANTY THAT THE SUBJECT SOFTWARE
+ * WILL CONFORM TO SPECIFICATIONS, ANY IMPLIED WARRANTIES OF
+ * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, OR FREEDOM FROM
+ * INFRINGEMENT, ANY WARRANTY THAT THE SUBJECT SOFTWARE WILL BE ERROR
+ * FREE, OR ANY WARRANTY THAT DOCUMENTATION, IF PROVIDED, WILL CONFORM
+ * TO THE SUBJECT SOFTWARE. THIS AGREEMENT DOES NOT, IN ANY MANNER,
+ * CONSTITUTE AN ENDORSEMENT BY GOVERNMENT AGENCY OR ANY PRIOR RECIPIENT
+ * OF ANY RESULTS, RESULTING DESIGNS, HARDWARE, SOFTWARE PRODUCTS OR ANY
+ * OTHER APPLICATIONS RESULTING FROM USE OF THE SUBJECT SOFTWARE.
+ * FURTHER, GOVERNMENT AGENCY DISCLAIMS ALL WARRANTIES AND LIABILITIES
+ * REGARDING THIRD-PARTY SOFTWARE, IF PRESENT IN THE ORIGINAL SOFTWARE,
+ * AND DISTRIBUTES IT "AS IS."
+ * 
+ * Waiver and Indemnity: RECIPIENT AGREES TO WAIVE ANY AND ALL CLAIMS
+ * AGAINST THE UNITED STATES GOVERNMENT, ITS CONTRACTORS AND
+ * SUBCONTRACTORS, AS WELL AS ANY PRIOR RECIPIENT. IF RECIPIENT'S USE OF
+ * THE SUBJECT SOFTWARE RESULTS IN ANY LIABILITIES, DEMANDS, DAMAGES,
+ * EXPENSES OR LOSSES ARISING FROM SUCH USE, INCLUDING ANY DAMAGES FROM
+ * PRODUCTS BASED ON, OR RESULTING FROM, RECIPIENT'S USE OF THE SUBJECT
+ * SOFTWARE, RECIPIENT SHALL INDEMNIFY AND HOLD HARMLESS THE UNITED
+ * STATES GOVERNMENT, ITS CONTRACTORS AND SUBCONTRACTORS, AS WELL AS ANY
+ * PRIOR RECIPIENT, TO THE EXTENT PERMITTED BY LAW. RECIPIENT'S SOLE
+ * REMEDY FOR ANY SUCH MATTER SHALL BE THE IMMEDIATE, UNILATERAL
+ * TERMINATION OF THIS AGREEMENT.
+ */
+
+package gov.nasa.kepler.common;
+
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+
+import org.junit.Test;
+
+/**
+ * @author Miles Cote
+ * 
+ */
+public class TargetManagementConstantsTest {
+    @Test
+    public void testInvalidTarget() {
+        assertFalse(TargetManagementConstants.isCustomTarget(TargetManagementConstants.INVALID_KEPLER_ID));
+
+        assertFalse(TargetManagementConstants.isCatalogTarget(TargetManagementConstants.INVALID_KEPLER_ID));
+    }
+
+    @Test
+    public void testKeplerCatalogTargets() {
+        assertFalse(TargetManagementConstants.isCustomTarget(0));
+        assertFalse(TargetManagementConstants.isCustomTarget(1));
+        assertFalse(TargetManagementConstants.isCustomTarget(99999999));
+
+        assertTrue(TargetManagementConstants.isCatalogTarget(0));
+        assertTrue(TargetManagementConstants.isCatalogTarget(1));
+        assertTrue(TargetManagementConstants.isCatalogTarget(99999999));
+    }
+
+    @Test
+    public void testKeplerCustomTargets() {
+        assertTrue(TargetManagementConstants.isCustomTarget(100000000));
+        assertTrue(TargetManagementConstants.isCustomTarget(100000001));
+        assertTrue(TargetManagementConstants.isCustomTarget(199999999));
+
+        assertFalse(TargetManagementConstants.isCatalogTarget(100000000));
+        assertFalse(TargetManagementConstants.isCatalogTarget(100000001));
+        assertFalse(TargetManagementConstants.isCatalogTarget(199999999));
+    }
+
+    @Test
+    public void testK2CustomTargets() {
+        assertTrue(TargetManagementConstants.isCustomTarget(200000000));
+        assertTrue(TargetManagementConstants.isCustomTarget(200000001));
+        assertTrue(TargetManagementConstants.isCustomTarget(200999999));
+
+        assertFalse(TargetManagementConstants.isCatalogTarget(200000000));
+        assertFalse(TargetManagementConstants.isCatalogTarget(200000001));
+        assertFalse(TargetManagementConstants.isCatalogTarget(200999999));
+    }
+
+    @Test
+    public void testK2CatalogTargets() {
+        assertFalse(TargetManagementConstants.isCustomTarget(201000000));
+        assertFalse(TargetManagementConstants.isCustomTarget(201000001));
+
+        assertTrue(TargetManagementConstants.isCatalogTarget(201000000));
+        assertTrue(TargetManagementConstants.isCatalogTarget(201000001));
+    }
+}

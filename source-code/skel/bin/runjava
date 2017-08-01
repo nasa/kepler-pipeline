@@ -1,0 +1,297 @@
+#!/usr/bin/perl 
+# 
+# Copyright 2017 United States Government as represented by the
+# Administrator of the National Aeronautics and Space Administration.
+# All Rights Reserved.
+# 
+# This file is available under the terms of the NASA Open Source Agreement
+# (NOSA). You should have received a copy of this agreement with the
+# Kepler source code; see the file NASA-OPEN-SOURCE-AGREEMENT.doc.
+# 
+# No Warranty: THE SUBJECT SOFTWARE IS PROVIDED "AS IS" WITHOUT ANY
+# WARRANTY OF ANY KIND, EITHER EXPRESSED, IMPLIED, OR STATUTORY,
+# INCLUDING, BUT NOT LIMITED TO, ANY WARRANTY THAT THE SUBJECT SOFTWARE
+# WILL CONFORM TO SPECIFICATIONS, ANY IMPLIED WARRANTIES OF
+# MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, OR FREEDOM FROM
+# INFRINGEMENT, ANY WARRANTY THAT THE SUBJECT SOFTWARE WILL BE ERROR
+# FREE, OR ANY WARRANTY THAT DOCUMENTATION, IF PROVIDED, WILL CONFORM
+# TO THE SUBJECT SOFTWARE. THIS AGREEMENT DOES NOT, IN ANY MANNER,
+# CONSTITUTE AN ENDORSEMENT BY GOVERNMENT AGENCY OR ANY PRIOR RECIPIENT
+# OF ANY RESULTS, RESULTING DESIGNS, HARDWARE, SOFTWARE PRODUCTS OR ANY
+# OTHER APPLICATIONS RESULTING FROM USE OF THE SUBJECT SOFTWARE.
+# FURTHER, GOVERNMENT AGENCY DISCLAIMS ALL WARRANTIES AND LIABILITIES
+# REGARDING THIRD-PARTY SOFTWARE, IF PRESENT IN THE ORIGINAL SOFTWARE,
+# AND DISTRIBUTES IT "AS IS."
+#
+# Waiver and Indemnity: RECIPIENT AGREES TO WAIVE ANY AND ALL CLAIMS
+# AGAINST THE UNITED STATES GOVERNMENT, ITS CONTRACTORS AND
+# SUBCONTRACTORS, AS WELL AS ANY PRIOR RECIPIENT. IF RECIPIENT'S USE OF
+# THE SUBJECT SOFTWARE RESULTS IN ANY LIABILITIES, DEMANDS, DAMAGES,
+# EXPENSES OR LOSSES ARISING FROM SUCH USE, INCLUDING ANY DAMAGES FROM
+# PRODUCTS BASED ON, OR RESULTING FROM, RECIPIENT'S USE OF THE SUBJECT
+# SOFTWARE, RECIPIENT SHALL INDEMNIFY AND HOLD HARMLESS THE UNITED
+# STATES GOVERNMENT, ITS CONTRACTORS AND SUBCONTRACTORS, AS WELL AS ANY
+# PRIOR RECIPIENT, TO THE EXTENT PERMITTED BY LAW. RECIPIENT'S SOLE
+# REMEDY FOR ANY SUCH MATTER SHALL BE THE IMMEDIATE, UNILATERAL
+# TERMINATION OF THIS AGREEMENT.
+#
+
+use warnings;
+use strict;
+
+use File::Basename;
+use Data::Dumper;
+use Getopt::Long qw/:config no_auto_abbrev no_permute pass_through auto_help/;
+
+
+our %pars = (
+    nicknamefile => "$0.nicknames",
+    home         => '..',
+    verbose      => 0,
+    norun        => 0,
+);
+our @args = qw{
+    nicknamefile=s
+    home=s
+    verbose!
+    norun
+};
+
+my $exitCode;
+eval {
+    $exitCode = main();
+};
+if (my $err = $@) {
+    print STDERR "# $0: $_\n", foreach split /\n/, $err;
+    exit 1;
+}
+exit ($exitCode != 0);
+
+sub main {
+    $pars{home} = dirname(dirname($0)) unless (dirname($0) eq dirname(dirname($0)));
+    $pars{home} = $ENV{'SOC_HOME'} if (defined($ENV{'SOC_HOME'}) && length($ENV{'SOC_HOME'}) != 0);
+
+    # Load user arguments, first picking out what's in %pars.  Do
+    #   not allow abbreviated args for %pars, and pass the rest into
+    #   @ARGV.
+    #
+    GetOptions(\%pars, @args);
+    my ($inName, $jvmargs, $progargs) = getUserArgs(@ARGV);
+    my %presets  = getPresets();
+
+    # Start to make the command line.  Every call will use the 
+    #   "java -cp $pars{home}/lib/soc-classpath.jar" prefix:
+    #
+    my $cmd = "java -cp $pars{home}/lib/soc-classpath.jar ";
+
+    # If the user-specified name is one of the pre-defined entries in the presets,
+    #    use information that that preset maps to.  If not, the user will need to 
+    #    specify everything.
+    # 
+    if (exists $presets{$inName}) {
+        $cmd .= "$presets{$inName}{jvmargs} @$jvmargs " .
+                "$presets{$inName}{classname} " .
+                "$presets{$inName}{progargs} @$progargs";
+    } else {
+        $cmd .= "@$jvmargs $inName @$progargs";
+    }
+
+    print "Running command:\n\t$cmd\n" if $pars{verbose};
+    return system $cmd if not $pars{norun};
+}
+
+sub getUserArgs() {
+    # Parse through command line args.  The first argument withough a leading
+    #   dash is the classname/nickname.  All args before that are JVM args, all
+    #   args after that are program args.
+    #
+    my @cmdLineArgs = @_;
+
+    my $name  = undef;
+    my $jvms  = [];
+    my $progs = [];
+
+    # Begin with the assumtion that the java classname/nickname has not been
+    #   found yet.
+    #
+    my $isNameFound = 0;
+    foreach (@cmdLineArgs) {
+        # The Java classname or nickname is the first argument that does not
+        #   have a leading dash.
+        #
+        if (!$isNameFound && !/^-/) {
+            $isNameFound = 1;
+            $name = $_;
+            next;
+        }
+
+        # If the name has been found already, all subsequent args are program arguments.
+        # Program arguments that contain spaces were entered by the user with quotes around
+        # them, and the quotes were stripped by the shell.  Add the quotes back in so the
+        # user's intent is preserved.
+        #
+        # Otherwise, they are JVM arguments:
+        #   
+        if ($isNameFound) {
+            $_ = "\"$_\"" if / /;
+            push @$progs, $_;
+        } else {
+            push @$jvms, $_;
+        }
+    }
+
+    die "No Java class nickname or fully-specified java classname found.  Dying!"
+        if not $isNameFound;
+
+    return($name, $jvms, $progs);
+}
+
+sub getPresets {
+    # The presets table is a hash table, hash-keys being the nicknames of the
+    #   java programs, and the hash-values being an anonymous hash table of
+    #   classname, string of default JVM args, and string of default program
+    #   args:
+    #
+    #       nickname => {
+    #           classname => classname-value
+    #           jvmargs   => string JVM arguments for this nickname
+    #           progargs  => string of program arguments for this nickname
+    #       }
+    # The presets file that this structure is generated from has the following format:
+    #
+    # nickname|fully.specified.classname|space-delimited jvm args|space-delimited program args
+    # 
+    # with "#" as a comment character, ala Perl.  Blank lines are ignored
+    #
+    # If there is a line beginning with 'DEFAULT_JVM_ARGS=', the text from the rest of that
+    #   line is added to every nickname's jvmargs 
+    #
+    my $presetsFile = $pars{nicknamefile};
+    my $home = $pars{home};
+    open(my $fh, $presetsFile)
+        or die "can't open presets file $presetsFile";
+
+    my %presets = ();
+    my $default_jvm_args = "";
+
+    while (<$fh>) {
+        s/#.*//;        # strip comments
+        s/^\s+|\s+$//g; # strip leading/trainling whitespace
+        chomp;          # strip EOL \n
+        next if /^$/;   # ignore empty lines
+
+        # Capture DEFAULT_JVM_ARGS:
+        if (/^DEFAULT_JVM_ARGS=(.*)/) {
+            $default_jvm_args = $1;
+            next;
+        } 
+
+        my @fields = split /\|/;
+        push @fields, "" while scalar @fields < 4;
+
+        # Load the data into the presets structure:
+        #
+
+        #nickname -> classname mapping
+        $presets{$fields[0]}{classname} = $fields[1];
+
+        #nickname -> (defaults) + JVM args mapping 
+        $presets{$fields[0]}{jvmargs} = $default_jvm_args . " " . $fields[2];
+        $presets{$fields[0]}{jvmargs} =~ s/SOC_HOME/$home/g;
+
+        #nickname -> program args mapping
+        $presets{$fields[0]}{progargs} = $fields[3];
+        $presets{$fields[0]}{progargs} =~ s/SOC_HOME/$home/g;
+
+        # Replace any null fields with the empty string to remove
+        # concatenation errors later:
+        #
+        foreach (keys %{$presets{$fields[0]}}) {
+            $presets{$fields[0]}{$_} = "" 
+                if not defined $presets{$fields[0]}{$_};
+        }
+    }
+
+    close $fh or warn "error closing presets file $presetsFile";
+
+    return %presets;
+}
+
+=head1 NAME
+
+runjava - A wrapper to run the Kepler java tools
+
+=head1 SYNOPSIS
+
+runjava [--help] [--norun] [--[no]verbose] [--nicknamefile=filename] [--home=dir] [jvm-args] nickname [program args]
+
+runjava [--help] [--norun] [--[no]verbose] [--nicknamefile=filename] [--home=dir] [jvm-args] fully-specified.classname [program args]
+
+=head1 OPTIONS
+
+=over 
+
+=item --help
+
+Prints a short help message.
+
+=item --norun 
+
+Generate the java command that would be run, but do not run it.  Useful
+when combined with the verbose option to echo out what would be done.
+Default is off.
+
+=item --[no]verbose
+
+Print the java command line as it is being run.  Default is non-verbose.
+
+=item --nicknamefile
+
+Specify a non-default nickname file.  See the DESCRIPTION section for the
+specification of the nickname file format.
+
+=item --home
+
+Specify the home directory of the package distribution.  Default is
+the parent directory of this script's parent directory.
+
+=back
+
+=head1  DESCRIPTION
+
+A wrapper for the Kepler java tools, runjava allows the user to run a subset of
+the java tools without having to specify any of the default JVM or program
+arguments.  Any Kepler java tool can be run if the desired JVM and program
+arguments are specified.  Additional JVM or program arguments can be added to
+either type of Kepler java tool.
+
+The setup nickname file (default: 'runjava.nicknames') defines the tools that
+are specified for easy use with runjava.   Each line in this file defines a
+tool's nickname and arguments in the following pipe-delimited format:
+
+    nickname|fully.specified.classname|string of jvm args|string of program args
+
+this setup file should be in directory that runjava is executed.  Blank lines
+are ignored and the # character is a comment char, as in Perl.
+
+Additionally, JVM arguments for every nickname in the file can be specified by
+including a 'DEFAULT_JVM_ARGS=...', with the elipsis replaced by the desired
+JVM arguments string.  The text after DEFAULT_JVM_ARGS= will be given as the
+first JVM arguments.
+
+If the user-specified name is a nicknamne in the setup file, the defaults
+specified in the setup file are used.  Otherwise, the user must specify all
+necessary parameters, including a fully-specified classname.
+
+Additional arguments can be given on the command line.  JVM arguments can be
+given before the nickname/class name, and must have a '-' prefix.  Program
+arguments can be given after the nickname/class name, and do not require a
+prefix. The nickname/class name is taken to be the first argument to runjava
+without a '-' prefix.  The runjava arguments --[no]verbose, --norun,
+--nicknamefile, and --home are never passed on to the java call.
+
+=head1 AUTHORS
+
+Kester Allen
+
+=cut

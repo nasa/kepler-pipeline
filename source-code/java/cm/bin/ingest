@@ -1,0 +1,2187 @@
+#!/usr/bin/perl 
+#$Id: ingest 62749 2017-07-27 17:19:21Z bwohler $
+# 
+# Copyright 2017 United States Government as represented by the
+# Administrator of the National Aeronautics and Space Administration.
+# All Rights Reserved.
+# 
+# This file is available under the terms of the NASA Open Source Agreement
+# (NOSA). You should have received a copy of this agreement with the
+# Kepler source code; see the file NASA-OPEN-SOURCE-AGREEMENT.doc.
+# 
+# No Warranty: THE SUBJECT SOFTWARE IS PROVIDED "AS IS" WITHOUT ANY
+# WARRANTY OF ANY KIND, EITHER EXPRESSED, IMPLIED, OR STATUTORY,
+# INCLUDING, BUT NOT LIMITED TO, ANY WARRANTY THAT THE SUBJECT SOFTWARE
+# WILL CONFORM TO SPECIFICATIONS, ANY IMPLIED WARRANTIES OF
+# MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, OR FREEDOM FROM
+# INFRINGEMENT, ANY WARRANTY THAT THE SUBJECT SOFTWARE WILL BE ERROR
+# FREE, OR ANY WARRANTY THAT DOCUMENTATION, IF PROVIDED, WILL CONFORM
+# TO THE SUBJECT SOFTWARE. THIS AGREEMENT DOES NOT, IN ANY MANNER,
+# CONSTITUTE AN ENDORSEMENT BY GOVERNMENT AGENCY OR ANY PRIOR RECIPIENT
+# OF ANY RESULTS, RESULTING DESIGNS, HARDWARE, SOFTWARE PRODUCTS OR ANY
+# OTHER APPLICATIONS RESULTING FROM USE OF THE SUBJECT SOFTWARE.
+# FURTHER, GOVERNMENT AGENCY DISCLAIMS ALL WARRANTIES AND LIABILITIES
+# REGARDING THIRD-PARTY SOFTWARE, IF PRESENT IN THE ORIGINAL SOFTWARE,
+# AND DISTRIBUTES IT "AS IS."
+#
+# Waiver and Indemnity: RECIPIENT AGREES TO WAIVE ANY AND ALL CLAIMS
+# AGAINST THE UNITED STATES GOVERNMENT, ITS CONTRACTORS AND
+# SUBCONTRACTORS, AS WELL AS ANY PRIOR RECIPIENT. IF RECIPIENT'S USE OF
+# THE SUBJECT SOFTWARE RESULTS IN ANY LIABILITIES, DEMANDS, DAMAGES,
+# EXPENSES OR LOSSES ARISING FROM SUCH USE, INCLUDING ANY DAMAGES FROM
+# PRODUCTS BASED ON, OR RESULTING FROM, RECIPIENT'S USE OF THE SUBJECT
+# SOFTWARE, RECIPIENT SHALL INDEMNIFY AND HOLD HARMLESS THE UNITED
+# STATES GOVERNMENT, ITS CONTRACTORS AND SUBCONTRACTORS, AS WELL AS ANY
+# PRIOR RECIPIENT, TO THE EXTENT PERMITTED BY LAW. RECIPIENT'S SOLE
+# REMEDY FOR ANY SUCH MATTER SHALL BE THE IMMEDIATE, UNILATERAL
+# TERMINATION OF THIS AGREEMENT.
+#
+
+=head1 NAME
+
+ingest - loads Kepler data into an Oracle database
+
+=head1 SYNOPSIS
+
+ingest [options] [directory...]
+
+=head1 DESCRIPTION
+
+Loads Kepler data (from the SCP and SOC) into an Oracle database. This
+script assumes that that the associated tables have already been created.
+
+Options include:
+
+=over
+
+=item -b database-name
+
+Database to connect to if default value specified in /path/to/dist/etc/kepler.properties
+will not be used.
+
+=item -t table-name
+
+Table to load. Valid tables, the names of files used to load them, and their
+ID sequencing strategy, and any tables that need to be already loaded include:
+
+  Table        File Pattern             ID              Prerequisites
+  CM_KIC       d*.mrg in dir1           From file
+               [cm_kic-sky_groupid.mrg in dir2]
+  CM_CATKEY    c*.mrg                   From file
+  CM_SCPKEY    scpkey.mrg               From file
+  CM_CHAR      r*.mrg                   Sequential      CM_CHAR_TYPE
+  CM_CHAR_TYPE t*.mrg                   Sequential
+
+Data in directory is appended to the associated table. The operator will want
+to delete the old records from the database before ingesting. If the the ID is
+"From file" then, an error will occur when the data is loaded; otherwise, the
+data will be duplicated.
+
+=item -verify-only
+
+Report back on number of items in the specified table and verify that it was
+the number of items loaded. This is always done on ingest, but this option can
+be used to perform the verification again later. Use the -t, -u, and -p
+options as necessary.
+
+=item -u user
+
+User name to use if default value specified in /path/to/dist/etc/kepler.properties
+will not be used.
+
+=item -p password
+
+Password to use if default value specified in /path/to/dist/etc/kepler.properties
+will not be used.
+
+=item -y
+
+Assume "yes" to all prompts to allow for non-interactive use.
+
+=item -d 
+
+A directory that contains input data files (see above for filename
+format). The data in the files is appended to the database.
+
+=back
+
+For example:
+
+  ingest -t CM_CATKEY -d /path/to/kic/kic-v9
+  ingest -t CM_SCPKEY -d /path/to/kic/kic-v9
+  ingest -t CM_KIC -d /path/to/kic/kic-v9
+  ingest -t CM_KIC -d /path/to/kic/kic-v7 /path/to/kic/skyGroup-v7
+
+  TO USE DEFAULT DATABASE CONNECTION DATA:
+  ingest -t table -d path_to_directory_containing_epic_data path_to_directory_containing_sky_group_id to kepler_id_data 
+
+  TO OVERRIDE DEFAULT DATABASE CONNECTION DATA:
+  ingest -u username -p password -b database -t table -d path_to_directory_containing_epic_data path_to_directory_containing_sky_group_id to kepler_id_data 
+
+Note that the sqlldr control files are written into a temporary directory in
+/var/tmp. If there is an error while running this script, those files will be
+left there for inspection. The files can be large, especially in the case of
+the CM_KIC table when not using sggen, so be sure to clean them up when you
+are done.
+
+This script requires that the ORACLE_HOME and ORACLE_SID environment variables
+are set correctly, and that the sqlplus and sqlldr commands are in your
+PATH. For example:
+
+  export ORACLE_SID=orcl
+  export ORACLE_HOME=/app/oracle/oracle/product/10.2.0/db_1
+  export PATH=$PATH:$ORACLE_HOME/bin
+
+In addition, you need to be in the oinstall group. If you haven't done so
+already, add yourself to the group with the following:
+
+  $ su -c "usermod -aG oinstall $USER"
+
+You must then log out and log back in again.
+
+=head1 CM_KIC TABLE NOTES
+
+The KIC that comes from the SCP does not include a SKY_GROUP_ID column. The
+sky groups can be assigned with or without the sggen pipeline module. The use
+of the sggen pipeline module is preferred.
+
+=head2 With sggen
+
+The second directory which contains the SKY_GROUP_ID to KEPLER_ID mapping is
+not needed when using sggen. Instead, after ingesting the KIC, the sggen
+pipeline module must be run to update the SKY_GROUP_ID column for each
+KEPLER_ID.
+
+=head2 Without sggen
+
+If the sggen pipeline is not used, then the sky group needs to be added to
+each record in the KIC data. This is accomplished by using a data file that
+contains the mapping of the KEPLER_ID to the SKY_GROUP_ID. This file is called
+cm_kic-sky_groupid.mrg in the second directory passed in on the command line.
+It should be generated every time a new version of the KIC is delivered.
+
+To create cm_kic-sky_groupid.mrg, the KEPLER_ID, RA, and DEC fields from the
+KIC is first run through RaDec2Pix to generate a list of Kepler ID, module,
+and output. For example:
+
+  cd matlab/fc/RaDec2Pix
+  matlab -nodesktop -nosplash -r 'determineSkyGroup; exit' | tee determineSkyGrououtput.txt
+
+The following command uses this list to generate cm_kic-sky_groupid.mrg:
+
+  perl determineSkyGroumakeUpdate.pl determineSkyGrououtput.txt > /path/to/kic/kicGroup-v7/cm_kic-sky_groupid.mrg
+
+The determineSkyGroup.m and determineSkyGroumakeUpdate.pl scripts are
+found in matlab/fc/RaDec2Pix.
+
+=head1 CM_CHAR TABLE NOTES
+
+The CM_CHAR_TYPE table needs to be loaded before the CM_CHAR table.
+
+=head1 OTHER IMPLEMENTATION NOTES
+
+If the characteristics ingest takes too long, there is a another algorithm to
+try. The characteristic types can be read into a perl hash, and then the
+string-based types in the input files can be replaced with ID-based types in
+the same fashion as setting the sky group ID in the CM_KIC table.
+
+=head1 AUTHORS
+
+ Bill Wohler
+ Thomas Han
+ Chris Middour
+ Jean-Pierre Harrison (May 2016)
+
+=head1 REQUIREMENTS
+
+ SOC_REQ_IMPL 158.CM.1
+ SOC_REQ_IMPL 159.CM.1
+ SOC_REQ_IMPL 164.CM.1
+ SOC_REQ_IMPL 164.CM.4
+
+=cut
+
+use Getopt::Std;
+
+use Cwd qw(abs_path getcwd);
+
+use File::Basename;
+
+use strict;
+
+use warnings;
+
+
+use constant 
+{
+
+                     SCRIPT_NAME => basename($0),
+
+
+                        MANIFEST => 'Manifest',
+
+                  MD5SUM_COMMAND => 'md5sum --check',
+
+                          TMPDIR => "/var/tmp/ingest$$",
+
+                    SQL_TMP_FILE => "/var/tmp/ingest$$/ingestFunctions.sql",
+
+
+                          CM_KIC => 'CM_KIC',
+
+                       CM_CATKEY => 'CM_CATKEY',
+
+                       CM_SCPKEY => 'CM_SCPKEY',
+
+                         CM_CHAR => 'CM_CHAR',
+
+                    CM_CHAR_TYPE => 'CM_CHAR_TYPE',
+
+
+     KEPLER_PROPERTIES_FILE_PATH => '/path/to/dist/etc/kepler.properties',
+
+
+                            TRUE => 1,
+
+                           FALSE => 0,
+
+
+                         SUCCESS => 0,
+
+                            FAIL => 1,
+
+};
+
+
+# Constants you can play around with.
+my $DB_USER = undef;                 # see also -u
+
+my $DB_PSWD = undef;                 # see also -p
+
+my $DB_NAME = undef;
+
+#my $DB_NAME = defined($ENV{ORACLE_SID}) ? "$ENV{ORACLE_SID}" : '';
+
+my $WIDTH = 79;
+
+
+
+
+# Additional variables.
+$| = 1;                                     # unbuffered output
+
+my $databaseConnectionDataHashRef = {};
+
+my %kidToSkyGroupIdHash = ();
+
+my $isOkToCleanUp = FALSE;
+
+my $rowCount = 0;                           # number of rows processed
+
+
+my $command = undef;
+
+# Stores strings as needed
+my $string = undef;
+
+my $answer = undef;
+
+my $mrgFileNamesArrayRef = [];
+
+my $keplerIDHashRef = {};
+
+my $isDataInTable = TRUE;
+
+
+my $table = undef;
+
+my $isVerifyOnly = FALSE;
+
+my $yes = FALSE;
+
+my $directory1 = undef;
+
+my $directory2 = undef;  # contains file [cm_kic-sky_groupid.mrg] including SKY_GROUP_ID to KEPLER_ID mapping.
+
+my $fileCount = 0;
+
+my $dataDirectoryFullPath = undef;
+
+my $manifestFileFullPath = undef;
+
+my $isYes = FALSE;
+
+my %booleanHash = ( 1 => 'y', 0 => 'n', 'y' => 1, 'n' => 0, );
+
+
+my $dataFilePattern = undef;                  # filename pattern for |-delimited files
+
+my $body = undef;                             # sqlldr script
+
+my $dataFile2 = undef;                        # file that contains SQL
+
+my $isCheckManifest = FALSE;                  # true if there is a manifest
+
+my $isCreateFunctions = FALSE;                # true if Oracle functions needed
+
+
+my $baseName = undef;
+
+
+# Database table and column names.
+my $KEPLER_ID_COL = 15;                 # 0-based column number
+
+my $CM_KIC_QUERY= 
+'APPEND INTO TABLE CM_KIC ' .
+"FIELDS TERMINATED BY '|' " .
+'TRAILING NULLCOLS 
+(
+RA,
+DEC,
+PMRA,
+PMDEC,
+UMAG,
+GMAG,
+RMAG,
+IMAG,
+ZMAG,
+GREDMAG,
+D51MAG,
+JMAG,
+HMAG,
+KMAG,
+KEPMAG,
+KEPLER_ID,
+TMID,
+SCPID,
+ALTID,
+ALTSOURCE,
+GALAXY,
+BLEND,
+VARIABLE,
+TEFF,
+LOGG,
+FEH,
+EBMINUSV,
+AV,
+RADIUS,
+CQ,
+PQ,
+AQ,
+CATKEY,
+SCPKEY,
+PARALLAX,
+GLON,
+GLAT,
+PMTOTAL,
+GRCOLOR,
+JKCOLOR,
+GKCOLOR,
+SKY_GROUP_ID
+)';
+
+
+my $CM_CATKEY_QUERY = 
+'APPEND INTO TABLE CM_CATKEY ' .
+"FIELDS TERMINATED BY '|' "    .
+'TRAILING NULLCOLS 
+(
+CATKEY,
+CATFLAG,
+TYCHOID,
+UCACID,
+GCVSID,
+SOURCE,
+SOURCEID,
+FLUX1,
+FLUX2,
+RAEPOCH,
+DECEPOCH,
+JMAG,
+HMAG,
+KMAG
+)';
+
+
+
+my $CM_SCPKEY_QUERY = 
+'APPEND INTO TABLE CM_SCPKEY ' .
+"FIELDS TERMINATED BY '|' "    .
+'TRAILING NULLCOLS 
+(
+SCPKEY,
+SCP_FIBER_RA,
+SCP_FIBER_DEC,
+SCP_TEFF,
+SCP_TEFF_ERR,
+SCP_LOGG,
+SCP_LOGG_ERR,
+SCP_FEH,
+SCP_FEH_ERR,
+SCP_VSINI,
+SCP_VSINI_ERR,
+SCP_RV,
+SCP_RV_ERR,
+SCP_CCPH
+)';
+
+
+
+my $CM_CHAR_QUERY= 
+'APPEND INTO TABLE CM_CHAR ' .
+"FIELDS TERMINATED BY '|' "  .
+"TRAILING NULLCOLS 
+(
+ID SEQUENCE(MAX,1),
+KEPLER_ID,
+TYPE_ID 'get_char_type_id(:type_id)',
+VALUE
+)";
+
+
+
+my $CM_CHAR_TYPE_QUERY = 
+'APPEND INTO TABLE CM_CHAR_TYPE ' .
+"FIELDS TERMINATED BY '|' "       .
+'TRAILING NULLCOLS
+(
+ID SEQUENCE(MAX,1),
+NAME,
+FORMAT
+)';
+
+
+
+################################################################################
+# Comma separated list used to tell user which functions have been defined.
+my $FUNCTION_LIST = 'get_char_type_id';
+
+my $CREATE_FUNCTIONS = qq {
+CREATE OR REPLACE FUNCTION get_char_type_id(char_type VARCHAR)
+RETURN NUMBER IS
+   char_type_id NUMBER;
+BEGIN
+   SELECT id INTO char_type_id
+   FROM cm_char_type
+   WHERE name = char_type;
+   RETURN char_type_id;
+END;
+/
+EXIT;
+};
+################################################################################
+
+
+################################################################################
+my $DROP_FUNCTIONS = qq {
+DROP FUNCTION get_char_type_id;
+/
+EXIT;
+};
+################################################################################
+
+
+################################################################################
+# START main
+
+
+$databaseConnectionDataHashRef = getDatabaseConnectionData();
+
+while (@ARGV)
+{
+
+   $_ = shift(@ARGV);
+
+   /^-b$/ and $DB_NAME = shift, next;
+
+   /^-d$/ and $directory1 = shift, next;
+
+   /^-h$/ and usage();
+
+   /^-p$/ and $DB_PSWD = shift, next;
+
+   /^-t$/ and $table = shift, next;
+
+   /^-u$/ and $DB_USER = shift, next;
+
+   /^-verify-only$/ and $isVerifyOnly = TRUE, next;
+
+   /^-y$/ and $isYes = TRUE, next;
+
+   /^-/ and usage("Unknown argument: $_\n");
+
+
+   if (!(defined($directory1)))
+   {
+
+      $directory1 = $_;
+
+   } 
+   else
+   {
+
+      $directory2 = $_;
+
+   }
+
+}
+
+
+if (!(defined($DB_NAME)))
+{
+
+   $DB_NAME = $databaseConnectionDataHashRef->{DB_NAME}
+
+}
+
+
+if (!(defined($DB_PSWD)))
+{
+
+   $DB_PSWD = $databaseConnectionDataHashRef->{DB_PSWD}
+
+}
+
+
+if (!(defined($DB_USER)))
+{
+
+   $DB_USER = $databaseConnectionDataHashRef->{DB_USER}
+
+}
+
+
+if (!(defined($ENV{ORACLE_HOME}))) 
+{
+
+   $string = 
+   "Unable to access database: ORACLE_HOME not defined.\n"  .
+   "Load status: FAIL.\n"                                   .
+   "INGEST FAILED.\n"                                       .
+   SCRIPT_NAME . " terminated on ERROR.\n\n";
+
+   usage($string);
+
+}
+
+
+
+if (!(defined($table)))
+{
+
+   $string = 
+   "Please provide the name of the table to load.\n"  .
+   "Load status: FAIL.\n"                             .
+   "INGEST FAILED.\n"                                 .
+   SCRIPT_NAME . " terminated on ERROR.\n\n";
+
+   usage($string);
+
+}
+
+if (!(defined($directory1)))
+{
+
+   $string = 
+   "Please specify a directory with input files.\n"  .
+   "Load status: FAIL.\n"                            .
+   "INGEST FAILED.\n"                                .
+   SCRIPT_NAME . " terminated on ERROR.\n\n";
+
+   usage($string);
+
+} 
+
+
+if (!(-d($directory1))) 
+{
+
+   $string = 
+   "Directory [$directory1] does not exist\n"  .
+   "Load status: FAIL.\n"                      .
+   "INGEST FAILED.\n"                          .
+   SCRIPT_NAME . " terminated on ERROR.\n\n";
+
+   usage($string);
+
+}
+
+
+$dataDirectoryFullPath = getDirectoryFullPath($directory1, $directory2);
+
+
+if ($table eq CM_KIC) 
+{
+
+   if (!(defined($directory2))) 
+   {
+
+      $answer = '';
+
+      if (!($isYes))
+      {
+
+         $string = 
+         "\nDo you plan to run sggen after ingesting the Kepler Input Catalog? [y/n]: ";
+
+         print($string);
+
+         $answer = <STDIN>;
+
+         if (($answer !~ /^$/) 
+             && 
+             ($answer !~ /y/i)) 
+         {
+
+            $string = 
+            "Please specify a directory that contains the Kepler Input Catalog group mapping file.\n"  .
+            "Load status: FAIL.\n"                                                                     .
+            "INGEST FAILED.\n"                                                                         .
+            SCRIPT_NAME . " terminated on ERROR.\n\n";
+
+            usage($string);
+
+         }
+
+      } 
+      elsif (!(-d $directory2)) 
+      {
+
+         $string = 
+         "Directory containing file [cm_kic-sky-groupid.mrg] does not exist\n"  .
+         "Load status: FAIL.\n"                                                .
+         "INGEST FAILED.\n"                                                    .
+         SCRIPT_NAME . " terminated on ERROR.\n\n";
+
+         usage($string);
+
+      } 
+      else 
+      {
+	
+         # Make directory2 absolute.
+         $directory2 = abs_path($directory2);
+
+      }
+
+   }
+
+}
+
+# Set parameters based on user input. See "Perform work" section to see
+# relationship between these variables.
+
+
+if ($table eq CM_KIC) 
+{
+
+   $dataFilePattern = "d*.mrg";
+
+   $body = $CM_KIC_QUERY;
+
+   $isCheckManifest = TRUE;
+
+   if (defined($directory2)) 
+   {
+
+      $dataFile2 = "$directory2/cm_kic-sky-groupid.mrg";
+
+   }
+   else 
+   {
+
+      # In version 9 and later, the sky group is added later via the sggen
+      # pipeline module, so remove it from our template.
+
+      $body =~ s/SKY_GROUP_ID/SKY_GROUP_ID CONSTANT 0/;
+
+   }
+
+}
+elsif ($table eq CM_CATKEY) 
+{
+
+   $dataFilePattern = 'c*.mrg';
+
+   $body = $CM_CATKEY_QUERY;
+
+   $isCheckManifest = TRUE;
+
+} 
+elsif ($table eq CM_SCPKEY) 
+{
+
+   $dataFilePattern = 'scpkey.mrg';
+
+   $body = $CM_SCPKEY_QUERY;
+
+   $isCheckManifest = TRUE;
+
+} 
+elsif ($table eq CM_CHAR) 
+{
+
+   $dataFilePattern = 'r*.mrg';
+
+   $body = $CM_CHAR_QUERY;
+
+   $isCreateFunctions = TRUE;
+
+} 
+elsif ($table eq CM_CHAR_TYPE) 
+{
+
+   $dataFilePattern = 't*.mrg';
+
+   $body = $CM_CHAR_TYPE_QUERY;
+
+} 
+else 
+{
+
+   $string = 
+   "Unknown table: $table\n"                .
+   "Load status: FAIL.\n"                   .
+   "INGEST FAILED.\n"                       .
+   SCRIPT_NAME . " terminated on ERROR.\n\n";
+
+   usage("Unknown table: $table\n");
+
+}
+
+# Set up workspace.
+$command = 'rm -rf ' . TMPDIR;
+
+system($command) and die("\n");
+
+
+$command = 'mkdir -p ' . TMPDIR;
+
+system($command) and die("\n");
+
+if ($directory1) 
+{
+
+   if (!(chdir($directory1)))
+   {
+
+      $string =
+      "main(): Unable to access directory [$directory1]: $!\n"  .
+      "Load status: FAIL.\n"                                    .
+      "INGEST FAILED.\n"                                        .
+      SCRIPT_NAME . " terminated on ERROR.\n\n";
+
+      die($string);
+
+   }
+
+}
+
+unless ($isVerifyOnly) 
+{
+
+   # Make user validate input.
+   if ($dataFilePattern) 
+   {
+
+      $fileCount = `ls -l $dataFilePattern|wc -l`;
+
+      chomp($fileCount);
+
+      $string =
+      "\nLoading $fileCount $table ($dataFilePattern) files using command:\n\n" .
+      "sqlldr $DB_USER/password\@$DB_NAME -direct control=file.ctl\n\n";
+
+      print($string);
+
+   }
+   elsif ($dataFile2) 
+   {
+
+      $string = 
+      "Updating $table using a command:\n\n"          .
+      "sqlplus -silent $DB_USER/$DB_PSWD\@$DB_NAME \@" .
+      basename($dataFile2) . "\n\n";
+
+      print($string); 
+
+   }
+   else 
+   {
+
+      $string =
+      "I do not understand what you are trying to do.\n"  .
+      "Load status: FAIL.\n"                              .
+      "INGEST FAILED.\n"                                  .
+      SCRIPT_NAME . " terminated on ERROR.\n\n";
+
+      usage($string);
+
+   }
+
+
+
+   $answer = ''; 
+
+   if (!($isYes))
+   {
+
+      $string =
+      'Continue? [y/n]: '; 
+
+      print($string);
+
+      $answer = <STDIN>;
+
+
+      if (($answer !~ /^$/)
+          &&
+          ($answer !~ /y/i))
+      {
+
+         $string =
+         "main(): Aborting.\n"                    .
+         "Load status: FAIL.\n"                   .
+         "INGEST FAILED.\n"                       .
+         SCRIPT_NAME . " terminated on ERROR.\n\n";
+
+         die($string);
+
+      }
+
+   }
+
+
+   # Perform work.
+   checkManifest() if ($isCheckManifest);
+
+
+   createOracleFunctions() if ($isCreateFunctions);
+
+
+   if ($dataFilePattern) 
+   {
+        
+      $manifestFileFullPath = 
+      $dataDirectoryFullPath . MANIFEST;   
+
+      $keplerIDHashRef = getKeplerIDsFromFile($dataDirectoryFullPath,
+                                              $manifestFileFullPath);
+
+      $isDataInTable = isDataInCM_KIC($keplerIDHashRef);
+
+       
+      if ($isDataInTable == TRUE)
+      {
+
+         $string = 
+         "Matching data found in table [CM_KIC].\n"  .
+         "Load status: FAIL.\n"                      .
+         "INGEST FAILED.\n"                          .
+         SCRIPT_NAME . " terminated.\n\n";
+
+         die($string);
+
+      }
+ 
+
+      $isOkToCleanUp = FALSE;
+
+      generateCtlFiles($dataFilePattern, $dataFile2, $table, $body);
+
+      runLoadScript(generateLoadScript($dataFilePattern, $table));
+
+      $isOkToCleanUp = TRUE;
+
+   } 
+   else 
+   {
+
+      $baseName = basename($dataFile2);
+
+      $string =
+      "+sqlplus -silent $DB_USER/$DB_PSWD\@$DB_NAME \@" .
+      "$baseName\n";
+
+      print($string);
+
+      $command =
+      "sqlplus -silent $DB_USER/$DB_PSWD\@$DB_NAME \@" .
+      "$baseName > /dev/null"; 
+
+
+      if ((system($command) >> 8) != SUCCESS)
+      {
+
+         $string =  
+         "main(): Unable to execute commands in [$dataFile2].\n"  .
+         "Load status: FAIL.\n"                                   .
+         "INGEST FAILED.\n"                                       .
+         SCRIPT_NAME . " terminated on ERROR.\n\n";
+
+         die($string);
+
+      }
+
+   }
+
+   if ($isCreateFunctions == TRUE)
+   {
+
+      deleteOracleFunctions();
+
+   }
+
+}
+
+
+verify($dataFilePattern);
+
+
+{
+
+   if ($isOkToCleanUp) 
+   {
+
+      $command = 'rm -rf ' . TMPDIR;
+
+      system($command);
+
+   } 
+   elsif (-d TMPDIR) 
+   {
+
+      $string = 
+      'sqlldr control files have been left in '                 .
+      TMPDIR . 'for inspection. They can be large, especially ' .
+      'in the case of CM_KIC table, so delete them '            .
+      "when you are done.\n";
+
+      print($string);
+
+   }
+
+}
+
+
+$string = 
+"Load status: SUCCESS.\n"                  .
+"INGEST SUCCESSFUL.\n"                     .
+SCRIPT_NAME . " terminated on SUCCESS.\n\n";
+
+print($string);
+
+
+exit(SUCCESS);
+
+
+# END main
+################################################################################
+
+
+
+################################################################################
+# Display usage.
+sub usage 
+{
+
+my ($error) = @_;
+
+my $string = undef;
+
+
+   if ($error) 
+   {
+
+      print($error);
+
+
+      $string =
+      'Usage: ' . SCRIPT_NAME                                                                               .
+      " -t [table_name] -b [database] -u [user_name] -p [password] -d [path_to_input_directory(ies)].\n\n"  .
+      'Type [' . SCRIPT_NAME . " -h] for help.\n\n";
+
+      die($string);
+
+   } 
+   else 
+   {
+ 
+      system('pod2text ' . $0 . '| ${PAGER:-less}');
+
+      exit(SUCCESS);
+
+   }
+
+} # END sub usage
+################################################################################
+
+
+################################################################################
+# Verify data integrity.
+sub checkManifest 
+{
+
+my $out = TMPDIR . '/md5sum.out';
+
+my $error = TMPDIR . '/md5sum.err';
+
+my $command = undef;
+
+my $string = undef; 
+
+
+   $command = MD5SUM_COMMAND . ' ' . MANIFEST . " 2> $error | grep -v OK > $out";
+
+   system($command);
+
+   if (-s $out) 
+   {
+
+      system("cat $out > /dev/stderr");
+
+      print("\n");
+
+      exit(FAIL);
+
+   }
+
+
+   if (-s $error)
+   {
+
+      system("cat $error > /dev/stderr");
+
+      print("\n");
+
+      exit(FAIL);
+
+   }
+
+
+   print("\n");
+
+
+} # END sub checkManifest 
+################################################################################
+
+
+################################################################################
+# generateCtlFiles($pattern, $dataFile2) - Generate ctl files
+#
+# If $dataFile2 is non-null, then getSkyGroupIds() is run on it and
+# insertSkyGroupId is used to inline the data into the control file. If
+# $pattern matches $table.mrg, then a control file that creates the table
+# table is automatically generated. Otherwise $pattern matches a set of data
+# files (.mrg) for which control files should load.
+sub generateCtlFiles 
+{
+
+my ($dataFilePattern, 
+    $dataFile, 
+    $table, 
+    $body) = @_;
+
+my @files = ();
+
+my $file = undef;
+
+my $fileCount = 0;
+
+my $filename = undef;
+
+my $ctlFile = undef;
+
+my $data_file = undef;
+
+my $line = undef;
+
+my $string = undef;
+
+my $cwd = undef;
+
+my $i = 0;
+
+
+   if ($dataFile) 
+   {
+
+      getSkyGroupIds($dataFile);
+
+   }
+
+   @files = getBasenames($dataFilePattern);
+
+   $fileCount = scalar(@files);
+
+   $string =
+   "Generating $fileCount control file"  .
+   (($fileCount > 1) ? 's' : '') . '...';
+
+   print($string);
+    
+   if ($dataFile) 
+   {
+
+      # This process takes a while so indicate progress.
+      print("\n");
+
+   }
+
+   $i = 0;
+
+   foreach $file (@files) 
+   {
+
+      $filename = TMPDIR . "/${file}.ctl";
+
+
+      if (!(open($ctlFile, ">$filename")))
+      {
+
+         $string =
+         "generateCtlFiles(): Unable to create file [$filename].\n"  .
+         "Load status: FAIL.\n"                                      .
+         "INGEST FAILED.\n"                                          .
+         SCRIPT_NAME . " terminated on ERROR.\n\n";
+
+         die($string);
+
+      }
+
+
+      print($ctlFile "load data\n");
+
+      $data_file = "${file}.mrg";
+
+      if ($dataFile) 
+      {
+
+         $i++;
+
+         $line = sprintf("  %d/%d files %d%% [%s]",
+                           $i, $fileCount, $i*100/$fileCount, $data_file);
+
+         printf("\r%-${WIDTH}s", $line);
+
+         print($ctlFile 'infile *');
+
+      } 
+      elsif ($file eq $table) 
+      {
+
+         print($ctlFile 'infile *');
+
+      } 
+      else 
+      {
+
+         chomp($cwd = getcwd);
+
+         print($ctlFile "infile '$cwd/${data_file}'\n");
+
+      }
+
+      print($ctlFile $body);
+
+      if ($dataFile or ($file eq $table)) 
+      {
+            
+         print(FILE_HANDLE "begindata\n");
+
+      }
+
+      if ($dataFile) 
+      {
+
+         insertSkyGroupId($data_file, $ctlFile);
+
+      }
+
+      close($ctlFile);
+
+   }
+
+
+   $string = 
+   "\rGenerating " . $fileCount . " control file" .
+   (($fileCount > 1) ? "s" : "") . "\n\n";
+
+   print($string);
+
+         
+} # sub generateCtlFiles
+################################################################################
+
+
+################################################################################
+# Generate lookup table for KEPLER_ID to SKY_GROUP_ID.
+# Updates global hash %kidToSkyGroupIdHash.
+# Input file has the following format:
+#   sky_groupid|kepler_id
+sub getSkyGroupIds 
+{
+
+my ($dataFile) = @_;
+
+my $line = 0;
+
+my @fields = ();
+
+my $string = undef;
+
+
+
+   if (!(open(SQL, $dataFile)))
+   {
+
+      $string =
+      "getSkyGroupIds(): Unable to open file [$dataFile]: $!\n"  .
+      "Load status: FAIL.\n"                                     .
+      "INGEST FAILED.\n"                                         . 
+       SCRIPT_NAME . " terminated on ERROR.\n\n";
+
+      die($string);
+
+   }
+
+
+   $string =
+   'Generating KEPLER_ID to SKY_GROUP_ID mapping from ' .
+   basename($dataFile)                                  .
+   '...';  
+
+   print($string);
+        
+ 
+   $line = 1;
+
+   while (<SQL>) 
+   {
+
+      chomp();
+
+      @fields = split(/\|/);
+
+      if (scalar(@fields) != 2) 
+      {
+
+         $string = 
+         "\ngetSkyGroupIds(): $dataFile: Line $line malformed.\n"  .
+         "Load status: FAIL.\n"                                    .
+         "INGEST FAILED.\n"                                        .
+         SCRIPT_NAME . " terminated on ERROR.\n\n";
+
+         die($string);
+
+      }
+
+      $line++;
+
+      $kidToSkyGroupIdHash{$fields[1]} = $fields[0];
+
+   }
+
+
+   close(SQL);
+
+
+} # END sub getSkyGroupIds
+################################################################################
+
+
+################################################################################
+# Update each row in the given file by adding the appropriate SKY_GROUP_ID for
+# the KEPLER_ID. Uses global hash %kidToSkyGroupIdHash.
+sub insertSkyGroupId 
+{
+
+my ($datafile, 
+    $file) = @_;
+
+my $keplerId = undef;
+
+my $skyGroupId = undef;
+
+my $string = undef;
+
+
+   if (!(open(DATA, $datafile)))
+   {
+    
+      $string = 
+      "insertSkyGroupId(): Unable to open $datafile: $!\n"  .
+      "Load status: FAIL.\n"                                .
+      "INGEST FAILED.\n"                                    .
+      SCRIPT_NAME . " terminated on ERROR.\n\n";
+ 
+      die($string);
+
+   }
+
+   while (<DATA>) 
+   {
+
+      chomp();
+
+      $keplerId = (split(/\|/))[$KEPLER_ID_COL];
+
+      $skyGroupId = $kidToSkyGroupIdHash{$keplerId};
+
+      $skyGroupId = defined($skyGroupId) ? $skyGroupId : 0;
+
+      print($file "$_|$skyGroupId\n");
+
+      $rowCount++;
+
+   }
+
+
+   close(DATA);
+
+
+} # END sub insertSkyGroupId
+################################################################################
+
+
+################################################################################
+# Create Oracle helper functions.
+sub createOracleFunctions 
+{
+
+my $command = undef;
+
+my $string = undef;
+
+
+   $string = 
+   "\nCreating Oracle functions ($FUNCTION_LIST)...";
+
+   print($string);
+
+
+   $string =
+   'createOracleFunctions(): Unable to create file ' . SQL_TMP_FILE . "\n";     
+
+   if (!(open(FILE, '>' . SQL_TMP_FILE)))
+   {
+
+      $string =
+      'createOracleFunctions(): Unable to create file ' . SQL_TMP_FILE . "\n"  .
+      "Load status: FAIL.\n"                                                   .
+      "INGEST FAILED.\n"                                                       .
+      SCRIPT_NAME . " terminated on ERROR.\n\n";
+  
+      die($string);
+
+   }
+
+
+   $string =
+   "-- AUTOGENERATED FILE (by " . SCRIPT_NAME . ")\n";
+
+   print(FILE $string); 
+
+   print(FILE $CREATE_FUNCTIONS);
+
+   close(FILE);
+
+   $command = 
+   "sqlplus -silent $DB_USER/$DB_PSWD\@$DB_NAME \@" . SQL_TMP_FILE .
+   '> /dev/null';
+
+   if ((system($command) >> 8) != SUCCESS)
+   {
+
+      $string =
+      'createOracleFunctions(): Unable to execute commands in ' . SQL_TMP_FILE . "\n" .
+      "Load status: FAIL.\n"                                                          .
+      "INGEST FAILED.\n"                                                              .
+      SCRIPT_NAME . " terminated on ERROR.\n\n";
+ 
+      die($string);
+
+   }
+
+
+} # END sub createOracleFunctions
+################################################################################
+
+
+################################################################################
+# Purge Oracle helper functions.
+sub deleteOracleFunctions 
+{
+
+my $command = undef;
+
+my $string = undef;
+
+
+   $string = 
+   "Deleting Oracle functions ($FUNCTION_LIST)...";
+
+   print($string);
+
+
+   if (!(open(FILE, '>' . SQL_TMP_FILE)))
+   {
+
+      $string = 
+      'deleteOracleFunctions(): Unable to create file ' . SQL_TMP_FILE . "\n" .
+      "Load status: FAIL.\n"                                                  .
+      "INGEST FAILED.\n"                                                      .
+      SCRIPT_NAME . " terminated on ERROR.\n\n";
+
+      die($string);
+
+   }
+
+   print(FILE "-- AUTOGENERATED FILE (by ", SCRIPT_NAME, ")\n");
+
+   print(FILE $DROP_FUNCTIONS);
+
+   close(FILE);
+
+
+   $command = 
+   "sqlplus -silent $DB_USER/$DB_PSWD\@$DB_NAME \@" . SQL_TMP_FILE .
+   '> /dev/null';
+
+   if ((system($command) >> 8) != SUCCESS)
+   {
+
+      $string =
+      'deleteOracleFunctions(): Unable to execute commands in ' . SQL_TMP_FILE . "\n" .
+      "Load status: FAIL.\n"                                                          .
+      "INGEST FAILED.\n"                                                              .
+      SCRIPT_NAME . " terminated on ERROR.\n\n";
+ 
+      die($string);
+
+   }
+
+
+   unlink(SQL_TMP_FILE);
+
+
+} # END sub deleteOracleFunctions
+################################################################################
+
+
+################################################################################
+# Generate the final load.sh script.
+sub generateLoadScript 
+{
+
+my ($pattern, 
+    $table) = @_;
+
+my $script = TMPDIR . "/${table}-load.sh";
+
+my $string = undef;
+
+
+   $string = 
+   "Generating $script..."; 
+
+   print($string);
+
+
+   $string = 
+   "generateLoadScript(): Unable to create script: $script \n"; 
+
+   if (!(open(FILE, ">$script")))
+   {
+
+      $string = 
+      "generateLoadScript(): Unable to create script: $script \n" .
+      "Load status: FAIL.\n"                                      .
+      "INGEST FAILED.\n"                                          .
+      SCRIPT_NAME . " terminated on ERROR.\n\n";
+
+      die($string);
+
+   }
+
+
+   $string =
+   "#! /bin/sh\n"  .
+   '# AUTOGENERATED FILE (by ' . SCRIPT_NAME . ")\n\n";
+
+   print(FILE $string); 
+
+
+   print(FILE 'set ', 
+              join(' ', getBasenames($pattern)), 
+              "\n");
+
+   print(FILE "i=1\n");
+
+   print(FILE "for file; do\n");
+
+   print(FILE '    percent=`expr $i \* 100 / $#`', "\n");
+
+   print(FILE '    echo -en "\r  $i/$# files $percent% [$file]             "', "\n");
+
+   print(FILE '    i=`expr $i + 1`', "\n");
+
+   print(FILE "    sqlldr $DB_USER/$DB_PSWD\@$DB_NAME -direct ",
+              'control=$file.ctl > /dev/null || exit 1', 
+              "\n");
+
+   print(FILE "done\n");
+
+
+   close(FILE);
+
+   system("chmod +x $script");
+
+
+   return($script);
+
+
+} # sub generateLoadScript
+################################################################################
+
+
+################################################################################
+# Run the load script.
+sub runLoadScript 
+{
+
+my ($script) = @_;
+
+my $olddir = getcwd;
+
+my $string = undef;
+
+
+   $string =
+   "Running $script...\n"; 
+
+   print($string);
+
+
+   if (!(chdir(dirname($script))))
+   {
+     
+      $string =
+      "runLoadScript(): Unable to change directory to " . dirname($script) . ": $!\n"  .
+      "Load status: FAIL.\n"                                                           .
+      "INGEST FAILED.\n"                                                               .
+      SCRIPT_NAME . " terminated on ERROR.\n\n";
+
+      die($string);
+
+   }
+
+
+   # Prepend ./ in case . is not in path.
+   if ((system('./' . basename($script)) >> 8) != SUCCESS)
+   {
+
+      $string = 
+      "\nrunLoadScript(): Problems running script [$script].\n"                       .
+      "Inspect .log files and fix the problem then run script [$script] directly.\n"  .
+      "Load status: FAIL.\n"                                                          .
+      "INGEST FAILED.\n"                                                              .
+      SCRIPT_NAME . " terminated on ERROR.\n\n";
+
+      die($string);
+
+   }
+
+
+   if (!(chdir($olddir)))
+   {
+     
+      $string =
+      "runLoadScript(): Unable to access directory [$olddir]: $!\n"  .
+      "Load status: FAIL.\n"                                         .
+      "INGEST FAILED.\n"                                             .
+      SCRIPT_NAME . " terminated on ERROR.\n\n";     
+
+      die($string);
+
+   }
+
+} # sub runLoadScript
+################################################################################
+
+
+################################################################################
+# List the files in the directory without the .mrg suffix. Also handles
+# special pattern ${table}.mrg which doesn't have real files associated with
+# it.
+sub getBasenames 
+{
+
+my ($pattern) = @_;
+
+my @files = ();
+
+my $file = undef;
+
+my @basenames = ();
+
+my $string = undef;
+
+
+   if ($pattern eq "${table}.mrg") 
+   {
+
+      @files = ("${table}.mrg");
+    
+   } 
+   else 
+   {
+
+      @files = `ls -l $pattern`;
+
+   }
+    
+   foreach $file (@files) 
+   {
+
+      if ($file =~ /(\S*).mrg/) 
+      {
+
+         push(@basenames, $1);
+
+      }
+
+   }
+
+
+   return(@basenames);
+
+
+} # END sub getBasenames
+################################################################################
+
+
+################################################################################
+# Perform some minor data validation.
+# SOC_REQ_IMPL 158.CM.1
+sub verify 
+{
+
+my ($pattern) = @_;
+
+my $string = undef;
+
+my $query = undef;
+
+
+   if ($rowCount == 0) 
+   {
+
+      # --verify-only: Calculate number of rows via data files.
+      # Use tail to get total line.
+      $rowCount = (split(' ', `wc -l $pattern|tail -1`))[0];
+    
+   }
+
+   # Compare expected rows with actual rows in database.
+   $string =
+   "Expected $rowCount records.\nGot:"; 
+
+   print($string);
+
+
+   $query = 
+   "SELECT COUNT(1) FROM $table"; 
+
+   query($query);
+
+   # Extra for CM_KIC.
+   if ($table eq CM_KIC) 
+   {
+
+      # Objects in FOV.
+      $string = 
+      'Objects in field of view: '; 
+
+      print($string);
+
+
+      $query =
+      "SELECT COUNT(1) FROM $table WHERE sky_group_id != 0"; 
+ 
+      query($query);
+
+
+      # Non-stellar objects.
+      $string =
+      'Non-stellar objects (galaxy == 1): ';
+
+      print($string);
+
+
+      $query =
+      "SELECT COUNT(1) FROM $table WHERE galaxy = 1";
+
+      query($query);
+
+
+      $string =
+      'Unknown objects (galaxy == null): ';
+
+      print($string);
+
+
+      $query =
+      "SELECT COUNT(1) FROM $table WHERE galaxy IS NULL";
+
+      query($query);
+
+   }
+
+
+} # END sub verify
+################################################################################
+
+
+################################################################################
+# Perform a single query.
+sub query 
+{
+
+my ($query) = @_;
+
+my $command = "sqlplus -silent $DB_USER/$DB_PSWD\@$DB_NAME \@" . SQL_TMP_FILE . ' ';
+
+my $string = undef;
+
+
+   if (!(open(FILE_HANDLE, '>' . SQL_TMP_FILE)))
+   {
+
+      $string =
+      'query(): Unable to create file ' . SQL_TMP_FILE . "\n" .
+      "Load status: FAIL.\n"                                  .
+      "INGEST FAILED.\n"                                      .
+      SCRIPT_NAME . " terminated on ERROR.\n\n";
+
+      die($string);
+
+   }
+
+
+   print(FILE_HANDLE "$query;\nEXIT;\n");
+
+   close(FILE_HANDLE);
+
+
+   if ((system($command) >> 8) != SUCCESS)
+   {    
+
+      $string = 
+      'query(): Unable to execute commands in ' . SQL_TMP_FILE . "\n" .
+      "Load status: FAIL.\n"                                          .
+      "INGEST FAILED.\n"                                              .
+      SCRIPT_NAME . " terminated on ERROR.\n\n";
+
+      die($string);
+
+   }
+
+
+   unlink(SQL_TMP_FILE);
+
+
+} # END sub query
+################################################################################
+
+
+################################################################################
+sub getKeplerIDsFromFile
+{
+
+my ($dataDirectoryFullPath,
+    $manifestFileFullPath) = @_;
+
+my $keplerIDHashRef = {};
+
+my @manifestFileContentsArray = `less $manifestFileFullPath`;
+
+my $line = undef;
+
+my @splitArray = ();
+
+my $fileName = undef;
+
+my $dataFileFullPath = undef;
+
+my @dataFileContentsArray = ();
+
+my $keplerIDArrayRef = [];
+
+my $string = undef;
+
+my $i = 0;
+
+
+   foreach $line (@manifestFileContentsArray)
+   {
+
+      chomp($line);
+
+      $line =~ s/.*\s+(.*\.mrg)/$1/xs;
+
+      $fileName = $1;
+
+      $dataFileFullPath =
+      $dataDirectoryFullPath . $fileName;
+
+      @dataFileContentsArray =
+      `cat $dataFileFullPath`;
+
+
+      for ($i = 0; $i < @dataFileContentsArray; $i++)
+      {
+
+         @splitArray = split(/\|/, $dataFileContentsArray[$i]);
+
+         $keplerIDArrayRef->[$i] = $splitArray[15];
+
+      }
+
+      $keplerIDHashRef->{$fileName} = {};
+
+      $keplerIDHashRef->{$fileName} = $keplerIDArrayRef; 
+
+   }
+
+
+   return($keplerIDHashRef);
+
+
+} # END sub getKeplerIDsFromFile
+################################################################################
+
+
+################################################################################
+sub isDataInCM_KIC
+{
+
+my ($keplerIDHashRef) = @_;
+
+my @keysArray = sort(keys(%$keplerIDHashRef));
+
+my $key = undef;
+
+my $keplerIDArrayRef = [];
+
+my $keplerID = undef;
+
+my $keplerIDSet = undef;
+
+my $dbConnectString = undef;
+
+my $sqlQuery = undef;
+
+my $command = undef; 
+
+my $sqtmPath = undef;
+
+my $outputFileFullPath = undef;
+
+my @splitArray = ();
+
+my $fileContentsArrayRef = [];
+
+my $numberMatchingRecords = undef;
+
+my $isDataInCM_KIC = FALSE;
+
+my $string = undef;
+
+my $i = 0;
+
+my $j = 0;
+
+
+   @splitArray = split(/\//, SQL_TMP_FILE);
+
+   pop(@splitArray);
+
+   $sqtmPath = join('/', @splitArray);
+
+   $outputFileFullPath = "$sqtmPath/keplerID.txt";
+
+   $dbConnectString = "$DB_USER/$DB_PSWD\@$DB_NAME";
+
+   $keplerIDSet = '';
+
+   for ($i = 0; $i < @keysArray; $i++)
+   {
+
+      $keplerIDArrayRef = 
+      $keplerIDHashRef->{$keysArray[$i]};
+
+      for ($j = 0; $j < @$keplerIDArrayRef; $j++)
+      { 
+
+         $keplerIDSet .= "$keplerIDArrayRef->[$j],";
+
+         if (($j == $#$keplerIDArrayRef)
+             ||
+             (($j > 0)
+              &&
+              ($j % 100) == 0))
+         {
+
+            chop($keplerIDSet);
+
+            $sqlQuery =
+            "SET HEADING OFF;\n"                         .
+            'SELECT UNIQUE kepler_id FROM CM_KIC '       .
+            "WHERE kepler_id IN ($keplerIDSet);\nEXIT;\n";          
+      
+            $string =
+            "Unable to open file [" .
+            SQL_TMP_FILE .
+            "].\n" .
+            SCRIPT_NAME .
+            " terminated on ERROR.\n\n";
+
+            open(FILE_HANDLE, '>', SQL_TMP_FILE) || die($string);
+ 
+            print(FILE_HANDLE $sqlQuery);
+
+            close(FILE_HANDLE); 
+
+            $command = 
+            "sqlplus -silent $dbConnectString \@" . SQL_TMP_FILE . " >> $outputFileFullPath";
+
+            if ((system($command) >> 8) != SUCCESS)
+            {
+
+               $string =
+               'isDataInCM_KIC(): Unable to execute command in ' . SQL_TMP_FILE . "\n" .
+               "Load status: FAIL.\n"                                                  .
+               "INGEST FAILED.\n"                                                      .
+               SCRIPT_NAME . " terminated on ERROR.\n\n";
+   
+               die($string);
+
+            }
+
+            unlink(SQL_TMP_FILE);
+
+            $keplerIDSet = '';
+
+         }
+
+      }
+
+   }
+
+
+   @$fileContentsArrayRef = `cat $outputFileFullPath`;
+
+   $numberMatchingRecords = 0;
+
+   for ($i = 0; $i < @$fileContentsArrayRef; $i++)
+   {
+
+      if ($fileContentsArrayRef->[$i] =~ s/^\s+(\d+)\s*$//xs)
+      {
+
+         $keplerID = $1;
+
+         if (defined($keplerID))
+         {
+
+            $numberMatchingRecords++;
+
+         }
+
+      }
+
+   }
+
+
+   $isDataInCM_KIC = FALSE;
+
+   if ($numberMatchingRecords > 0)
+   {
+
+      $isDataInCM_KIC = TRUE;
+
+      $string =
+      "[$numberMatchingRecords] matching kepler_ids found in table [CM_KIC].\n\n" .
+      "The list of matching kepler_ids is available in file [$outputFileFullPath].\n\n";
+
+      print($string);
+
+   }
+
+
+   return($isDataInCM_KIC);
+
+
+} # END sub isDataInCM_KIC
+################################################################################
+
+
+
+################################################################################
+sub getDirectoryFullPath
+{
+
+my ($directory1, 
+    $directory2) = @_;
+
+my $directoryFullPath = getcwd;
+
+my $string = undef;
+
+
+   if (defined($directory1))
+   {
+
+      $directoryFullPath = $directory1;
+
+   }
+   elsif (defined($directory2))
+   {
+
+      $directoryFullPath = $directory2;
+
+   }
+   else
+   {
+
+      $string =
+      "getDirectoryFullPath(): Unable to determine directory path.\n"  .
+      "Load status: FAIL.\n"                                           .
+      "INGEST FAILED.\n"                                               .
+      SCRIPT_NAME . " terminated on ERROR.\n\n";
+
+      die($string);
+
+   }
+
+
+   $directoryFullPath =~ s/^(.*)(\/+)$//xs;
+
+   $directoryFullPath = $1 . '/';
+
+
+   return($directoryFullPath);
+
+
+} # sub getDirectoryFullPath
+################################################################################
+
+
+
+################################################################################
+sub getDatabaseConnectionData
+{
+
+my $keplerPropertiesFilePath = KEPLER_PROPERTIES_FILE_PATH;
+
+my $fileContents = undef;
+
+my @fileContentsArray = ();
+
+my $usernamePasswordHashRef = {};
+
+my $isContinue = TRUE;
+
+my $string = undef;
+
+my $i = 0;
+
+
+   if (!(-e $keplerPropertiesFilePath))
+   {
+
+      $string = "File [$keplerPropertiesFilePath] not found.\n\n";
+
+      print($string);
+
+      $isContinue = FALSE;
+
+   }
+
+
+   if ($isContinue == TRUE)
+   {
+
+      $fileContents = `cat $keplerPropertiesFilePath`; 
+
+      if (length($fileContents) == 0)
+      {
+
+         $string = "Unable to open input file [$keplerPropertiesFilePath]].\n\n";
+   
+         print($string); 
+
+      }
+      else
+      {
+
+         @fileContentsArray = split(/\n/, $fileContents);
+
+         $i = $#fileContentsArray;
+ 
+         while ($i > 0)
+         {
+
+            if ($fileContentsArray[$i] =~ s/^hibernate.connection.username\s*\=\s*(\w+)\s*$//xs)
+            { 
+
+               $usernamePasswordHashRef->{DB_USER} = $1;
+
+            }
+
+
+            if ($fileContentsArray[$i] =~ s/^hibernate.connection.password\s*\=\s*(\w+)\s*$//xs)
+            {
+
+               $usernamePasswordHashRef->{DB_PSWD} = $1;
+
+            }
+
+
+            if ($fileContentsArray[$i] =~ s/^hibernate.connection.url\s*\=\s*.*\/(\w+)\s*$//xs)
+            {
+
+               $usernamePasswordHashRef->{DB_NAME} = $1;
+
+            }
+
+
+            if ((exists($usernamePasswordHashRef->{DB_USER}))
+                &&
+                (exists($usernamePasswordHashRef->{DB_PSWD}))
+                &&
+                (exists($usernamePasswordHashRef->{DB_NAME})))
+ 
+            {
+
+               $i = 0;
+
+            }
+
+            $i--;
+
+         }
+
+      }
+
+   }
+
+
+   return($usernamePasswordHashRef); 
+
+
+} # END sub getDatabaseConnectionData
+################################################################################
+
+

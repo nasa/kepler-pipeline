@@ -1,0 +1,99 @@
+#********************************************************************
+#
+# Wrapper Properties for Filestore
+#
+#********************************************************************
+# 
+# Copyright 2017 United States Government as represented by the
+# Administrator of the National Aeronautics and Space Administration.
+# All Rights Reserved.
+# 
+# This file is available under the terms of the NASA Open Source Agreement
+# (NOSA). You should have received a copy of this agreement with the
+# Kepler source code; see the file NASA-OPEN-SOURCE-AGREEMENT.doc.
+# 
+# No Warranty: THE SUBJECT SOFTWARE IS PROVIDED "AS IS" WITHOUT ANY
+# WARRANTY OF ANY KIND, EITHER EXPRESSED, IMPLIED, OR STATUTORY,
+# INCLUDING, BUT NOT LIMITED TO, ANY WARRANTY THAT THE SUBJECT SOFTWARE
+# WILL CONFORM TO SPECIFICATIONS, ANY IMPLIED WARRANTIES OF
+# MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, OR FREEDOM FROM
+# INFRINGEMENT, ANY WARRANTY THAT THE SUBJECT SOFTWARE WILL BE ERROR
+# FREE, OR ANY WARRANTY THAT DOCUMENTATION, IF PROVIDED, WILL CONFORM
+# TO THE SUBJECT SOFTWARE. THIS AGREEMENT DOES NOT, IN ANY MANNER,
+# CONSTITUTE AN ENDORSEMENT BY GOVERNMENT AGENCY OR ANY PRIOR RECIPIENT
+# OF ANY RESULTS, RESULTING DESIGNS, HARDWARE, SOFTWARE PRODUCTS OR ANY
+# OTHER APPLICATIONS RESULTING FROM USE OF THE SUBJECT SOFTWARE.
+# FURTHER, GOVERNMENT AGENCY DISCLAIMS ALL WARRANTIES AND LIABILITIES
+# REGARDING THIRD-PARTY SOFTWARE, IF PRESENT IN THE ORIGINAL SOFTWARE,
+# AND DISTRIBUTES IT "AS IS."
+#
+# Waiver and Indemnity: RECIPIENT AGREES TO WAIVE ANY AND ALL CLAIMS
+# AGAINST THE UNITED STATES GOVERNMENT, ITS CONTRACTORS AND
+# SUBCONTRACTORS, AS WELL AS ANY PRIOR RECIPIENT. IF RECIPIENT'S USE OF
+# THE SUBJECT SOFTWARE RESULTS IN ANY LIABILITIES, DEMANDS, DAMAGES,
+# EXPENSES OR LOSSES ARISING FROM SUCH USE, INCLUDING ANY DAMAGES FROM
+# PRODUCTS BASED ON, OR RESULTING FROM, RECIPIENT'S USE OF THE SUBJECT
+# SOFTWARE, RECIPIENT SHALL INDEMNIFY AND HOLD HARMLESS THE UNITED
+# STATES GOVERNMENT, ITS CONTRACTORS AND SUBCONTRACTORS, AS WELL AS ANY
+# PRIOR RECIPIENT, TO THE EXTENT PERMITTED BY LAW. RECIPIENT'S SOLE
+# REMEDY FOR ANY SUCH MATTER SHALL BE THE IMMEDIATE, UNILATERAL
+# TERMINATION OF THIS AGREEMENT.
+#
+
+#include ../etc/soc-common.wrapper.conf
+
+# main() entry point
+wrapper.app.parameter.1=gov.nasa.kepler.fs.server.Server
+wrapper.app.parameter.2=startup
+
+# Log file to use for wrapper output logging.
+wrapper.logfile=logs/fs.wrapper.log
+
+# Title to use when running as a console
+wrapper.console.title=Kepler File Store
+
+# Initial Java Heap Size (in MB)
+
+wrapper.java.initmemory=512
+
+# Maximum Java Heap Size (in MB)
+# DO NOT SET THIS TO THE 32GiByte LIMIT!!!!  Otherwise compressed object
+ references may not work!!!!!!!!!!!!!!!!!!!
+# See also WrapperHeapSizeSetter.java
+wrapper.java.maxmemory=32000
+
+wrapper.java.additional.1=-Dlog4j.configuration=file:etc/fs.log4j.xml
+wrapper.java.additional.2=-Dlog4j.logfile.prefix=logs/fs
+wrapper.java.additional.3=-Dconfig.propfile=etc/kepler.properties
+wrapper.java.additional.4=-XX:+UseParallelGC
+wrapper.java.additional.5=-javaagent:lib/aspectjweaver.jar
+wrapper.java.additional.6=-XX:+UseCompressedOops
+wrapper.java.additional.7=-XX:MaxPermSize=128m
+wrapper.java.additional.8=-XX:+UseMembar
+wrapper.java.additional.9=-XX:MaxDirectMemorySize=1024m
+wrapper.java.additional.10=-XX:NewRatio=4
+wrapper.java.additional.11=-XX:+UseParallelOldGC
+
+#The following enables the use of the oprofle, linux profiler
+#jit agent.  This agent is in the package oprofile-jit
+#wrapper.java.additional.9=-agentlib:jvmti_oprofile
+#The following should be the path to libjvmti_oprofile.so.x.y.z 
+#shared library.
+#wrapper.java.library.path.2=/usr/lib64/oprofile
+
+#The following would enable the YourKit profiler agent. 
+#You would need to make the profiler .so available someplace
+#like in dist/lib
+#wrapper.java.additional.8=-agentlib:yjpagent=disablej2ee,sampling,allocadaptive,usedmem=85,port=8762,dir=/tmp/yourkit-fs-snapshots
+
+#The following would enable the filestore server to be debugged.
+#wrapper.java.additional.8=-Xdebug
+#wrapper.java.additional.9=-Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=8000
+
+#Give the JVM some time to write out a memory dump file.
+wrapper.jvm_exit.timeout=300
+wrapper.shutdown.timeout=300
+wrapper.ping.timeout=0
+wrapper.ping.interval=30
+wrapper.disable_restarts=TRUE
+

@@ -1,0 +1,267 @@
+#!/bin/sh
+#$Id: verifyExport 62782 2017-07-29 17:50:52Z bwohler $
+# 
+# NAME
+#   verifyExport - verifies exported KIC
+#
+# SYNOPSIS
+#   verifyExport originalKicDirectory exportedKicFile
+#   verifyExport originalCharDirectory exportedCharFile
+#   verifyExport exportedKicFile-1 exportedKicFile-2
+#   verifyExport exportedCharFile-1 exportedCharFile-2
+#   verifyExport -h
+# 
+# DESCRIPTION
+#   Verifies that the exported file matches original KIC in the first
+#   form. Verifies that the the exported file matches the original
+#   characteristics in the second form. Compares two exported files in
+#   the third and fourth forms.
+#
+#   This script creates a temporary directory called verifyExport.tmp
+#   in the current directory in which to store intermediary files.
+#   This directory will need approximately the same amount of disk
+#   space taken by both arguments (about 6 GB in the case of the KIC),
+#   so be sure to run this script in a filesystem that is large
+#   enough.
+# 
+#   Options include:
+#   
+#     -h
+#       Display this help.
+#     
+#     originalKicDirectory
+#       A directory that contains a large number of input data files.
+#       In particular, the KIC is found in the d*.mrg files. This
+#       directory must also contain a Manifest file, which is checked.
+#     
+#     exportedKicFile 
+#       This is the file that has been exported by AR. The filename
+#       must be in a form such as kplr20071127152301_kic.txt.
+#   
+#     originalCharDirectory 
+#       A directory that contains a large number of input data files.
+#       In particular, the characteristics are found in the r*.mrg
+#       files.
+#     
+#     exportedCharFile 
+#       This is the file that has been exported by AR. The filename
+#       must be in a form such as kplr20071127152301_ct.txt.
+#
+#   For example:
+#
+#     verifyExport /path/to/kic/kic-v7 /path/to/recdels/gsit-4/v2-28-Nov-2007/kic/kplr20071127152301_kic.txt
+#
+# REQUIREMENTS
+#   160.CM.1
+#   160.CM.2
+# 
+# AUTHOR
+#   Bill Wohler
+#
+# Copyright 2017 United States Government as represented by the
+# Administrator of the National Aeronautics and Space Administration.
+# All Rights Reserved.
+# 
+# This file is available under the terms of the NASA Open Source Agreement
+# (NOSA). You should have received a copy of this agreement with the
+# Kepler source code; see the file NASA-OPEN-SOURCE-AGREEMENT.doc.
+# 
+# No Warranty: THE SUBJECT SOFTWARE IS PROVIDED "AS IS" WITHOUT ANY
+# WARRANTY OF ANY KIND, EITHER EXPRESSED, IMPLIED, OR STATUTORY,
+# INCLUDING, BUT NOT LIMITED TO, ANY WARRANTY THAT THE SUBJECT SOFTWARE
+# WILL CONFORM TO SPECIFICATIONS, ANY IMPLIED WARRANTIES OF
+# MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, OR FREEDOM FROM
+# INFRINGEMENT, ANY WARRANTY THAT THE SUBJECT SOFTWARE WILL BE ERROR
+# FREE, OR ANY WARRANTY THAT DOCUMENTATION, IF PROVIDED, WILL CONFORM
+# TO THE SUBJECT SOFTWARE. THIS AGREEMENT DOES NOT, IN ANY MANNER,
+# CONSTITUTE AN ENDORSEMENT BY GOVERNMENT AGENCY OR ANY PRIOR RECIPIENT
+# OF ANY RESULTS, RESULTING DESIGNS, HARDWARE, SOFTWARE PRODUCTS OR ANY
+# OTHER APPLICATIONS RESULTING FROM USE OF THE SUBJECT SOFTWARE.
+# FURTHER, GOVERNMENT AGENCY DISCLAIMS ALL WARRANTIES AND LIABILITIES
+# REGARDING THIRD-PARTY SOFTWARE, IF PRESENT IN THE ORIGINAL SOFTWARE,
+# AND DISTRIBUTES IT "AS IS."
+#
+# Waiver and Indemnity: RECIPIENT AGREES TO WAIVE ANY AND ALL CLAIMS
+# AGAINST THE UNITED STATES GOVERNMENT, ITS CONTRACTORS AND
+# SUBCONTRACTORS, AS WELL AS ANY PRIOR RECIPIENT. IF RECIPIENT'S USE OF
+# THE SUBJECT SOFTWARE RESULTS IN ANY LIABILITIES, DEMANDS, DAMAGES,
+# EXPENSES OR LOSSES ARISING FROM SUCH USE, INCLUDING ANY DAMAGES FROM
+# PRODUCTS BASED ON, OR RESULTING FROM, RECIPIENT'S USE OF THE SUBJECT
+# SOFTWARE, RECIPIENT SHALL INDEMNIFY AND HOLD HARMLESS THE UNITED
+# STATES GOVERNMENT, ITS CONTRACTORS AND SUBCONTRACTORS, AS WELL AS ANY
+# PRIOR RECIPIENT, TO THE EXTENT PERMITTED BY LAW. RECIPIENT'S SOLE
+# REMEDY FOR ANY SUCH MATTER SHALL BE THE IMMEDIATE, UNILATERAL
+# TERMINATION OF THIS AGREEMENT.
+#
+
+# Display usage. If argument present, it is first printed and the exit
+# status is non-zero. Otherwise, just the usage is displayed and the
+# exit status is 0.
+usage() {
+    if [ $# -gt 0 ]; then
+	echo -e "$1\n"
+    fi
+    cat <<EOF
+verifyExport originalKicDirectory exportedKicFile
+verifyExport originalCharDirectory exportedCharFile
+verifyExport exportedKicFile-1 exportedKicFile-2
+verifyExport exportedCharFile-1 exportedCharFile-2
+verifyExport -h		show this help
+
+This script creates a temporary directory called verifyExport.tmp
+in the current directory in which to store intermediary files.
+This directory will need approximately the same amount of disk
+space taken by both arguments (about 6 GB in the case of the KIC),
+so be sure to run this script in a filesystem that is large
+enough.
+EOF
+    exit $#
+}
+
+# Variables.
+export TMPDIR=verifyExport.tmp		# exported to affect sort
+LINES=1000000				# lines per split file
+SUFFIX_LENGTH=3				# set according to number of files
+splitOptions="--numeric-suffixes --suffix-length=$SUFFIX_LENGTH --lines=$LINES"
+sortOptions="--field-separator=|"
+
+# Parse arguments.
+while [ $# -gt 0 ]; do 
+    case $1 in 
+	-h*) usage;;
+	*) 
+	    if [ "$original" = "" ]; then
+		original=$1;
+	    else
+		file=$1;
+	    fi
+	    ;;
+    esac
+    shift
+done
+if [ "$original" = "" ]; then
+    usage "Source directory parameter missing"
+elif [ ! -e $original ]; then
+    usage "$original: no such file"
+elif [ ! -d $original -a ! -f $original ]; then
+    usage "$original: not a file or directory"
+fi
+if [ "$file" = "" ]; then
+    usage "Export file parameter missing"
+elif [ ! -e $file ]; then
+    usage "$file: no such file"
+fi
+
+# Set type and filenames based upon file.
+case `basename $file | sed -e s/kplr[0-9]*_// -e s/\.txt//` in
+    kic)
+	type=kic
+	files=d*.mrg
+        sortOptions="$sortOptions --key=16,16n";;
+    ct)
+	type=char
+	files=r*.mrg
+        sortOptions="$sortOptions --key=1,1n --key=2,2 --key=3,3n";;
+    *)
+	usage "Unrecognized export file type."
+esac
+
+trap 'rm -rf $TMPDIR; exit 0' SIGHUP SIGINT
+
+# Check manifest.
+if [ -d $original -a $type = kic ]; then
+    echo -n Checking manifest...
+    (cd $original; \
+	md5sum --check Manifest 2> /tmp/Manifest.err | \
+	grep -v OK > /tmp/Manifest.out)
+    echo done
+    if [ -s /tmp/Manifest.out -o -s /tmp/Manifest.err ]; then
+	cat /tmp/Manifest.out > /dev/stderr
+	cat /tmp/Manifest.err > /dev/stderr
+	exit 1
+    fi
+fi
+
+# Set up temporary directory.
+if [ -e $TMPDIR ]; then
+    echo -n Clearing $TMPDIR from previous run...
+    rm -rf $TMPDIR
+    echo done
+fi
+mkdir $TMPDIR
+
+# Sort before splitting to ensure that diff works.
+if [ -d $original ]; then
+    echo -n Splitting files in $original...
+    sort $sortOptions $original/$files | \
+	(cd $TMPDIR; split $splitOptions - in.)
+else
+    echo -n Splitting $original...
+    sed /^#/d $original | sort $sortOptions | \
+	(cd $TMPDIR; split $splitOptions - in.)
+fi
+echo done
+
+# Remove timestamp and END.
+echo -n Splitting $file...
+sed /^#/d $file | sort $sortOptions | \
+    (cd $TMPDIR; split $splitOptions - out.)
+echo done
+
+# Check that the number of splits equal.
+# In the end, the positional parameters will contain in.* or out.*,
+# whichever has more files.
+cd $TMPDIR
+set in.*
+inCount=$#
+set out.*
+outCount=$#
+if [ $inCount != $outCount ]; then
+    echo There are $inCount splits from $original.
+    echo There are $outCount splits from $file.
+    echo There should should be the same number of splits.
+    echo Please investigate splits in $TMPDIR.
+    echo -n "Try comparing them anyway? "
+    read compare
+    if [ "$compare" != y -a "$compare" != Y ]; then
+	exit 1
+    fi
+    if [ $inCount -gt $outCount ]; then
+	set in.*
+    fi
+fi
+
+# Diff splits.
+> diff.out
+errors=0
+suffixStart=`expr length $1 - $SUFFIX_LENGTH + 1`
+for f; do
+    suffix=`expr substr $f $suffixStart $SUFFIX_LENGTH`
+    part=`expr $suffix + 1`
+    echo -n -e "\r                                                          \r"
+    echo -n -e "Comparing part $part of $#..."
+    echo diff in.$suffix out.$suffix >> diff.out
+    diff in.$suffix out.$suffix >> diff.out
+    result=$?
+    if [ $result = 1 ]; then
+	echo -e "\nDifferences found between in.$suffix and out.$suffix"
+    fi
+    if [ $result != 0 ]; then
+	errors=`expr $errors + 1`
+    fi
+done
+echo done
+
+# Summary.
+if [ $errors -gt 0 ]; then
+    echo There were $errors split files that had differences.
+    echo See $TMPDIR/diff.out.
+    exit 1
+else
+    echo The exported file is identical to the input files.
+fi
+
+echo -n Cleaning up...
+cd ..
+rm -rf $TMPDIR
+echo done

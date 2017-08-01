@@ -1,0 +1,512 @@
+
+Instance Summary
+
+ID     Pipeline Name                        State      P-time    
+-----------------------------------------------------------------
+11695  PPA x 4: r9.3.19: Q3 PPA, KSOP-2186  COMPLETED  05:46:27  
+
+Instance ID: 11695
+Instance Name: r9.3.19: Q3 PPA, KSOP-2186
+Instance Priority: 4
+Instance State: COMPLETED
+Instance Software Revisions: [svn+ssh://murzim/repo/soc/tags/release/9.3.19@60029]
+
+Definition Name: PPA x 4
+Definition Version: 0
+Definition ID: 71175596
+
+Pipeline Parameter Sets
+  Parameter Set: ancillaryEngineering (PDC) (type=AncillaryEngineeringParameters, version=4)
+    (no parameters)
+
+  Parameter Set: tpsType (lite) (type=TpsTypeParameters, version=0)
+    tpsType = TPS_LITE
+
+  Parameter Set: fluxType (type=FluxTypeParameters, version=0)
+    fluxType = SAP
+
+  Parameter Set: moduleOutputLists (LC) (type=ModuleOutputListsParameters, version=2)
+    cadenceOfDeathArray = 12935,12935,12935,12935
+    channelForStoringNonChannelSpecificData = 0
+    channelGroupsEnabled = false
+    channelsPerTask = 0
+    deadChannelArray = 5,6,7,8
+
+  Parameter Set: pmd (type=PmdModuleParameters, version=3)
+    adaptiveBoundsXFactorForOutlier = 5.0
+    alertTime = 5.0
+    backgroundCosmicRayEnergyKurtosisAdaptiveXFactor = 5.0
+    backgroundCosmicRayEnergyKurtosisFixedLowerBound = 0.0
+    backgroundCosmicRayEnergyKurtosisFixedUpperBound = 20.0
+    backgroundCosmicRayEnergyKurtosisSmoothingFactor = 0.1
+    backgroundCosmicRayEnergySkewnessAdaptiveXFactor = 5.0
+    backgroundCosmicRayEnergySkewnessFixedLowerBound = -10.0
+    backgroundCosmicRayEnergySkewnessFixedUpperBound = 10.0
+    backgroundCosmicRayEnergySkewnessSmoothingFactor = 0.1
+    backgroundCosmicRayEnergyVarianceAdaptiveXFactor = 5.0
+    backgroundCosmicRayEnergyVarianceFixedLowerBound = 0.0
+    backgroundCosmicRayEnergyVarianceFixedUpperBound = 1.0E9
+    backgroundCosmicRayEnergyVarianceSmoothingFactor = 0.1
+    backgroundCosmicRayHitRateAdaptiveXFactor = 5.0
+    backgroundCosmicRayHitRateFixedLowerBound = 0.0
+    backgroundCosmicRayHitRateFixedUpperBound = 10.0
+    backgroundCosmicRayHitRateSmoothingFactor = 0.1
+    backgroundCosmicRayMeanEnergyAdaptiveXFactor = 5.0
+    backgroundCosmicRayMeanEnergyFixedLowerBound = 0.0
+    backgroundCosmicRayMeanEnergyFixedUpperBound = 30000.0
+    backgroundCosmicRayMeanEnergySmoothingFactor = 0.1
+    backgroundLevelAdaptiveXFactor = 5.0
+    backgroundLevelFixedLowerBound = 100000.0
+    backgroundLevelFixedUpperBound = 500000.0
+    backgroundLevelSmoothingFactor = 0.1
+    blackCosmicRayAdaptiveXFactor = 5.0
+    blackCosmicRayEnergyKurtosisAdaptiveXFactor = 5.0
+    blackCosmicRayEnergyKurtosisFixedLowerBound = 0.0
+    blackCosmicRayEnergyKurtosisFixedUpperBound = 20.0
+    blackCosmicRayEnergyKurtosisSmoothingFactor = 0.1
+    blackCosmicRayEnergySkewnessAdaptiveXFactor = 5.0
+    blackCosmicRayEnergySkewnessFixedLowerBound = -10.0
+    blackCosmicRayEnergySkewnessFixedUpperBound = 10.0
+    blackCosmicRayEnergySkewnessSmoothingFactor = 0.1
+    blackCosmicRayEnergyVarianceAdaptiveXFactor = 5.0
+    blackCosmicRayEnergyVarianceFixedLowerBound = 0.0
+    blackCosmicRayEnergyVarianceFixedUpperBound = 1.0E8
+    blackCosmicRayEnergyVarianceSmoothingFactor = 0.1
+    blackCosmicRayHitRateFixedLowerBound = 0.0
+    blackCosmicRayHitRateFixedUpperBound = 10.0
+    blackCosmicRayHitRateSmoothingFactor = 0.1
+    blackCosmicRayMeanEnergyAdaptiveXFactor = 5.0
+    blackCosmicRayMeanEnergyFixedLowerBound = 0.0
+    blackCosmicRayMeanEnergyFixedUpperBound = 20000.0
+    blackCosmicRayMeanEnergySmoothingFactor = 0.1
+    blackLevelAdaptiveXFactor = 5.0
+    blackLevelFixedLowerBound = -3.0
+    blackLevelFixedUpperBound = 1.8
+    blackLevelSmoothingFactor = 0.1
+    brightnessAdaptiveXFactor = 5.0
+    brightnessFixedLowerBound = 0.8
+    brightnessFixedUpperBound = 1.2
+    brightnessSmoothingFactor = 0.1
+    cdppExpectedAdaptiveXFactor = 5.0
+    cdppExpectedFixedLowerBound = 0.0
+    cdppExpectedFixedUpperBound = 500.0
+    cdppExpectedSmoothingFactor = 0.1
+    cdppMeasuredAdaptiveXFactor = 5.0
+    cdppMeasuredFixedLowerBound = 0.0
+    cdppMeasuredFixedUpperBound = 500.0
+    cdppMeasuredSmoothingFactor = 0.1
+    cdppRatioAdaptiveXFactor = 5.0
+    cdppRatioFixedLowerBound = 0.1
+    cdppRatioFixedUpperBound = 10.0
+    cdppRatioSmoothingFactor = 0.1
+    centroidsMeanColumnAdaptiveXFactor = 5.0
+    centroidsMeanColumnFixedLowerBound = -0.1
+    centroidsMeanColumnFixedUpperBound = 0.1
+    centroidsMeanColumnSmoothingFactor = 0.1
+    centroidsMeanRowAdaptiveXFactor = 5.0
+    centroidsMeanRowFixedLowerBound = -0.1
+    centroidsMeanRowFixedUpperBound = 0.1
+    centroidsMeanRowSmoothingFactor = 0.1
+    compressionAdaptiveXFactor = 5.0
+    compressionFixedLowerBound = 3.0
+    compressionFixedUpperBound = 7.0
+    compressionSmoothingFactor = 0.1
+    darkCurrentAdaptiveXFactor = 5.0
+    darkCurrentFixedLowerBound = -3.0
+    darkCurrentFixedUpperBound = 5.0
+    darkCurrentSmoothingFactor = 0.1
+    debugLevel = 0
+    encircledEnergyAdaptiveXFactor = 5.0
+    encircledEnergyFixedLowerBound = 0.5
+    encircledEnergyFixedUpperBound = 3.0
+    encircledEnergySmoothingFactor = 0.1
+    horizonTime = 30.0
+    initialAverageSampleCount = 10.0
+    ldeUndershootAdaptiveXFactor = 5.0
+    ldeUndershootFixedLowerBound = -2.5
+    ldeUndershootFixedUpperBound = 2.5
+    ldeUndershootSmoothingFactor = 0.1
+    maskedSmearCosmicRayEnergyKurtosisAdaptiveXFactor = 5.0
+    maskedSmearCosmicRayEnergyKurtosisFixedLowerBound = 0.0
+    maskedSmearCosmicRayEnergyKurtosisFixedUpperBound = 20.0
+    maskedSmearCosmicRayEnergyKurtosisSmoothingFactor = 0.1
+    maskedSmearCosmicRayEnergySkewnessAdaptiveXFactor = 5.0
+    maskedSmearCosmicRayEnergySkewnessFixedLowerBound = -10.0
+    maskedSmearCosmicRayEnergySkewnessFixedUpperBound = 10.0
+    maskedSmearCosmicRayEnergySkewnessSmoothingFactor = 0.1
+    maskedSmearCosmicRayEnergyVarianceAdaptiveXFactor = 5.0
+    maskedSmearCosmicRayEnergyVarianceFixedLowerBound = 0.0
+    maskedSmearCosmicRayEnergyVarianceFixedUpperBound = 1.0E8
+    maskedSmearCosmicRayEnergyVarianceSmoothingFactor = 0.1
+    maskedSmearCosmicRayHitRateAdaptiveXFactor = 5.0
+    maskedSmearCosmicRayHitRateFixedLowerBound = 0.0
+    maskedSmearCosmicRayHitRateFixedUpperBound = 10.0
+    maskedSmearCosmicRayHitRateSmoothingFactor = 0.1
+    maskedSmearCosmicRayMeanEnergyAdaptiveXFactor = 5.0
+    maskedSmearCosmicRayMeanEnergyFixedLowerBound = 0.0
+    maskedSmearCosmicRayMeanEnergyFixedUpperBound = 20000.0
+    maskedSmearCosmicRayMeanEnergySmoothingFactor = 0.1
+    minTrendFitSampleCount = 48.0
+    plateScaleAdaptiveXFactor = 5.0
+    plateScaleFixedLowerBound = 3.93
+    plateScaleFixedUpperBound = 4.02
+    plateScaleSmoothingFactor = 0.1
+    plottingEnabled = false
+    smearLevelAdaptiveXFactor = 5.0
+    smearLevelFixedLowerBound = 0.0
+    smearLevelFixedUpperBound = 100000.0
+    smearLevelSmoothingFactor = 0.1
+    targetStarCosmicRayEnergyKurtosisAdaptiveXFactor = 5.0
+    targetStarCosmicRayEnergyKurtosisFixedLowerBound = 0.0
+    targetStarCosmicRayEnergyKurtosisFixedUpperBound = 300.0
+    targetStarCosmicRayEnergyKurtosisSmoothingFactor = 0.1
+    targetStarCosmicRayEnergySkewnessAdaptiveXFactor = 5.0
+    targetStarCosmicRayEnergySkewnessFixedLowerBound = -20.0
+    targetStarCosmicRayEnergySkewnessFixedUpperBound = 20.0
+    targetStarCosmicRayEnergySkewnessSmoothingFactor = 0.1
+    targetStarCosmicRayEnergyVarianceAdaptiveXFactor = 5.0
+    targetStarCosmicRayEnergyVarianceFixedLowerBound = 0.0
+    targetStarCosmicRayEnergyVarianceFixedUpperBound = 9.9999999E14
+    targetStarCosmicRayEnergyVarianceSmoothingFactor = 0.1
+    targetStarCosmicRayHitRateAdaptiveXFactor = 5.0
+    targetStarCosmicRayHitRateFixedLowerBound = 0.0
+    targetStarCosmicRayHitRateFixedUpperBound = 20.0
+    targetStarCosmicRayHitRateSmoothingFactor = 0.1
+    targetStarCosmicRayMeanEnergyAdaptiveXFactor = 5.0
+    targetStarCosmicRayMeanEnergyFixedLowerBound = 0.0
+    targetStarCosmicRayMeanEnergyFixedUpperBound = 1.0E7
+    targetStarCosmicRayMeanEnergySmoothingFactor = 0.1
+    trendFitTime = 5.0
+    twoDBlackAdaptiveXFactor = 5.0
+    twoDBlackFixedLowerBound = 0.0
+    twoDBlackFixedUpperBound = 100000.0
+    twoDBlackSmoothingFactor = 0.1
+    virtualSmearCosmicRayEnergyKurtosisAdaptiveXFactor = 5.0
+    virtualSmearCosmicRayEnergyKurtosisFixedLowerBound = 0.0
+    virtualSmearCosmicRayEnergyKurtosisFixedUpperBound = 20.0
+    virtualSmearCosmicRayEnergyKurtosisSmoothingFactor = 0.1
+    virtualSmearCosmicRayEnergySkewnessAdaptiveXFactor = 5.0
+    virtualSmearCosmicRayEnergySkewnessFixedLowerBound = -10.0
+    virtualSmearCosmicRayEnergySkewnessFixedUpperBound = 10.0
+    virtualSmearCosmicRayEnergySkewnessSmoothingFactor = 0.1
+    virtualSmearCosmicRayEnergyVarianceAdaptiveXFactor = 5.0
+    virtualSmearCosmicRayEnergyVarianceFixedLowerBound = 0.0
+    virtualSmearCosmicRayEnergyVarianceFixedUpperBound = 1.0E8
+    virtualSmearCosmicRayEnergyVarianceSmoothingFactor = 0.1
+    virtualSmearCosmicRayHitRateAdaptiveXFactor = 5.0
+    virtualSmearCosmicRayHitRateFixedLowerBound = 0.0
+    virtualSmearCosmicRayHitRateFixedUpperBound = 10.0
+    virtualSmearCosmicRayHitRateSmoothingFactor = 0.1
+    virtualSmearCosmicRayMeanEnergyAdaptiveXFactor = 5.0
+    virtualSmearCosmicRayMeanEnergyFixedLowerBound = 0.0
+    virtualSmearCosmicRayMeanEnergyFixedUpperBound = 20000.0
+    virtualSmearCosmicRayMeanEnergySmoothingFactor = 0.1
+
+  Parameter Set: pad (type=PadModuleParameters, version=3)
+    adaptiveBoundsXFactorForOutlier = 5.0
+    alertTime = 5.0
+    debugLevel = 1
+    deltaDecAdaptiveXFactor = 5.0
+    deltaDecFixedLowerBound = -0.2
+    deltaDecFixedUpperBound = 0.2
+    deltaDecSmoothingFactor = 0.1
+    deltaRaAdaptiveXFactor = 5.0
+    deltaRaFixedLowerBound = -0.2
+    deltaRaFixedUpperBound = 0.2
+    deltaRaSmoothingFactor = 0.1
+    deltaRollAdaptiveXFactor = 5.0
+    deltaRollFixedLowerBound = -0.2
+    deltaRollFixedUpperBound = 0.2
+    deltaRollSmoothingFactor = 0.1
+    gridColEnd = 770
+    gridColStart = 270
+    gridRowEnd = 770
+    gridRowStart = 270
+    horizonTime = 30.0
+    initialAverageSampleCount = 10.0
+    minTrendFitSampleCount = 48.0
+    plottingEnabled = true
+    trendFitTime = 5.0
+
+  Parameter Set: cadenceType (LC) (type=CadenceTypePipelineParameters, version=0)
+    cadenceType = LONG
+
+  Parameter Set: pag (type=PagModuleParameters, version=2)
+    adaptiveBoundsXFactorForOutlier = 5.0
+    alertTime = 5.0
+    compressionAdaptiveXFactor = 5.0
+    compressionFixedLowerBound = 3.0
+    compressionFixedUpperBound = 7.0
+    compressionSmoothingFactor = 0.1
+    debugLevel = 0
+    horizonTime = 30.0
+    initialAverageSampleCount = 10.0
+    minTrendFitSampleCount = 48.0
+    plottingEnabled = true
+    trendFitTime = 5.0
+
+  Parameter Set: ancillary (type=AncillaryPipelineParameters, version=0)
+    (no parameters)
+
+
+Modules
+
+  Module Definition: pad, version=0
+    Java Classname: PadPipelineModule
+    exe timeout seconds: 180000
+    exe name: pad
+    min memory MB: 0
+    # Tasks (total/completed/failed): 1/1/0
+    Software Revisions for node:[svn+ssh://murzim/repo/soc/tags/release/9.3.19@60029]
+    Parameter Set: cadenceRange (LC,4) (type=CadenceRangeParameters, version=13)
+      binByTargetTable = true
+      endCadence = 11773
+      excludeCadences = 11891:11913,34226:34236,48458:48472,61866:61885
+      minimumBinSize = 1
+      numberOfBins = 1
+      startCadence = 7404
+
+    Parameter Set: taskFileCopy (4) (type=TaskFileCopyParameters, version=13)
+      deleteAfterCopy = true
+      deleteWithoutCopy = false
+      destinationPath = /soc/nfs/production-nfs6/soc-9.3-reprocessing/pipeline_results/lc/ppa/q3/
+      enabled = true
+      excludeWildcards = *.bin
+      failTaskOnError = true
+      uowSymlinksEnabled = false
+      uowSymlinksIncludeCadenceRange = false
+      uowSymlinksIncludeMonths = false
+
+
+  Module Definition: pmd, version=0
+    Java Classname: PmdPipelineModule
+    exe timeout seconds: 180000
+    exe name: pmd
+    min memory MB: 0
+    # Tasks (total/completed/failed): 84/84/0
+    Software Revisions for node:[svn+ssh://murzim/repo/soc/tags/release/9.3.19@60029]
+    Parameter Set: cadenceRange (LC,4) (type=CadenceRangeParameters, version=13)
+      binByTargetTable = true
+      endCadence = 11773
+      excludeCadences = 11891:11913,34226:34236,48458:48472,61866:61885
+      minimumBinSize = 1
+      numberOfBins = 1
+      startCadence = 7404
+
+    Parameter Set: taskFileCopy (4) (type=TaskFileCopyParameters, version=13)
+      deleteAfterCopy = true
+      deleteWithoutCopy = false
+      destinationPath = /soc/nfs/production-nfs6/soc-9.3-reprocessing/pipeline_results/lc/ppa/q3/
+      enabled = true
+      excludeWildcards = *.bin
+      failTaskOnError = true
+      uowSymlinksEnabled = false
+      uowSymlinksIncludeCadenceRange = false
+      uowSymlinksIncludeMonths = false
+
+
+  Module Definition: pag, version=0
+    Java Classname: PagPipelineModule
+    exe timeout seconds: 180000
+    exe name: pag
+    min memory MB: 0
+    # Tasks (total/completed/failed): 1/1/0
+    Software Revisions for node:[svn+ssh://murzim/repo/soc/tags/release/9.3.19@60029]
+    Parameter Set: cadenceRange (LC,4) (type=CadenceRangeParameters, version=13)
+      binByTargetTable = true
+      endCadence = 11773
+      excludeCadences = 11891:11913,34226:34236,48458:48472,61866:61885
+      minimumBinSize = 1
+      numberOfBins = 1
+      startCadence = 7404
+
+    Parameter Set: taskFileCopy (4) (type=TaskFileCopyParameters, version=13)
+      deleteAfterCopy = true
+      deleteWithoutCopy = false
+      destinationPath = /soc/nfs/production-nfs6/soc-9.3-reprocessing/pipeline_results/lc/ppa/q3/
+      enabled = true
+      excludeWildcards = *.bin
+      failTaskOnError = true
+      uowSymlinksEnabled = false
+      uowSymlinksIncludeCadenceRange = false
+      uowSymlinksIncludeMonths = false
+
+
+Data Model Registry
+version=139, locked=true, lockTimestamp=2015-07-17 09:23:50.0
+  type=BAD_PIXELS
+    importTime=2009-02-24 14:00:01.0
+    revision=svn+ssh://murzim/data-repo/trunk/data/flight/so/models/invalid-pixels/09054_01_tklaus_invalid_pixels (LCR=305)
+    description=Added as seed data during r6.2 migration
+    locked=true
+    lockTime=2016-03-16 14:03:15.0
+
+  type=DATA_ANOMALY_FLAGS
+    importTime=2015-07-17 09:07:41.0
+    revision=28
+    description=Default description
+    locked=true
+    lockTime=2016-03-16 14:03:15.0
+
+  type=EB_TRANSIT_PARAMETER
+    importTime=2015-07-15 11:19:18.0
+    revision=2
+    description=kplr20150714170000_ebham.txt: URL: svn+ssh://murzim/data-repo/trunk/data/flight/so/exo_archive/koi_tables/150714_ksop2203/kplr20150714170000_ebham.txt R7203 r9.3.16 KSOP-2203 EB Parameters Model import, kzamudio, 20150715
+    locked=true
+    lockTime=2016-03-16 14:03:15.0
+
+  type=EXTERNAL_TCE
+    importTime=2014-04-02 07:41:02.0
+    revision=2
+    description=r9.1.27: TCE Model import, KSOP-1970 svn+ssh://murzim/data-repo/trunk/data/flight/so/models/external-tce/140401_jlcoughl_q1q16_orphan_dvsuprun/Q16OrphanDVSuppInput.txt R6170 kzamudio 20140402
+    locked=true
+    lockTime=2016-03-16 14:03:15.0
+
+  type=GAIN
+    importTime=2009-02-24 13:59:55.0
+    revision=svn+ssh://murzim/data-repo/trunk/data/flight/so/models/gain/09054_01_tklaus_gain (LCR=299)
+    description=Added as seed data during r6.2 migration
+    locked=true
+    lockTime=2016-03-16 14:03:15.0
+
+  type=GEOMETRY
+    importTime=2009-06-04 20:02:48.0
+    revision=svn+ssh://murzim/data-repo/trunk/data/flight/so/models/geometry/09156_01_pt_geometry (LCR=700)
+    description=Added as seed data during r6.2 migration
+    locked=true
+    lockTime=2016-03-16 14:03:15.0
+
+  type=KIC_EXTENSION
+    importTime=2013-07-15 11:49:05.0
+    revision=1
+    description=r9.0.7: Import UKIRT KIC Extenstion KSOP-1662 svn+ssh://murzim/data-repo/trunk/data/flight/so/catalogs/kicExtensions/ukirt_kic_extension_full_fov.txt R4651, kibrahim, KSOP-1662, 20130715
+    locked=true
+    lockTime=2016-03-16 14:03:15.0
+
+  type=KIC_OVERRIDE
+    importTime=2014-07-01 11:08:39.0
+    revision=6
+    description=Importing the KOM file for Q0-Q17 KSOP-1927, svn+ssh://murzim/data-repo/trunk/data/flight/so/models/kic-overrides/14160_mergedHuberPropertiesBrysonMagnitudes_ksop-1927/mergedPropertiesKepmagsKom_20140609.txt R6318, kzamudio, 20140701
+    locked=true
+    lockTime=2015-09-08 16:23:13.0
+
+  type=LARGEFLATFIELD
+    importTime=2009-06-25 09:41:47.0
+    revision=svn+ssh://murzim/data-repo/trunk/data/flight/so/models/large-flat/09175_01_jvancleve_large-flat (LCR=771)
+    description=Added as seed data during r6.2 migration
+    locked=true
+    lockTime=2016-03-16 14:03:15.0
+
+  type=LEAP_SECONDS
+    importTime=2015-07-14 16:54:06.0
+    revision=svn+ssh://murzim/data-repo/trunk/data/flight/moc/leap-seconds/15162_01_jcampbell_leap_seconds/kplr2015160212506_senm.xml@7164
+    description=Adding the 2015 Leap Second update: naif0011.tls, KSOP-2336, jcampbell, 20150714
+    locked=true
+    lockTime=2016-03-16 14:03:15.0
+
+  type=LINEARITY
+    importTime=2009-06-10 14:37:13.0
+    revision=svn+ssh://murzim/data-repo/trunk/data/flight/so/models/linearity/09153_01_jvancleve_linearity (LCR=683)
+    description=Added as seed data during r6.2 migration
+    locked=true
+    lockTime=2016-03-16 14:03:15.0
+
+  type=OBS_LOG
+    importTime=2015-02-24 10:36:35.0
+    revision=4
+    description=r9.2.31: Importing the Observing Log XML KSOC-4609, svn+ssh://murzim/data-repo/trunk/data/flight/so/misc/data_observing_log/observing-log.xml R6845, kzamudio, 20150224
+    locked=true
+    lockTime=2016-03-16 14:03:15.0
+
+  type=PLANETARY_EPHEMERIS
+    importTime=2009-02-24 16:34:14.0
+    revision=svn+ssh://murzim/data-repo/trunk/data/flight/moc/planetary-ephemeris/09055_01_tklaus_planetary_ephemeris/kplr2009055103710_senm.xml (LCR=327)
+    description=Added as seed data during r6.2 migration
+    locked=true
+    lockTime=2016-03-16 14:03:15.0
+
+  type=POINTING
+    importTime=2015-07-15 10:32:35.0
+    revision=svn+ssh://kzamudio@murzim/data-repo/trunk/data/flight/so/models/pointing/15187_01_kzamudio_pointing_use15062roll_useL2276ephem (LCR=7189)
+    description=r9.3: KSOP-2313 K1+K2 model w/L2276ephem+15062roll svn+ssh://murzim/data-repo/trunk/data/flight/so/models/pointing/15187_01_kzamudio_pointing_use15062roll_useL2276ephem/kplr2015070608_pointing.txt R7189 kzamudio 150715 created by makeNextVersionHistory
+    locked=true
+    lockTime=2015-07-17 09:23:50.0
+
+  type=PRF
+    importTime=2009-05-29 16:26:43.0
+    revision=svn+ssh://murzim/data-repo/trunk/data/flight/so/models/prf/09146_01_sbryson_c039_prf_5prf_delivery (LCR=636)
+    description=Added as seed data during r6.2 migration
+    locked=true
+    lockTime=2016-03-16 14:03:15.0
+
+  type=READNOISE
+    importTime=2009-02-24 14:05:36.0
+    revision=svn+ssh://murzim/data-repo/trunk/data/flight/so/models/read-noise/09054_01_tklaus_read_noise (LCR=302)
+    description=Added as seed data during r6.2 migration
+    locked=true
+    lockTime=2016-03-16 14:03:15.0
+
+  type=ROLLTIME
+    importTime=2015-03-18 13:23:40.0
+    revision=svn+ssh://murzim/data-repo/trunk/data/flight/so/models/roll-time/15062_01_jcamp_roll_time_c6_to_c9_updates (LCR=6866)
+    description=r9.2.33 KSOP-2242 Roll-time update C6 to C9, svn+ssh://murzim/data-repo/trunk/data/flight/so/models/roll-time/15062_01_jcamp_roll_time_c6_to_c9_updates/kplr2015030314_rolltime.txt R6869, kzamudio, 20150318 created by makeNextVersionHistory
+    locked=true
+    lockTime=2015-07-17 09:23:50.0
+
+  type=SATURATION
+    importTime=2011-04-27 15:13:35.0
+    revision=svn+ssh://murzim/data-repo/trunk/data/flight/so/models/saturation/2011111_01_sbryson_saturation_model (LCR=2760)
+    description=r6.2v42444 svn+ssh://murzim/data-repo/trunk/data/flight/so/models/saturation/2011111_01_sbryson_saturation_model/kplr2011042115_saturation.txt R2760 kibrahim 110427 KSOP-844 created by makeNextVersionHistory
+    locked=true
+    lockTime=2016-03-16 14:03:15.0
+
+  type=SCLK
+    importTime=2015-07-15 10:19:23.0
+    revision=svn+ssh://murzim/data-repo/trunk/data/flight/moc/sclk/15138_01_kzamudio_sclk/kplr2015135192506_sknm.xml@7085
+    description=Adding new SCLK: kplr2015135185757.tsc, KSOP-2314, kzamudio, 20150715
+    locked=true
+    lockTime=2016-03-16 14:03:15.0
+
+  type=SMALLFLATFIELD
+    importTime=2009-06-25 10:23:25.0
+    revision=svn+ssh://murzim/data-repo/trunk/data/flight/so/models/small-flat/09174_01_dcaldwell_small_flat (LCR=772)
+    description=Added as seed data during r6.2 migration
+    locked=true
+    lockTime=2016-03-16 14:03:15.0
+
+  type=SPACECRAFT_EPHEMERIS
+    importTime=2015-07-15 10:31:26.0
+    revision=svn+ssh://murzim/data-repo/trunk/data/flight/moc/spacecraft-ephemeris/15156_01_kzamudio_spacecraft_ephemeris_L2276/kplr2015155202305_senm.xml@7155
+    description=Adding L+2276 ephemeris: spk_2015152000000_2015155195840_kplr.bsp, KSOP-2313, kzamudio, 20150715
+    locked=true
+    lockTime=2015-07-17 09:23:50.0
+
+  type=TRANSIT_NAME
+    importTime=2015-07-17 08:22:03.0
+    revision=3
+    description=keplernames_20150715210000.csv: svn+ssh://murzim/data-repo/trunk/data/flight/so/models/nexsci/20150715_jcoughlin_koi_and_kepler_names/keplernames_20150715210000.csv R7206 r9.3.16 KSOP-2202 Kepler Names Table import, kzamudio, 20150717
+    locked=true
+    lockTime=2015-09-08 16:23:13.0
+
+  type=TRANSIT_PARAMETER
+    importTime=2015-07-17 08:17:57.0
+    revision=4
+    description=cumulative_20150715210000.csv: URL: svn+ssh://murzim/data-repo/trunk/data/flight/so/models/nexsci/20150715_jcoughlin_koi_and_kepler_names/cumulative_20150715210000.csv R7206 r9.3.16 KSOP-2202 Cumulative Table import, kzamudio, 20150717
+    locked=true
+    lockTime=2015-09-08 16:23:13.0
+
+  type=TWODBLACK
+    importTime=2010-03-03 14:55:18.0
+    revision=svn+ssh://murzim/data-repo/trunk/data/flight/so/models/two-d-black/10062_01_kibrahim_combine_09165_02_pgazis_10042_01_dcaldwell_two_d_black (LCR=1240)
+    description=Added as seed data during r6.2 migration
+    locked=true
+    lockTime=2016-03-16 14:03:15.0
+
+  type=UNDERSHOOT
+    importTime=2009-02-24 14:11:02.0
+    revision=svn+ssh://murzim/data-repo/trunk/data/flight/so/models/undershoot/09054_01_tklaus_undershoot (LCR=304)
+    description=Added as seed data during r6.2 migration
+    locked=true
+    lockTime=2016-03-16 14:03:15.0
+
+

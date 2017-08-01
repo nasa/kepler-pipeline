@@ -1,0 +1,289 @@
+
+Instance Summary
+
+ID     Pipeline Name                                          State      P-time    
+-----------------------------------------------------------------------------------
+11457  TAD Supplemental: r9.3.6: Q14 LC sTAD MPE=T KSOP-2182  COMPLETED  03:43:19  
+
+Instance ID: 11457
+Instance Name: r9.3.6: Q14 LC sTAD MPE=T KSOP-2182
+Instance Priority: 4
+Instance State: COMPLETED
+Instance Software Revisions: [svn+ssh://murzim/repo/soc/tags/release/9.3.6@59333]
+
+Definition Name: TAD Supplemental
+Definition Version: 0
+Definition ID: 1720095
+
+Pipeline Parameter Sets
+  Parameter Set: coa (mpe=True) (type=CoaModuleParameters, version=1)
+    backgroundPolynomialsEnabled = false
+    decOffset = 0.0
+    dvaMeshEdgeBuffer = -1
+    dvaMeshOrder = 3
+    motionPolynomialsEnabled = true
+    nDvaMeshCols = 5
+    nDvaMeshRows = 5
+    nOutputBufferPix = 2
+    nStarImageCols = 21
+    nStarImageRows = 21
+    phiOffset = 0.0
+    raOffset = 0.0
+    saturationSpillBufferSize = 0.75
+    starChunkLength = 5000
+
+  Parameter Set: moduleOutputLists (exclude mod 3) (type=ModuleOutputListsParameters, version=30)
+    channelExcludeArray = 5,6,7,8
+    channelGroupsEnabled = false
+    channelsPerTask = 0
+
+  Parameter Set: plannedSpacecraftConfig (type=PlannedSpacecraftConfigParameters, version=2)
+    darkEndCol = 1131
+    darkEndRow = 1069
+    darkStartCol = 1118
+    darkStartRow = 0
+    fgsFramesPerIntegration = 58
+    integrationsPerScienceFfi = 270
+    integrationsPerShortCadence = 9
+    lcRequantFixedOffset = 419400
+    longCadencesPerBaseline = 48
+    maskedEndCol = 1111
+    maskedEndRow = 17
+    maskedStartCol = 12
+    maskedStartRow = 6
+    millisecondsPerFgsFrame = 103.7897052288
+    millisecondsPerReadout = 518.948526144
+    mjd = 54500.0
+    scConfigId = 1
+    scRequantFixedOffset = 219400
+    secondsPerShortCadence = 58.8487628647296
+    shortCadencesPerLongCadence = 30
+    smearEndCol = 1111
+    smearEndRow = 1057
+    smearStartCol = 12
+    smearStartRow = 1046
+
+  Parameter Set: ama (type=AmaModuleParameters, version=2)
+    defaultCustomLabels = TAD_NO_HALO,TAD_NO_UNDERSHOOT_COLUMN
+    defaultStellarLabels = TAD_ONE_HALO,TAD_ADD_UNDERSHOOT_COLUMN
+
+
+Modules
+
+  Module Definition: merge, version=0
+    Java Classname: MergePipelineModule
+    exe timeout seconds: 180000
+    exe name: merge
+    min memory MB: 0
+    # Tasks (total/completed/failed): 1/1/0
+    Software Revisions for node:[svn+ssh://murzim/repo/soc/tags/release/9.3.6@59333]
+    Parameter Set: tadLc (type=TadParameters, version=18)
+      quarters = q14
+      supplementalFor = quarter14_summer2012_trimmed_lc
+      targetListSetName = quarter14_summer2012_trimmed_lc_supp_mpe_v4
+
+
+  Module Definition: coa, version=0
+    Java Classname: CoaPipelineModule
+    exe timeout seconds: 180000
+    exe name: coa
+    min memory MB: 0
+    # Tasks (total/completed/failed): 80/80/0
+    Software Revisions for node:[svn+ssh://murzim/repo/soc/tags/release/9.3.6@59333]
+    Parameter Set: tadLc (type=TadParameters, version=18)
+      quarters = q14
+      supplementalFor = quarter14_summer2012_trimmed_lc
+      targetListSetName = quarter14_summer2012_trimmed_lc_supp_mpe_v4
+
+
+  Module Definition: tadval, version=0
+    Java Classname: TadValPipelineModule
+    exe timeout seconds: 180000
+    exe name: tadval
+    min memory MB: 0
+    # Tasks (total/completed/failed): 1/1/0
+    Software Revisions for node:[svn+ssh://murzim/repo/soc/tags/release/9.3.6@59333]
+    Parameter Set: tadLc (type=TadParameters, version=18)
+      quarters = q14
+      supplementalFor = quarter14_summer2012_trimmed_lc
+      targetListSetName = quarter14_summer2012_trimmed_lc_supp_mpe_v4
+
+
+Data Model Registry
+version=138, locked=true, lockTimestamp=2015-05-12 14:16:07.0
+  type=BAD_PIXELS
+    importTime=2009-02-24 14:00:01.0
+    revision=svn+ssh://murzim/data-repo/trunk/data/flight/so/models/invalid-pixels/09054_01_tklaus_invalid_pixels (LCR=305)
+    description=Added as seed data during r6.2 migration
+    locked=true
+    lockTime=2016-03-16 14:03:15.0
+
+  type=DATA_ANOMALY_FLAGS
+    importTime=2014-03-05 08:39:04.0
+    revision=27
+    description=Default description
+    locked=true
+    lockTime=2015-05-12 14:16:07.0
+
+  type=EB_TRANSIT_PARAMETER
+    importTime=2014-04-09 10:18:46.0
+    revision=1
+    description=r9.2.0: Import EB Table for Q0-Q17 PDC KSOP-1929: svn+ssh://murzim/data-repo/trunk/data/flight/so/exo_archive/koi_tables/140303_ksop1929/kplr20140303150000_ebham.txt R6132, kzamudio, 20140409
+    locked=true
+    lockTime=2015-05-12 14:16:07.0
+
+  type=EXTERNAL_TCE
+    importTime=2014-04-02 07:41:02.0
+    revision=2
+    description=r9.1.27: TCE Model import, KSOP-1970 svn+ssh://murzim/data-repo/trunk/data/flight/so/models/external-tce/140401_jlcoughl_q1q16_orphan_dvsuprun/Q16OrphanDVSuppInput.txt R6170 kzamudio 20140402
+    locked=true
+    lockTime=2016-03-16 14:03:15.0
+
+  type=GAIN
+    importTime=2009-02-24 13:59:55.0
+    revision=svn+ssh://murzim/data-repo/trunk/data/flight/so/models/gain/09054_01_tklaus_gain (LCR=299)
+    description=Added as seed data during r6.2 migration
+    locked=true
+    lockTime=2016-03-16 14:03:15.0
+
+  type=GEOMETRY
+    importTime=2009-06-04 20:02:48.0
+    revision=svn+ssh://murzim/data-repo/trunk/data/flight/so/models/geometry/09156_01_pt_geometry (LCR=700)
+    description=Added as seed data during r6.2 migration
+    locked=true
+    lockTime=2016-03-16 14:03:15.0
+
+  type=KIC_EXTENSION
+    importTime=2013-07-15 11:49:05.0
+    revision=1
+    description=r9.0.7: Import UKIRT KIC Extenstion KSOP-1662 svn+ssh://murzim/data-repo/trunk/data/flight/so/catalogs/kicExtensions/ukirt_kic_extension_full_fov.txt R4651, kibrahim, KSOP-1662, 20130715
+    locked=true
+    lockTime=2016-03-16 14:03:15.0
+
+  type=KIC_OVERRIDE
+    importTime=2014-07-01 11:08:39.0
+    revision=6
+    description=Importing the KOM file for Q0-Q17 KSOP-1927, svn+ssh://murzim/data-repo/trunk/data/flight/so/models/kic-overrides/14160_mergedHuberPropertiesBrysonMagnitudes_ksop-1927/mergedPropertiesKepmagsKom_20140609.txt R6318, kzamudio, 20140701
+    locked=true
+    lockTime=2015-09-08 16:23:13.0
+
+  type=LARGEFLATFIELD
+    importTime=2009-06-25 09:41:47.0
+    revision=svn+ssh://murzim/data-repo/trunk/data/flight/so/models/large-flat/09175_01_jvancleve_large-flat (LCR=771)
+    description=Added as seed data during r6.2 migration
+    locked=true
+    lockTime=2016-03-16 14:03:15.0
+
+  type=LEAP_SECONDS
+    importTime=2012-02-03 15:28:41.0
+    revision=svn+ssh://murzim/data-repo/trunk/data/flight/moc/leap-seconds/12025_01_kibrahim_leap_seconds/kplr2012023232516_senm.xml@3814
+    description=r8.0.11: Adding updated leap second kernel: naif0010.tls KSOP1191 kibrahim 120203 
+    locked=true
+    lockTime=2015-05-12 14:16:07.0
+
+  type=LINEARITY
+    importTime=2009-06-10 14:37:13.0
+    revision=svn+ssh://murzim/data-repo/trunk/data/flight/so/models/linearity/09153_01_jvancleve_linearity (LCR=683)
+    description=Added as seed data during r6.2 migration
+    locked=true
+    lockTime=2016-03-16 14:03:15.0
+
+  type=OBS_LOG
+    importTime=2015-02-24 10:36:35.0
+    revision=4
+    description=r9.2.31: Importing the Observing Log XML KSOC-4609, svn+ssh://murzim/data-repo/trunk/data/flight/so/misc/data_observing_log/observing-log.xml R6845, kzamudio, 20150224
+    locked=true
+    lockTime=2016-03-16 14:03:15.0
+
+  type=PLANETARY_EPHEMERIS
+    importTime=2009-02-24 16:34:14.0
+    revision=svn+ssh://murzim/data-repo/trunk/data/flight/moc/planetary-ephemeris/09055_01_tklaus_planetary_ephemeris/kplr2009055103710_senm.xml (LCR=327)
+    description=Added as seed data during r6.2 migration
+    locked=true
+    lockTime=2016-03-16 14:03:15.0
+
+  type=POINTING
+    importTime=2015-05-08 12:52:43.0
+    revision=svn+ssh://kzamudio@murzim/data-repo/trunk/data/flight/so/models/pointing/15128_01_kzamudio_pointing_use15062roll_useL2248ephem (LCR=7067)
+    description=r9.3: KSOP-2306 K1+K2 model w/L2248ephem+15062roll svn+ssh://murzim/data-repo/trunk/data/flight/so/models/pointing/15128_01_kzamudio_pointing_use15062roll_useL2248ephem/kplr2015050810_pointing.txt R7067 kzamudio 150508 created by makeNextVersionHistory
+    locked=true
+    lockTime=2015-05-12 14:16:07.0
+
+  type=PRF
+    importTime=2009-05-29 16:26:43.0
+    revision=svn+ssh://murzim/data-repo/trunk/data/flight/so/models/prf/09146_01_sbryson_c039_prf_5prf_delivery (LCR=636)
+    description=Added as seed data during r6.2 migration
+    locked=true
+    lockTime=2016-03-16 14:03:15.0
+
+  type=READNOISE
+    importTime=2009-02-24 14:05:36.0
+    revision=svn+ssh://murzim/data-repo/trunk/data/flight/so/models/read-noise/09054_01_tklaus_read_noise (LCR=302)
+    description=Added as seed data during r6.2 migration
+    locked=true
+    lockTime=2016-03-16 14:03:15.0
+
+  type=ROLLTIME
+    importTime=2015-03-18 13:23:40.0
+    revision=svn+ssh://murzim/data-repo/trunk/data/flight/so/models/roll-time/15062_01_jcamp_roll_time_c6_to_c9_updates (LCR=6866)
+    description=r9.2.33 KSOP-2242 Roll-time update C6 to C9, svn+ssh://murzim/data-repo/trunk/data/flight/so/models/roll-time/15062_01_jcamp_roll_time_c6_to_c9_updates/kplr2015030314_rolltime.txt R6869, kzamudio, 20150318 created by makeNextVersionHistory
+    locked=true
+    lockTime=2015-07-17 09:23:50.0
+
+  type=SATURATION
+    importTime=2011-04-27 15:13:35.0
+    revision=svn+ssh://murzim/data-repo/trunk/data/flight/so/models/saturation/2011111_01_sbryson_saturation_model (LCR=2760)
+    description=r6.2v42444 svn+ssh://murzim/data-repo/trunk/data/flight/so/models/saturation/2011111_01_sbryson_saturation_model/kplr2011042115_saturation.txt R2760 kibrahim 110427 KSOP-844 created by makeNextVersionHistory
+    locked=true
+    lockTime=2016-03-16 14:03:15.0
+
+  type=SCLK
+    importTime=2015-01-07 08:03:36.0
+    revision=svn+ssh://murzim/data-repo/trunk/data/flight/moc/sclk/14343_01_kzamudio_sclk/kplr2014342224509_sknm.xml@6733
+    description=Adding new SCLK: kplr2014342182121.tsc, KSOP-2176, kzamudio, 20150107
+    locked=true
+    lockTime=2015-05-12 14:16:07.0
+
+  type=SMALLFLATFIELD
+    importTime=2009-06-25 10:23:25.0
+    revision=svn+ssh://murzim/data-repo/trunk/data/flight/so/models/small-flat/09174_01_dcaldwell_small_flat (LCR=772)
+    description=Added as seed data during r6.2 migration
+    locked=true
+    lockTime=2016-03-16 14:03:15.0
+
+  type=SPACECRAFT_EPHEMERIS
+    importTime=2015-05-08 12:51:16.0
+    revision=svn+ssh://murzim/data-repo/trunk/data/flight/moc/spacecraft-ephemeris/15127_01_kzamudio_spacecraft_ephemeris_L2248/kplr2015126162304_senm.xml@7066
+    description=Adding L+2248 ephemeris: spk_2015124000000_2015126161705_kplr.bsp, KSOP-2306, kzamudio, 20150508
+    locked=true
+    lockTime=2015-05-12 14:16:07.0
+
+  type=TRANSIT_NAME
+    importTime=2014-09-19 07:24:48.0
+    revision=2
+    description=keplernames_20140908104737.csv: URL:svn+ssh://murzim/data-repo/trunk/data/flight/so/models/nexsci/20140908_kzamudio_koi_and_kepler_names/keplernames_20140908104737.csv R6497 r9.2.19 KSOP-1928 Transit Names Model import, kzamudio, 20140919
+    locked=true
+    lockTime=2015-05-12 14:16:07.0
+
+  type=TRANSIT_PARAMETER
+    importTime=2014-09-19 07:18:12.0
+    revision=3
+    description=cumulative_20140908104217.csv: URL:svn+ssh://murzim/data-repo/trunk/data/flight/so/models/nexsci/20140908_kzamudio_koi_and_kepler_names/cumulative_20140908104217.csv R6497 r9.2.19 KSOP-1928 Transit Parameters Model import, kzamudio, 20140919
+    locked=true
+    lockTime=2015-05-12 14:16:07.0
+
+  type=TWODBLACK
+    importTime=2010-03-03 14:55:18.0
+    revision=svn+ssh://murzim/data-repo/trunk/data/flight/so/models/two-d-black/10062_01_kibrahim_combine_09165_02_pgazis_10042_01_dcaldwell_two_d_black (LCR=1240)
+    description=Added as seed data during r6.2 migration
+    locked=true
+    lockTime=2016-03-16 14:03:15.0
+
+  type=UNDERSHOOT
+    importTime=2009-02-24 14:11:02.0
+    revision=svn+ssh://murzim/data-repo/trunk/data/flight/so/models/undershoot/09054_01_tklaus_undershoot (LCR=304)
+    description=Added as seed data during r6.2 migration
+    locked=true
+    lockTime=2016-03-16 14:03:15.0
+
+

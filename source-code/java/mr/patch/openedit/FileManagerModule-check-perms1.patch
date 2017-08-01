@@ -1,0 +1,150 @@
+--- com/openedit/modules/admin/filemanager/FileManagerModule.java.stock	2007-04-16 11:23:25.000000000 -0700
++++ com/openedit/modules/admin/filemanager/FileManagerModule.java	2007-04-19 18:11:38.000000000 -0700
+@@ -9,10 +9,12 @@
+ import org.apache.commons.logging.Log;
+ import org.apache.commons.logging.LogFactory;
+ 
++import com.openedit.BaseWebPageRequest;
+ import com.openedit.OpenEditException;
+ import com.openedit.WebPageRequest;
+ import com.openedit.modules.BaseModule;
+ import com.openedit.page.Page;
++import com.openedit.users.User;
+ import com.openedit.util.PathUtilities;
+ import com.openedit.util.URLUtilities;
+ import com.openedit.util.ZipUtil;
+@@ -24,6 +26,8 @@
+ public class FileManagerModule extends BaseModule
+ {
+ 	private static final Log log = LogFactory.getLog(FileManagerModule.class);
++    
++    public static final String NO_PERM_PREFIX = "Insufficient permissions: ";
+ 	
+ 	protected FileUpload fieldFileUpload;
+ 	protected TreeModule fieldTreeSupport;
+@@ -40,6 +44,7 @@
+ 	public void copyPage( WebPageRequest inReq ) throws OpenEditException
+ 	{
+ 		String sourcePath = inReq.getRequestParameter("sourcePath");
++        checkUserCanView(inReq, getPage(sourcePath));
+ 		String destinationPath = inReq.getRequestParameter("destinationPath");
+ 		if( sourcePath.equals(destinationPath))
+ 		{
+@@ -57,9 +62,14 @@
+ 			}
+ 			destinationPath = destinationPath + PathUtilities.extractFileName(sourcePath);
+ 			destPage = getPage(destinationPath);
++
++            checkUserCanEdit(inReq, destPage);
+ 		}
++        
+ 		else if ( !destPage.exists() )
+ 		{
++            checkUserCanEdit(inReq, destPage);
++            
+ 			if( destinationPath.endsWith("/") || destinationPath.indexOf(".") == -1)
+ 			{
+ 				if( !destinationPath.endsWith("/"))
+@@ -69,9 +79,12 @@
+ 				}
+ 				destPage = getPage(destinationPath);
+ 				destPage.getContentItem().setAuthor(inReq.getUser().getUserName());
++
+ 				getPageManager().putPage(destPage);
+ 			}
+-		}
++		} else {
++            checkUserCanEdit(inReq, destPage);
++        }
+ 		String overwriteStr = inReq.getRequestParameter("overwrite");
+ 		boolean overwrite = ((overwriteStr != null) && overwriteStr.equals("true"));
+ 
+@@ -96,7 +109,9 @@
+ 
+ 		Page page = getPage(path);
+ 		
+-		if (path.indexOf("trash") > -1)
++        checkUserCanEdit(inReq, page);
++
++        if (path.indexOf("trash") > -1)
+ 		{
+ 			//just delete it
+ 			page.getContentItem().setAuthor(inReq.getUser().getUserName());
+@@ -112,7 +127,46 @@
+ 			getPageManager().movePage(page, trashPage);
+ 		}	
+ 	}
+-	protected void checkUser(WebPageRequest inReq ) throws OpenEditException
++
++    protected void checkUserCanEdit(WebPageRequest inReq, Page page)
++        throws OpenEditException {
++
++        // Make sure the user has permission to write to the page.
++        User user = inReq.getUser();
++        WebPageRequest req = new BaseWebPageRequest();
++        req.setPage(page);
++        req.setUser(user);
++        if (user == null) {
++            throw new OpenEditException(NO_PERM_PREFIX +
++                "You must be logged in to modify pages.");
++        } else if (!page.getEditFilter().passes(req)) {
++            throw new OpenEditException(NO_PERM_PREFIX + "User " +
++                user.getUserName() +
++                " does not have permission to modify the page " +
++                page.getPath());
++        }
++    }
++    
++    protected void checkUserCanView(WebPageRequest inReq, Page page)
++        throws OpenEditException {
++
++        // Make sure the user has permission to view the page.
++        User user = inReq.getUser();
++        WebPageRequest req = new BaseWebPageRequest();
++        req.setPage(page);
++        req.setUser(user);
++        if (user == null) {
++            throw new OpenEditException(NO_PERM_PREFIX +
++                "You must be logged in to access pages.");
++        } else if (!page.getViewFilter().passes(req)) {
++            throw new OpenEditException(NO_PERM_PREFIX + "User " +
++                user.getUserName() +
++                " does not have permission to access this page " +
++                page.getPath());
++        }
++    }
++
++    protected void checkUser(WebPageRequest inReq ) throws OpenEditException
+ 	{
+ 		if( inReq.getUser() == null && !inReq.getUser().hasPermission("oe.administration"))
+ 		{
+@@ -138,6 +192,9 @@
+ 			return;
+ 		}
+ 		Page page = (Page)map.get("savedas");
++        
++        checkUserCanEdit(inReq, page);
++
+ 		if ( page.getPath().toLowerCase().endsWith(".zip"))
+ 		{
+ 			String ok = (String)map.get("unzip");
+@@ -169,7 +226,7 @@
+ 	public void movePage( WebPageRequest inReq ) throws OpenEditException
+ 	{
+ 		String sourcePath = inReq.getRequestParameter("sourcePath");
+-		String destinationPath = inReq.getRequestParameter("destinationPath");
++        String destinationPath = inReq.getRequestParameter("destinationPath");
+ 
+ 		if ((sourcePath == null) || (destinationPath == null))
+ 		{
+@@ -184,6 +241,10 @@
+ 		checkUser(inReq);
+ 		Page page = getPageManager().getPage(sourcePath);
+ 		Page destpage = getPageManager().getPage(destinationPath);
++
++        checkUserCanView(inReq, page);
++        checkUserCanEdit(inReq, destpage);
++
+ 		page.getContentItem().setAuthor(inReq.getUser().getUserName());
+ 		destpage.getContentItem().setAuthor(inReq.getUser().getUserName());
+ 

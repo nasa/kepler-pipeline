@@ -1,0 +1,81 @@
+% Quarter of data being analysed
+% 
+% Copyright 2017 United States Government as represented by the
+% Administrator of the National Aeronautics and Space Administration.
+% All Rights Reserved.
+% 
+% NASA acknowledges the SETI Institute's primary role in authoring and
+% producing the Kepler Data Processing Pipeline under Cooperative
+% Agreement Nos. NNA04CC63A, NNX07AD96A, NNX07AD98A, NNX11AI13A,
+% NNX11AI14A, NNX13AD01A & NNX13AD16A.
+% 
+% This file is available under the terms of the NASA Open Source Agreement
+% (NOSA). You should have received a copy of this agreement with the
+% Kepler source code; see the file NASA-OPEN-SOURCE-AGREEMENT.doc.
+% 
+% No Warranty: THE SUBJECT SOFTWARE IS PROVIDED "AS IS" WITHOUT ANY
+% WARRANTY OF ANY KIND, EITHER EXPRESSED, IMPLIED, OR STATUTORY,
+% INCLUDING, BUT NOT LIMITED TO, ANY WARRANTY THAT THE SUBJECT SOFTWARE
+% WILL CONFORM TO SPECIFICATIONS, ANY IMPLIED WARRANTIES OF
+% MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, OR FREEDOM FROM
+% INFRINGEMENT, ANY WARRANTY THAT THE SUBJECT SOFTWARE WILL BE ERROR
+% FREE, OR ANY WARRANTY THAT DOCUMENTATION, IF PROVIDED, WILL CONFORM
+% TO THE SUBJECT SOFTWARE. THIS AGREEMENT DOES NOT, IN ANY MANNER,
+% CONSTITUTE AN ENDORSEMENT BY GOVERNMENT AGENCY OR ANY PRIOR RECIPIENT
+% OF ANY RESULTS, RESULTING DESIGNS, HARDWARE, SOFTWARE PRODUCTS OR ANY
+% OTHER APPLICATIONS RESULTING FROM USE OF THE SUBJECT SOFTWARE.
+% FURTHER, GOVERNMENT AGENCY DISCLAIMS ALL WARRANTIES AND LIABILITIES
+% REGARDING THIRD-PARTY SOFTWARE, IF PRESENT IN THE ORIGINAL SOFTWARE,
+% AND DISTRIBUTES IT "AS IS."
+% 
+% Waiver and Indemnity: RECIPIENT AGREES TO WAIVE ANY AND ALL CLAIMS
+% AGAINST THE UNITED STATES GOVERNMENT, ITS CONTRACTORS AND
+% SUBCONTRACTORS, AS WELL AS ANY PRIOR RECIPIENT. IF RECIPIENT'S USE OF
+% THE SUBJECT SOFTWARE RESULTS IN ANY LIABILITIES, DEMANDS, DAMAGES,
+% EXPENSES OR LOSSES ARISING FROM SUCH USE, INCLUDING ANY DAMAGES FROM
+% PRODUCTS BASED ON, OR RESULTING FROM, RECIPIENT'S USE OF THE SUBJECT
+% SOFTWARE, RECIPIENT SHALL INDEMNIFY AND HOLD HARMLESS THE UNITED
+% STATES GOVERNMENT, ITS CONTRACTORS AND SUBCONTRACTORS, AS WELL AS ANY
+% PRIOR RECIPIENT, TO THE EXTENT PERMITTED BY LAW. RECIPIENT'S SOLE
+% REMEDY FOR ANY SUCH MATTER SHALL BE THE IMMEDIATE, UNILATERAL
+% TERMINATION OF THIS AGREEMENT.
+%
+\newcommand{\quarter}{Q8}
+
+% Pipeline software version
+\newcommand{\swversion}{7.0}
+
+% Top directory for figures
+\newcommand{\reportgraphicspath}{/path/to/cal_Q8_data_review_jun8/}
+
+
+%--------------------------------------------------------------------------
+% items below this line do not need editing
+%--------------------------------------------------------------------------
+% Subdirectories for each channel
+%
+% collateral figures are created for LC M1-M3 and SC M1-M3, 
+% use M1 for presentation
+\newcommand{\lcCollateralFigs}{long_cadence_m1/collateral/}
+\newcommand{\scCollateralFigs}{short_cadence_m1/collateral/}
+
+% photometric figures are created for:
+% (1) LC M1 7th invocation for all select channels,  
+% (2) LC M1-M3 7th invocation for Channel 19
+% (3) SC M1-M3 the first UOW for all select channels (use M1 for presentation) 
+% (4) SC M1 three UOWs for Channel 19
+\newcommand{\lcPhotometricFigsMOne}{long_cadence_m1/photometric/}
+\newcommand{\lcPhotometricFigsMTwo}{long_cadence_m2/photometric/}
+\newcommand{\lcPhotometricFigsMThree}{long_cadence_m3/photometric/}
+\newcommand{\scPhotometricFigsMOne}{short_cadence_m1/photometric/}
+\newcommand{\scPhotometricFigsMTwo}{short_cadence_m2/photometric/}
+\newcommand{\scPhotometricFigsMThree}{short_cadence_m3/photometric/}
+
+% pipeline-generated (collateral data) figures are created for all
+% LC/SC M1-M3
+\newcommand{\lcPipelineFigsMOne}{long_cadence_m1/collateral/}
+\newcommand{\lcPipelineFigsMTwo}{long_cadence_m2/collateral/}
+\newcommand{\lcPipelineFigsMThree}{long_cadence_m3/collateral/}
+\newcommand{\scPipelineFigsMOne}{short_cadence_m1/collateral/}
+\newcommand{\scPipelineFigsMTwo}{short_cadence_m2/collateral/}
+\newcommand{\scPipelineFigsMThree}{short_cadence_m3/collateral/}

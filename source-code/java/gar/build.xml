@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Copyright 2017 United States Government as represented by the
+  Administrator of the National Aeronautics and Space Administration.
+  All Rights Reserved.
+  
+  NASA acknowledges the SETI Institute's primary role in authoring and
+  producing the Kepler Data Processing Pipeline under Cooperative
+  Agreement Nos. NNA04CC63A, NNX07AD96A, NNX07AD98A, NNX11AI13A,
+  NNX11AI14A, NNX13AD01A & NNX13AD16A.
+  
+  This file is available under the terms of the NASA Open Source Agreement
+  (NOSA). You should have received a copy of this agreement with the
+  Kepler source code; see the file NASA-OPEN-SOURCE-AGREEMENT.doc.
+  
+  No Warranty: THE SUBJECT SOFTWARE IS PROVIDED "AS IS" WITHOUT ANY
+  WARRANTY OF ANY KIND, EITHER EXPRESSED, IMPLIED, OR STATUTORY,
+  INCLUDING, BUT NOT LIMITED TO, ANY WARRANTY THAT THE SUBJECT SOFTWARE
+  WILL CONFORM TO SPECIFICATIONS, ANY IMPLIED WARRANTIES OF
+  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, OR FREEDOM FROM
+  INFRINGEMENT, ANY WARRANTY THAT THE SUBJECT SOFTWARE WILL BE ERROR
+  FREE, OR ANY WARRANTY THAT DOCUMENTATION, IF PROVIDED, WILL CONFORM
+  TO THE SUBJECT SOFTWARE. THIS AGREEMENT DOES NOT, IN ANY MANNER,
+  CONSTITUTE AN ENDORSEMENT BY GOVERNMENT AGENCY OR ANY PRIOR RECIPIENT
+  OF ANY RESULTS, RESULTING DESIGNS, HARDWARE, SOFTWARE PRODUCTS OR ANY
+  OTHER APPLICATIONS RESULTING FROM USE OF THE SUBJECT SOFTWARE.
+  FURTHER, GOVERNMENT AGENCY DISCLAIMS ALL WARRANTIES AND LIABILITIES
+  REGARDING THIRD-PARTY SOFTWARE, IF PRESENT IN THE ORIGINAL SOFTWARE,
+  AND DISTRIBUTES IT "AS IS."
+  
+  Waiver and Indemnity: RECIPIENT AGREES TO WAIVE ANY AND ALL CLAIMS
+  AGAINST THE UNITED STATES GOVERNMENT, ITS CONTRACTORS AND
+  SUBCONTRACTORS, AS WELL AS ANY PRIOR RECIPIENT. IF RECIPIENT'S USE OF
+  THE SUBJECT SOFTWARE RESULTS IN ANY LIABILITIES, DEMANDS, DAMAGES,
+  EXPENSES OR LOSSES ARISING FROM SUCH USE, INCLUDING ANY DAMAGES FROM
+  PRODUCTS BASED ON, OR RESULTING FROM, RECIPIENT'S USE OF THE SUBJECT
+  SOFTWARE, RECIPIENT SHALL INDEMNIFY AND HOLD HARMLESS THE UNITED
+  STATES GOVERNMENT, ITS CONTRACTORS AND SUBCONTRACTORS, AS WELL AS ANY
+  PRIOR RECIPIENT, TO THE EXTENT PERMITTED BY LAW. RECIPIENT'S SOLE
+  REMEDY FOR ANY SUCH MATTER SHALL BE THE IMMEDIATE, UNILATERAL
+  TERMINATION OF THIS AGREEMENT.
+-->
+
+<project basedir="." default="build" name="gar">
+
+  <import file="../include/ant/standard.xml" />
+  <import file="${targets}/gen-xmlbeans.xml" />
+
+  <property name="gen-proxy.modules" value="Hgn,Hac,Huffman,Requantization" />
+
+  <property name="matlab.gar.dir"
+            value="${build.top.matlab}/${ant.project.name}" />
+  
+  <property name="gen-proxy.module.Hgn.mfilesGenDir"
+            value="${matlab.dir}/hgn/${build}/generated/mfiles" />
+  <property name="gen-proxy.module.Hgn.mfilesDir"
+            value="${matlab.dir}/hgn/mfiles" />
+  <property name="gen-proxy.module.Hgn.incDir"
+            value="${matlab.dir}/hgn/${build}/generated" />
+  <property name="gen-proxy.module.Hgn.srcDir"
+            value="${matlab.dir}/hgn/${build}/generated" />
+  <property name="gen-proxy.module.Hgn.controllerIncDir"
+            value="${matlab.dir}/hgn/include" />
+  <property name="gen-proxy.module.Hgn.controllerSrcDir"
+            value="${matlab.dir}/hgn/src" />
+  <property name="gen-proxy.module.Hgn.classes"
+            value="gov.nasa.kepler.${ant.project.name}.hgn.HgnInputs,gov.nasa.kepler.${ant.project.name}.hgn.HgnOutputs"
+            />
+
+  <property name="gen-proxy.module.Hac.mfilesGenDir"
+            value="${matlab.dir}/hac/${build}/generated/mfiles" />
+  <property name="gen-proxy.module.Hac.mfilesDir"
+            value="${matlab.dir}/hac/mfiles" />
+  <property name="gen-proxy.module.Hac.incDir"
+            value="${matlab.dir}/hac/${build}/generated" />
+  <property name="gen-proxy.module.Hac.srcDir"
+            value="${matlab.dir}/hac/${build}/generated" />
+  <property name="gen-proxy.module.Hac.controllerIncDir"
+            value="${matlab.dir}/hac/include" />
+  <property name="gen-proxy.module.Hac.controllerSrcDir"
+            value="${matlab.dir}/hac/src" />
+  <property name="gen-proxy.module.Hac.classes"
+            value="gov.nasa.kepler.${ant.project.name}.hac.HacInputs,gov.nasa.kepler.${ant.project.name}.hac.HacOutputs" />
+  
+  <property name="gen-proxy.module.Huffman.mfilesGenDir"
+            value="${matlab.dir}/huffman/${build}/generated/mfiles" />
+  <property name="gen-proxy.module.Huffman.mfilesDir"
+            value="${matlab.dir}/huffman/mfiles" />
+  <property name="gen-proxy.module.Huffman.incDir"
+            value="${matlab.dir}/huffman/${build}/generated" />
+  <property name="gen-proxy.module.Huffman.srcDir"
+            value="${matlab.dir}/huffman/${build}/generated" />
+  <property name="gen-proxy.module.Huffman.controllerIncDir"
+            value="${matlab.dir}/huffman/include" />
+  <property name="gen-proxy.module.Huffman.controllerSrcDir"
+            value="${matlab.dir}/huffman/src" />
+  <property name="gen-proxy.module.Huffman.classes"
+            value="gov.nasa.kepler.${ant.project.name}.huffman.HuffmanInputs,gov.nasa.kepler.${ant.project.name}.huffman.HuffmanOutputs" />
+
+  <property name="gen-proxy.module.Requantization.mfilesGenDir"
+            value="${matlab.dir}/requantization/${build}/generated/mfiles" />
+  <property name="gen-proxy.module.Requantization.mfilesDir"
+            value="${matlab.dir}/requantization/mfiles" />
+  <property name="gen-proxy.module.Requantization.incDir"
+            value="${matlab.dir}/requantization/${build}/generated" />
+  <property name="gen-proxy.module.Requantization.srcDir"
+            value="${matlab.dir}/requantization/${build}/generated" />
+  <property name="gen-proxy.module.Requantization.controllerIncDir"
+            value="${matlab.dir}/requantization/include" />
+  <property name="gen-proxy.module.Requantization.controllerSrcDir"
+            value="${matlab.dir}/requantization/src" />
+  <property name="gen-proxy.module.Requantization.classes"
+            value="gov.nasa.kepler.${ant.project.name}.requant.RequantInputs,gov.nasa.kepler.${ant.project.name}.requant.RequantOutputs" />
+
+  <target name="compile-pre" depends="gen-xmlbeans" >
+    <mkdir dir="${matlab.dir}/hgn/${build}/generated" />
+    <mkdir dir="${matlab.dir}/hac/${build}/generated" />
+    <mkdir dir="${matlab.dir}/huffman/${build}/generated" />
+    <mkdir dir="${matlab.dir}/requantization/${build}/generated" />
+  </target>
+
+  <target name="compile-post" depends="gen-proxy" />
+  
+  <target name="dist-post">
+    <copy file="${xml}/hgn-parameter-set-1.0.xml"
+          todir="${dist.xml}" />
+  </target>
+
+  <target name="import-huffman" depends="build"
+          description="Seed a Huffman table using a histogram fits file">
+    <java classname="gov.nasa.kepler.gar.xml.GarImportPerfTest"
+          failonerror="true" fork="yes">
+      <classpath refid="classpath.runtime" />
+      <jvmarg value="-Xmx2G" />
+    </java>
+  </target>
+  
+  <target name="gen-huffman-binary-inputs">
+    <java classname="gov.nasa.kepler.${ant.project.name}.huffman.HuffmanBinaryInputGenerator"
+          failonerror="true" fork="yes">
+      <classpath refid="classpath.runtime" />
+      <jvmarg value="-Xmx2G" />
+    </java>
+  </target>
+
+  <target name="seed-db" depends="build"
+          description="Seed the compression table pipeline data">
+    <java classname="gov.nasa.kepler.gar.hgn.HistogramPipelineSeedData"
+          failonerror="true" fork="yes">
+      <classpath refid="classpath.runtime" />
+      <sysproperty key="log4j.configuration" value="file:etc/log4j.xml" />
+      <jvmarg value="-Xmx2G" />
+    </java>
+    <java classname="gov.nasa.kepler.gar.huffman.HuffmanPipelineSeedData"
+          failonerror="true" fork="yes">
+      <classpath refid="classpath.runtime" />
+      <jvmarg value="-Xmx2G" />
+    </java>
+    <java classname="gov.nasa.kepler.gar.requant.RequantPipelineSeedData"
+          failonerror="true" fork="yes">
+      <classpath refid="classpath.runtime" />
+      <jvmarg value="-Xmx2G" />
+    </java>
+  </target>
+
+  <target name="seed-histogram" depends="build"
+          description="Seed a histogram for release testing">
+    <java classname="gov.nasa.kepler.gar.huffman.SeedDatabaseHistogram"
+          failonerror="true" fork="yes">
+      <classpath refid="classpath.runtime" />
+      <jvmarg value="-Xmx2G" />
+    </java>
+  </target>
+  
+</project>

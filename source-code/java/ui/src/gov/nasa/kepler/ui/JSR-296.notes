@@ -1,0 +1,124 @@
+-*- mode: Outline -*-
+
+Copyright 2017 United States Government as represented by the
+Administrator of the National Aeronautics and Space Administration.
+All Rights Reserved.
+
+This file is available under the terms of the NASA Open Source
+Agreement (NOSA). You should have received a copy of this agreement
+with the Kepler source code; see the file
+NASA-OPEN-SOURCE-AGREEMENT.doc.
+
+No Warranty: THE SUBJECT SOFTWARE IS PROVIDED "AS IS" WITHOUT ANY
+WARRANTY OF ANY KIND, EITHER EXPRESSED, IMPLIED, OR STATUTORY,
+INCLUDING, BUT NOT LIMITED TO, ANY WARRANTY THAT THE SUBJECT SOFTWARE
+WILL CONFORM TO SPECIFICATIONS, ANY IMPLIED WARRANTIES OF
+MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, OR FREEDOM FROM
+INFRINGEMENT, ANY WARRANTY THAT THE SUBJECT SOFTWARE WILL BE ERROR
+FREE, OR ANY WARRANTY THAT DOCUMENTATION, IF PROVIDED, WILL CONFORM TO
+THE SUBJECT SOFTWARE. THIS AGREEMENT DOES NOT, IN ANY MANNER,
+CONSTITUTE AN ENDORSEMENT BY GOVERNMENT AGENCY OR ANY PRIOR RECIPIENT
+OF ANY RESULTS, RESULTING DESIGNS, HARDWARE, SOFTWARE PRODUCTS OR ANY
+OTHER APPLICATIONS RESULTING FROM USE OF THE SUBJECT SOFTWARE.
+FURTHER, GOVERNMENT AGENCY DISCLAIMS ALL WARRANTIES AND LIABILITIES
+REGARDING THIRD-PARTY SOFTWARE, IF PRESENT IN THE ORIGINAL SOFTWARE,
+AND DISTRIBUTES IT "AS IS."
+
+Waiver and Indemnity:  RECIPIENT AGREES TO WAIVE ANY AND ALL CLAIMS
+AGAINST THE UNITED STATES GOVERNMENT, ITS CONTRACTORS AND
+SUBCONTRACTORS, AS WELL AS ANY PRIOR RECIPIENT.  IF RECIPIENT'S USE OF
+THE SUBJECT SOFTWARE RESULTS IN ANY LIABILITIES, DEMANDS, DAMAGES,
+EXPENSES OR LOSSES ARISING FROM SUCH USE, INCLUDING ANY DAMAGES FROM
+PRODUCTS BASED ON, OR RESULTING FROM, RECIPIENT'S USE OF THE SUBJECT
+SOFTWARE, RECIPIENT SHALL INDEMNIFY AND HOLD HARMLESS THE UNITED
+STATES GOVERNMENT, ITS CONTRACTORS AND SUBCONTRACTORS, AS WELL AS ANY
+PRIOR RECIPIENT, TO THE EXTENT PERMITTED BY LAW.  RECIPIENT'S SOLE
+REMEDY FOR ANY SUCH MATTER SHALL BE THE IMMEDIATE, UNILATERAL
+TERMINATION OF THIS AGREEMENT.
+
+* Framework can save selected tab. 
+
+ApplicationContext.getSessionStorage()
+save(rootComponent, filename)
+  Supported types, named components only
+  Window bounds, JTable column widths, etc
+  archived with XMLEncoder
+restore(rootComponent, filename)
+  conservative
+  restored with XMLDecoder
+
+* To get properties from Socrates.properties:
+
+ApplicationContext c = ApplicationContext.getInstance();
+ResourceMap resourceMap = c.getResourceMap(Socrates.class);
+// Can pass args for things like {0} in property. ResourceMap handle strings,
+// messages, icons, fonts, and other types.
+resourceMap.getString("aMessage", "World") => "Hello World"
+
+// Using the names of the components as keys in the resource file, and
+// suffixes like what I had in my Action class (.text, .icon), can set the
+// field names and icon files from the property file.
+resourceMap.injectComponents(panel):
+
+// Instead of defining Action classes, use the injectComponents to set the UI,
+// and @Action to set the behavior.
+@Action public void sayHello() {
+    String s = textField.getText();
+    JOptionPane.showMessageDialog(s);
+}
+Action sayHello = getAction("sayHello");
+textField.setAction(sayHello);
+button.setAction(sayHello);
+
+// getAction is defined using ApplicationContext.getActionMap().
+Action getAction(String name) {
+    ApplicationContext c = ApplicationContext.getInstance();
+    ActionMap actionMap = c.getActionMap(getClass(), this);
+    return actionMap.get(name);
+}
+
+// However, the action stuff can be stuffed in properties too!
+sayHello.Action.text = Say &Hello
+sayHello.Action.icon = hello.png
+sayHello.Action.accelerator = control H
+sayHello.Action.shortDescription = Say hello modally
+textField.action = sayHello
+button.action = sayHello
+
+    //    Bound properties (need to understand more).
+    // Defines 3 Actions: revert, save, delete
+    public class MyForm extends JPanel {
+    @Action(enabledProperty = "changesPending")
+    public void revert() { ... }
+    @Action(enabledProperty = "changesPending")
+    public void save() { ... }
+    @Action(enabledProperty = "!selectionEmpty")
+    public void delete() { ... }
+    // These properties are bound, when they change
+    // PropertyChangeEvents are fired
+    public boolean getChangesPending() { ... }
+    public boolean isSelectionEmpty() { ... }
+    // ...
+}
+
+* Tasks
+
+// Task isa SwingWorker isa Future. Check out new Task class when ready to run
+// stuff in background.
+
+// Asynchronous @Actions that Block.
+
+// See TaskService and TaskMonitor for statusbar implementation
+
+* Schedule
+
+To be released in Java 7.
+See javadesktop.org for announcements about prototype code
+See JSR 296.
+https://appframework.dev.java.net/
+
+* JXStatusBar
+
+Might be useful.
+Guess I should rename this file to NOTES. Or, start a wiki ;-).
+

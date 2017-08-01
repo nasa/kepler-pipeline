@@ -1,0 +1,131 @@
+%
+% Copyright 2017 United States Government as represented by the
+% Administrator of the National Aeronautics and Space Administration.
+% All Rights Reserved.
+% 
+% This file is available under the terms of the NASA Open Source Agreement
+% (NOSA). You should have received a copy of this agreement with the
+% Kepler source code; see the file NASA-OPEN-SOURCE-AGREEMENT.doc.
+% 
+% No Warranty: THE SUBJECT SOFTWARE IS PROVIDED "AS IS" WITHOUT ANY
+% WARRANTY OF ANY KIND, EITHER EXPRESSED, IMPLIED, OR STATUTORY,
+% INCLUDING, BUT NOT LIMITED TO, ANY WARRANTY THAT THE SUBJECT SOFTWARE
+% WILL CONFORM TO SPECIFICATIONS, ANY IMPLIED WARRANTIES OF
+% MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, OR FREEDOM FROM
+% INFRINGEMENT, ANY WARRANTY THAT THE SUBJECT SOFTWARE WILL BE ERROR
+% FREE, OR ANY WARRANTY THAT DOCUMENTATION, IF PROVIDED, WILL CONFORM
+% TO THE SUBJECT SOFTWARE. THIS AGREEMENT DOES NOT, IN ANY MANNER,
+% CONSTITUTE AN ENDORSEMENT BY GOVERNMENT AGENCY OR ANY PRIOR RECIPIENT
+% OF ANY RESULTS, RESULTING DESIGNS, HARDWARE, SOFTWARE PRODUCTS OR ANY
+% OTHER APPLICATIONS RESULTING FROM USE OF THE SUBJECT SOFTWARE.
+% FURTHER, GOVERNMENT AGENCY DISCLAIMS ALL WARRANTIES AND LIABILITIES
+% REGARDING THIRD-PARTY SOFTWARE, IF PRESENT IN THE ORIGINAL SOFTWARE,
+% AND DISTRIBUTES IT "AS IS."
+%
+% Waiver and Indemnity: RECIPIENT AGREES TO WAIVE ANY AND ALL CLAIMS
+% AGAINST THE UNITED STATES GOVERNMENT, ITS CONTRACTORS AND
+% SUBCONTRACTORS, AS WELL AS ANY PRIOR RECIPIENT. IF RECIPIENT'S USE OF
+% THE SUBJECT SOFTWARE RESULTS IN ANY LIABILITIES, DEMANDS, DAMAGES,
+% EXPENSES OR LOSSES ARISING FROM SUCH USE, INCLUDING ANY DAMAGES FROM
+% PRODUCTS BASED ON, OR RESULTING FROM, RECIPIENT'S USE OF THE SUBJECT
+% SOFTWARE, RECIPIENT SHALL INDEMNIFY AND HOLD HARMLESS THE UNITED
+% STATES GOVERNMENT, ITS CONTRACTORS AND SUBCONTRACTORS, AS WELL AS ANY
+% PRIOR RECIPIENT, TO THE EXTENT PERMITTED BY LAW. RECIPIENT'S SOLE
+% REMEDY FOR ANY SUCH MATTER SHALL BE THE IMMEDIATE, UNILATERAL
+% TERMINATION OF THIS AGREEMENT.
+%
+\section{PMD Metrics Summary}
+
+\subsection{Tracking Summary Display}
+
+\begin{center}
+\includegraphics[width=\imagewidth]{\trackDashboard.png}
+\end{center}
+
+PPA Metric Determination (PMD) Tracking Alerts. The color coding of
+the boxes indicates the following:
+\begin{itemize}
+\setlength{\itemsep}{0ex}
+\setlength{\parsep}{0ex}
+\item Green:  Metric is within all bounds at all times
+\item Yellow: Metric exceeds adaptive bounds
+\item Red:    Metric exceeds fixed bounds
+\item Cyan:   Metric information is missing
+\end{itemize}
+Open \url{./\trackDashboard.fig}
+
+\subsection{Trending Summary Display}
+
+\begin{center}
+\includegraphics[width=\imagewidth]{\trendDashboard.png}
+\end{center}
+
+PPA Metric Determination (PMD) Trending Alerts. The color coding of
+the boxes indicates the following:
+\begin{itemize}
+\setlength{\itemsep}{0ex}
+\setlength{\parsep}{0ex}
+\item Green:  Metric is within all bounds at all times
+\item Yellow: Metric exceeds adaptive bounds
+\item Red:    Metric exceeds fixed bounds
+\item Cyan:   Metric information is missing
+\end{itemize}
+Open \url{./\trendDashboard.fig}
+
+\subsection{Expected Bounds Breaking Summary}
+
+\begin{center}
+\includegraphics[width=\imagewidth]{\gnrlProjBndsBreak.png}
+\end{center}
+
+General Metrics Projected Bounds Breaking. Missing values indicate
+missing metrics or metrics for which the projected out-of-bounds time
+exceeds the PMD trending time horizon.\\
+Open \url{./\gnrlProjBndsBreak.fig}
+
+\begin{center}
+\includegraphics[width=\imagewidth]{\LDECDBlkProjBndsBreak.png}
+\end{center}
+
+LDE Undershoot and 2D Black Projected Bounds Breaking. Missing values
+indicate missing metrics or metrics for which the projected
+out-of-bounds time exceeds the PMD trending time horizon.\\
+Open \url{./\LDECDBlkProjBndsBreak.fig}
+
+\clearpage
+\begin{center}
+\includegraphics[width=\imagewidth]{\CRProjBndsBreak.png}
+\end{center}
+
+Cosmic Ray Projected Bounds Breaking. Missing values indicate missing
+metrics or metrics for which the projected out-of-bounds time exceeds
+the PMD trending time horizon.\\
+Open \url{./\CRProjBndsBreak.fig}
+
+\begin{center}
+\includegraphics[width=\imagewidth]{\CDPPADProjBndsBreak.png}
+\end{center}
+
+CDPP 3-Hour Projected Bounds Breaking. Missing values indicate missing
+metrics or metrics for which the projected out-of-bounds time exceeds
+the PMD trending time horizon.\\
+Open \url{./\CDPPADProjBndsBreak.fig}
+
+\clearpage
+\begin{center}
+\includegraphics[width=\imagewidth]{\CDPPAGProjBndsBreak.png}
+\end{center}
+
+CDPP 6-Hour Projected Bounds Breaking. Missing values indicate missing
+metrics or metrics for which the projected out-of-bounds time exceeds
+the PMD trending time horizon.\\
+Open \url{./\CDPPAGProjBndsBreak.fig}
+
+\begin{center}
+\includegraphics[width=\imagewidth]{\CDPPBCProjBndsBreak.png}
+\end{center}
+
+CDPP 12-Hour Projected Bounds Breaking. Missing values indicate
+missing metrics or metrics for which the projected out-of-bounds time
+exceeds the PMD trending time horizon.\\
+Open \url{./\CDPPBCProjBndsBreak.fig}

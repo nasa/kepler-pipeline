@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Copyright 2017 United States Government as represented by the
+  Administrator of the National Aeronautics and Space Administration.
+  All Rights Reserved.
+  
+  This file is available under the terms of the NASA Open Source Agreement
+  (NOSA). You should have received a copy of this agreement with the
+  Kepler source code; see the file NASA-OPEN-SOURCE-AGREEMENT.doc.
+  
+  No Warranty: THE SUBJECT SOFTWARE IS PROVIDED "AS IS" WITHOUT ANY
+  WARRANTY OF ANY KIND, EITHER EXPRESSED, IMPLIED, OR STATUTORY,
+  INCLUDING, BUT NOT LIMITED TO, ANY WARRANTY THAT THE SUBJECT SOFTWARE
+  WILL CONFORM TO SPECIFICATIONS, ANY IMPLIED WARRANTIES OF
+  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, OR FREEDOM FROM
+  INFRINGEMENT, ANY WARRANTY THAT THE SUBJECT SOFTWARE WILL BE ERROR
+  FREE, OR ANY WARRANTY THAT DOCUMENTATION, IF PROVIDED, WILL CONFORM
+  TO THE SUBJECT SOFTWARE. THIS AGREEMENT DOES NOT, IN ANY MANNER,
+  CONSTITUTE AN ENDORSEMENT BY GOVERNMENT AGENCY OR ANY PRIOR RECIPIENT
+  OF ANY RESULTS, RESULTING DESIGNS, HARDWARE, SOFTWARE PRODUCTS OR ANY
+  OTHER APPLICATIONS RESULTING FROM USE OF THE SUBJECT SOFTWARE.
+  FURTHER, GOVERNMENT AGENCY DISCLAIMS ALL WARRANTIES AND LIABILITIES
+  REGARDING THIRD-PARTY SOFTWARE, IF PRESENT IN THE ORIGINAL SOFTWARE,
+  AND DISTRIBUTES IT "AS IS."
+
+  Waiver and Indemnity: RECIPIENT AGREES TO WAIVE ANY AND ALL CLAIMS
+  AGAINST THE UNITED STATES GOVERNMENT, ITS CONTRACTORS AND
+  SUBCONTRACTORS, AS WELL AS ANY PRIOR RECIPIENT. IF RECIPIENT'S USE OF
+  THE SUBJECT SOFTWARE RESULTS IN ANY LIABILITIES, DEMANDS, DAMAGES,
+  EXPENSES OR LOSSES ARISING FROM SUCH USE, INCLUDING ANY DAMAGES FROM
+  PRODUCTS BASED ON, OR RESULTING FROM, RECIPIENT'S USE OF THE SUBJECT
+  SOFTWARE, RECIPIENT SHALL INDEMNIFY AND HOLD HARMLESS THE UNITED
+  STATES GOVERNMENT, ITS CONTRACTORS AND SUBCONTRACTORS, AS WELL AS ANY
+  PRIOR RECIPIENT, TO THE EXTENT PERMITTED BY LAW. RECIPIENT'S SOLE
+  REMEDY FOR ANY SUCH MATTER SHALL BE THE IMMEDIATE, UNILATERAL
+  TERMINATION OF THIS AGREEMENT.
+-->
+
+<project basedir="." default="build" name="fs">
+
+  <import file="../include/ant/standard.xml"/>
+  <import file="${targets}/gen-xmlbeans.xml"/>
+<!-- Commented out because this does not work with java 8.
+  <import file="../include/ant/jaxb-schemagen.xml" />
+-->
+
+  <!-- =================== Externally-exposed Targets =================== -->
+  <target name="gen-qparser" >
+    <java fork="true"
+      failonerror="true"
+      classname="org.antlr.Tool"
+      dir="grammar"
+     >
+       <classpath refid="classpath.buildtime" />
+       <arg value="-o" />
+       <arg value="../src/gov/nasa/kepler/fs/query" />
+       <arg value="FsQuery.g" />
+     </java>
+  </target>
+	
+  <target name="compile-pre" depends="gen-xmlbeans,gen-qparser" >
+  	<javac debug="true" debuglevel="${debuglevel}" 
+               includeantruntime="false"
+               destdir="${classes.src.dir}"
+               source="${source}" target="${target}">
+           <src path="${src}" />
+            <classpath refid="classpath.buildtime" />
+           <compilerarg value="${build.compiler.arg}" />
+           <include name="gov/nasa/kepler/fs/api/gen/**" />
+    </javac>
+  	<java fork="true" 
+  	      failonerror="true" 
+  	      classname="gov.nasa.kepler.fs.api.gen.TimeSeriesGenerator"
+  	      >
+  	      <classpath refid="classpath.buildtime" />
+  	      <classpath path="../common/build/src" />
+  	      <classpath path="../services/build/src" />
+  	      <classpath path="${classes.src.dir}" />
+              <jvmarg value="-Dlog4j.configuration=${log4j.configuration}" />
+  	      <arg value="src/gov/nasa/kepler/fs/api" />
+  		  <arg value="int" />
+  		  <arg value="float" />
+  		  <arg value="double" />
+  	</java>
+  	
+    <javac debug="true" debuglevel="${debuglevel}" destdir="${classes.src.dir}"
+           includeantruntime="false" source="${source}" target="${target}">
+      <src path="${src}" />
+      <classpath refid="classpath.buildtime" />
+      <compilerarg value="${build.compiler.arg}" />
+      <include name="gov/nasa/kepler/fs/api/**" />
+    </javac>
+  	
+    <java fork="true" 
+	  failonerror="true" 
+	  classname="gov.nasa.kepler.fs.api.gen.ApiGenerator"
+	  >
+      <classpath refid="classpath.buildtime" />
+      <classpath path="../common/build/src" />
+      <classpath path="../services/build/src" />
+      <classpath path="${classes.src.dir}" />
+      <arg value="-stub" />
+      <arg value="gov.nasa.kepler.fs.client.AbstractFstpClient" />
+      <arg value="--skeleton" />
+      <arg value="gov.nasa.kepler.fs.server.AbstractFstpServer" />
+      <arg value="--target" />
+      <arg value="gov.nasa.kepler.fs.api.FileStoreImplInterface" />
+      <arg value="--outputdir" />
+      <arg value="${src}" />
+    </java>
+
+    <mkdir dir="${classes.src.dir}/META-INF" />
+    <copy file="${src}/META-INF/aop.xml" todir="${classes.src.dir}/META-INF" />
+  </target>
+
+  <target name="clean">
+    <antcall target="basic.clean"/>
+    <delete file="${src}/gov/nasa/kepler/fs/client/AbstractHttpClient.java" />
+    <delete file="${src}/gov/nasa/kepler/fs/server/AbstractFsServlet.java" />
+    <delete file="${src}/gov/nasa/kepler/fs/client/AbstractFstpClient.java" />
+    <delete file="${src}/gov/nasa/kepler/fs/server/AbstractFstpServer.java" />
+    <delete file="${src}/gov/nasa/kepler/fs/query/FsQueryLexer.java" />
+    <delete file="${src}/gov/nasa/kepler/fs/query/FsQueryParser.java" />
+    <delete file="${src}/gov/nasa/kepler/fs/query/FsQuery.tokens" />
+<!-- Commented out because this file has been committed to svn, since it can no longer be auto-generated with java 8.
+    <delete file="xml/fsidpathmap.xsd" />
+-->
+  </target>
+
+  <target name="compile-post"
+        depends="xmlschemagen" />
+	
+  <target name="xmlschemagen">
+<!-- Commented out because this does not work with java 8.
+    <schemagen destdir="xml" srcdir="${src}" includeantruntime="false">
+      <include name="gov/nasa/kepler/fs/storage/FsDataPlacementConfiguration.java" />
+      <include name="gov/nasa/kepler/fs/storage/FileSystem.java" />
+      <classpath refid="classpath.buildtime" />
+    </schemagen>
+    <move file="xml/schema1.xsd" tofile="xml/fsidpathmap.xsd" />
+-->
+    <copy file="xml/fsidpathmap.xsd" todir="${src}/" />
+    <copy file="xml/fsidpathmap.xsd" todir="${classes.src.dir}/" />
+  </target>
+
+  
+</project>

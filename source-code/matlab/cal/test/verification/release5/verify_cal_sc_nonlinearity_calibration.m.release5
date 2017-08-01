@@ -1,0 +1,215 @@
+function verify_cal_sc_nonlinearity_calibration(dataLocationStr)
+%function verify_cal_sc_nonlinearity_calibration(dataLocationStr)
+%
+% function to verify short cadence CAL nonlinearity correction using ETEM2 data
+%
+%  clear classes
+%  verify_cal_sc_nonlinearity_calibration('/path/to/rec/test-data/cal/verification/short_cadence_cal/')
+%
+%--------------------------------------------------------------------------
+%
+%  Requirement:
+%                    SOC1002        The SOC shall be capable of correcting
+%                                   target, background, and collateral pixel data for
+%                                   nonlinearity
+%
+%                    SOC1002.CAL.1  CAL shall be capable of correcting
+%                                   target, background, and collateral
+%                                   pixel data for nonlinearity
+%
+%  Test Data Sets:
+%                   ETEM2 runs with all motion and noise sources turned off, and
+%                       (1) 2Dblack, stars, smear, and dark on (requantized data)
+%                       (2) 2Dblack, stars, smear, dark, and nonlinearity on (requantized data)
+%
+%
+%  Test Data Sets ID:
+%                   calInputs_calSC_2D_ST_SM_DC_nl_lu_ff_rn_qn_sn_RQ_cr.mat
+%                   calOutputs_calSC_2D_ST_SM_DC_nl_lu_ff_rn_qn_sn_RQ_cr.mat
+%
+%                   calInputs_calSC_2D_ST_SM_DC_NL_lu_ff_rn_qn_sn_RQ_cr.mat
+%                   calOutputs_calSC_2D_ST_SM_DC_NL_lu_ff_rn_qn_sn_RQ_cr.mat
+%
+%  Verification Method: Manual Inspection
+%
+%
+%  Verification Process:
+%                   Run verify_cal_sc_nonlinearity_calibration.m:
+%
+%                   (1) Load and plot the input and output collateral smear
+%                   pixels for runs with and without NL (figure 1)
+%
+%                   (2) Load and plot the input and output target pixels for
+%                   runs with and without NL (figure 2)
+%
+%       Output
+%                   dataLocationStr/CAL_verification_figures/cal_sc_nonlinearity_correction_I.fig
+%                   dataLocationStr/CAL_verification_figures/cal_sc_nonlinearity_correction_II.fig
+%
+%--------------------------------------------------------------------------
+% 
+% Copyright 2017 United States Government as represented by the
+% Administrator of the National Aeronautics and Space Administration.
+% All Rights Reserved.
+% 
+% NASA acknowledges the SETI Institute's primary role in authoring and
+% producing the Kepler Data Processing Pipeline under Cooperative
+% Agreement Nos. NNA04CC63A, NNX07AD96A, NNX07AD98A, NNX11AI13A,
+% NNX11AI14A, NNX13AD01A & NNX13AD16A.
+% 
+% This file is available under the terms of the NASA Open Source Agreement
+% (NOSA). You should have received a copy of this agreement with the
+% Kepler source code; see the file NASA-OPEN-SOURCE-AGREEMENT.doc.
+% 
+% No Warranty: THE SUBJECT SOFTWARE IS PROVIDED "AS IS" WITHOUT ANY
+% WARRANTY OF ANY KIND, EITHER EXPRESSED, IMPLIED, OR STATUTORY,
+% INCLUDING, BUT NOT LIMITED TO, ANY WARRANTY THAT THE SUBJECT SOFTWARE
+% WILL CONFORM TO SPECIFICATIONS, ANY IMPLIED WARRANTIES OF
+% MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, OR FREEDOM FROM
+% INFRINGEMENT, ANY WARRANTY THAT THE SUBJECT SOFTWARE WILL BE ERROR
+% FREE, OR ANY WARRANTY THAT DOCUMENTATION, IF PROVIDED, WILL CONFORM
+% TO THE SUBJECT SOFTWARE. THIS AGREEMENT DOES NOT, IN ANY MANNER,
+% CONSTITUTE AN ENDORSEMENT BY GOVERNMENT AGENCY OR ANY PRIOR RECIPIENT
+% OF ANY RESULTS, RESULTING DESIGNS, HARDWARE, SOFTWARE PRODUCTS OR ANY
+% OTHER APPLICATIONS RESULTING FROM USE OF THE SUBJECT SOFTWARE.
+% FURTHER, GOVERNMENT AGENCY DISCLAIMS ALL WARRANTIES AND LIABILITIES
+% REGARDING THIRD-PARTY SOFTWARE, IF PRESENT IN THE ORIGINAL SOFTWARE,
+% AND DISTRIBUTES IT "AS IS."
+% 
+% Waiver and Indemnity: RECIPIENT AGREES TO WAIVE ANY AND ALL CLAIMS
+% AGAINST THE UNITED STATES GOVERNMENT, ITS CONTRACTORS AND
+% SUBCONTRACTORS, AS WELL AS ANY PRIOR RECIPIENT. IF RECIPIENT'S USE OF
+% THE SUBJECT SOFTWARE RESULTS IN ANY LIABILITIES, DEMANDS, DAMAGES,
+% EXPENSES OR LOSSES ARISING FROM SUCH USE, INCLUDING ANY DAMAGES FROM
+% PRODUCTS BASED ON, OR RESULTING FROM, RECIPIENT'S USE OF THE SUBJECT
+% SOFTWARE, RECIPIENT SHALL INDEMNIFY AND HOLD HARMLESS THE UNITED
+% STATES GOVERNMENT, ITS CONTRACTORS AND SUBCONTRACTORS, AS WELL AS ANY
+% PRIOR RECIPIENT, TO THE EXTENT PERMITTED BY LAW. RECIPIENT'S SOLE
+% REMEDY FOR ANY SUCH MATTER SHALL BE THE IMMEDIATE, UNILATERAL
+% TERMINATION OF THIS AGREEMENT.
+%
+
+cd(dataLocationStr);
+
+% FC model parameters
+nColsImaging    = 1100;
+nLeadingBlack   = 12;
+
+validCols = (nLeadingBlack+1:nLeadingBlack+nColsImaging)';
+
+
+%--------------------------------------------------------------------------
+% load input/output pixel data
+%--------------------------------------------------------------------------
+
+load calInputs_calSC_2D_ST_SM_DC_NL_lu_ff_rn_qn_sn_RQ_cr.mat
+
+mSmearInputPix_2D_ST_SM_DC_NL = [calCollateralInputs.maskedSmearPixels.values]';
+vSmearInputPix_2D_ST_SM_DC_NL = [calCollateralInputs.virtualSmearPixels.values]';
+targetInputPix_2D_ST_SM_DC_NL = [calPhotometricInputs.targetAndBkgPixels.values]';
+
+load calInputs_calSC_2D_ST_SM_DC_nl_lu_ff_rn_qn_sn_RQ_cr.mat
+
+mSmearInputPix_2D_ST_SM_DC    = [calCollateralInputs.maskedSmearPixels.values]';
+vSmearInputPix_2D_ST_SM_DC    = [calCollateralInputs.virtualSmearPixels.values]';
+targetInputPix_2D_ST_SM_DC    = [calPhotometricInputs.targetAndBkgPixels.values]';
+
+
+load calOutputs_calSC_2D_ST_SM_DC_NL_lu_ff_rn_qn_sn_RQ_cr.mat
+
+% 2Dblack and NL corrected:
+calibratedMsmearPix_2D_ST_SM_DC_NL  = [calCollateralOutputs.calibratedCollateralPixels.maskedSmear.values]';    % nPixels x nCadences
+calibratedVsmearPix_2D_ST_SM_DC_NL  = [calCollateralOutputs.calibratedCollateralPixels.virtualSmear.values]';   % nPixels x nCadences
+calibratedTargetPix_2D_ST_SM_DC_NL  = [calPhotometricOutputs.targetAndBackgroundPixels.values]';  % nPixels x nCadences
+
+
+load calOutputs_calSC_2D_ST_SM_DC_nl_lu_ff_rn_qn_sn_RQ_cr.mat
+
+% 2Dblack and NL corrected:
+calibratedMsmearPix_2D_ST_SM_DC  = [calCollateralOutputs.calibratedCollateralPixels.maskedSmear.values]';    % nPixels x nCadences
+calibratedVsmearPix_2D_ST_SM_DC  = [calCollateralOutputs.calibratedCollateralPixels.virtualSmear.values]';   % nPixels x nCadences
+calibratedTargetPix_2D_ST_SM_DC  = [calPhotometricOutputs.targetAndBackgroundPixels.values]';   % nPixels x nCadences
+
+
+%--------------------------------------------------------------------------
+% Fig 1: plot the input and output collateral pixels for runs with and without NL
+%--------------------------------------------------------------------------
+
+figure;
+subplot(2, 1, 1)
+
+h1 = plot(mSmearInputPix_2D_ST_SM_DC, ...
+    ((mSmearInputPix_2D_ST_SM_DC_NL - mSmearInputPix_2D_ST_SM_DC)./mSmearInputPix_2D_ST_SM_DC), 'r.');
+
+hold on
+h2 = plot(vSmearInputPix_2D_ST_SM_DC, ...
+    ((vSmearInputPix_2D_ST_SM_DC_NL - vSmearInputPix_2D_ST_SM_DC)./vSmearInputPix_2D_ST_SM_DC), 'bo');
+
+
+ylabel('Input fractional diff');
+xlabel('Smear pixels');
+title('CAL INPUT smear fractional diff (NLon-NLoff)/NLoff  (2Dblack/stars/smear/dark on, NL on/off)');
+legend([h1(1) h2(1)], {'input masked smear', 'input virtual smear'}, 'Location', 'Best');
+
+subplot(2, 1, 2)
+
+h3 = plot(calibratedMsmearPix_2D_ST_SM_DC(validCols, 1), ...
+    ((calibratedMsmearPix_2D_ST_SM_DC_NL(validCols, 1) - calibratedMsmearPix_2D_ST_SM_DC(validCols, 1))./calibratedMsmearPix_2D_ST_SM_DC(validCols, 1)), 'r.');
+
+hold on
+h4 = plot(calibratedVsmearPix_2D_ST_SM_DC(validCols, 1), ...
+    ((calibratedVsmearPix_2D_ST_SM_DC_NL(validCols, 1) - calibratedVsmearPix_2D_ST_SM_DC(validCols, 1))./calibratedVsmearPix_2D_ST_SM_DC(validCols, 1)), 'bo');
+
+ylabel('Output fractional diff');
+xlabel('Smear pixels');
+title('CAL OUTPUT smear fractional diff (NLon-NLoff)/NLoff  (2Dblack/stars/smear/dark on, NL on/off)');
+legend([h3(1) h4(1)], {'output masked smear', 'output virtual smear'}, 'Location', 'Best');
+
+
+fileNameStr = [dataLocationStr 'CAL_verification_figures/cal_sc_nonlinearity_correction_I.fig'];
+paperOrientationFlag = false;
+includeTimeFlag      = false;
+printJpgFlag         = false;
+
+plot_to_file(fileNameStr, paperOrientationFlag, includeTimeFlag, printJpgFlag);
+
+
+%--------------------------------------------------------------------------
+% Fig 2: plot the input and output target pixels for runs with and without NL
+%--------------------------------------------------------------------------
+figure;
+subplot(2, 1, 1)
+
+h5 = plot(targetInputPix_2D_ST_SM_DC, ...
+    ((targetInputPix_2D_ST_SM_DC_NL ./ targetInputPix_2D_ST_SM_DC)./targetInputPix_2D_ST_SM_DC), 'c.');
+
+
+ylabel('Input fractional diff');
+xlabel('Target pixels');
+title('CAL INPUT target pixel fractional diff (NLon-NLoff)/NLoff (2Dblack/stars/smear/dark on, NL on/off)');
+legend(h5(1), 'input target pixels', 'Location', 'Best');
+
+subplot(2, 1, 2)
+
+h6 = plot(calibratedTargetPix_2D_ST_SM_DC, ...
+    ((calibratedTargetPix_2D_ST_SM_DC_NL ./ calibratedTargetPix_2D_ST_SM_DC)./calibratedTargetPix_2D_ST_SM_DC), 'm.');
+
+
+ylabel('Output fractional diff');
+xlabel('Target pixels');
+title('CAL OUTPUT target pixel fractional diff (NLon-NLoff)/NLoff  (2Dblack/stars/smear/dark on, NL on/off)');
+legend(h6(1), 'output target pixels', 'Location', 'Best');
+
+
+fileNameStr = [dataLocationStr 'CAL_verification_figures/cal_sc_nonlinearity_validation_II'];
+paperOrientationFlag = false;
+includeTimeFlag      = false;
+printJpgFlag         = false;
+
+plot_to_file(fileNameStr, paperOrientationFlag, includeTimeFlag, printJpgFlag);
+
+
+cd(dataLocationStr);
+
+
+return;

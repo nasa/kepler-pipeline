@@ -1,0 +1,185 @@
+Copyright 2017 United States Government as represented by the
+Administrator of the National Aeronautics and Space Administration.
+All Rights Reserved.
+
+NASA acknowledges the SETI Institute's primary role in authoring and
+producing the Kepler Data Processing Pipeline under Cooperative
+Agreement Nos. NNA04CC63A, NNX07AD96A, NNX07AD98A, NNX11AI13A,
+NNX11AI14A, NNX13AD01A & NNX13AD16A.
+
+This file is available under the terms of the NASA Open Source Agreement
+(NOSA). You should have received a copy of this agreement with the
+Kepler source code; see the file NASA-OPEN-SOURCE-AGREEMENT.doc.
+
+No Warranty: THE SUBJECT SOFTWARE IS PROVIDED "AS IS" WITHOUT ANY
+WARRANTY OF ANY KIND, EITHER EXPRESSED, IMPLIED, OR STATUTORY,
+INCLUDING, BUT NOT LIMITED TO, ANY WARRANTY THAT THE SUBJECT SOFTWARE
+WILL CONFORM TO SPECIFICATIONS, ANY IMPLIED WARRANTIES OF
+MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, OR FREEDOM FROM
+INFRINGEMENT, ANY WARRANTY THAT THE SUBJECT SOFTWARE WILL BE ERROR
+FREE, OR ANY WARRANTY THAT DOCUMENTATION, IF PROVIDED, WILL CONFORM
+TO THE SUBJECT SOFTWARE. THIS AGREEMENT DOES NOT, IN ANY MANNER,
+CONSTITUTE AN ENDORSEMENT BY GOVERNMENT AGENCY OR ANY PRIOR RECIPIENT
+OF ANY RESULTS, RESULTING DESIGNS, HARDWARE, SOFTWARE PRODUCTS OR ANY
+OTHER APPLICATIONS RESULTING FROM USE OF THE SUBJECT SOFTWARE.
+FURTHER, GOVERNMENT AGENCY DISCLAIMS ALL WARRANTIES AND LIABILITIES
+REGARDING THIRD-PARTY SOFTWARE, IF PRESENT IN THE ORIGINAL SOFTWARE,
+AND DISTRIBUTES IT "AS IS."
+
+Waiver and Indemnity: RECIPIENT AGREES TO WAIVE ANY AND ALL CLAIMS
+AGAINST THE UNITED STATES GOVERNMENT, ITS CONTRACTORS AND
+SUBCONTRACTORS, AS WELL AS ANY PRIOR RECIPIENT. IF RECIPIENT'S USE OF
+THE SUBJECT SOFTWARE RESULTS IN ANY LIABILITIES, DEMANDS, DAMAGES,
+EXPENSES OR LOSSES ARISING FROM SUCH USE, INCLUDING ANY DAMAGES FROM
+PRODUCTS BASED ON, OR RESULTING FROM, RECIPIENT'S USE OF THE SUBJECT
+SOFTWARE, RECIPIENT SHALL INDEMNIFY AND HOLD HARMLESS THE UNITED
+STATES GOVERNMENT, ITS CONTRACTORS AND SUBCONTRACTORS, AS WELL AS ANY
+PRIOR RECIPIENT, TO THE EXTENT PERMITTED BY LAW. RECIPIENT'S SOLE
+REMEDY FOR ANY SUCH MATTER SHALL BE THE IMMEDIATE, UNILATERAL
+TERMINATION OF THIS AGREEMENT.
+
+7/7/15
+
+This directory contains supplemental DAWG tools for characterizing K2 data 
+products. In addition to the existing Kepler DAWG tools, new tools have 
+been added for analyzing agreement of motion polynomials and centroids, 
+the effect of roll tweaks on raw light curves, cosmic ray corrections, 
+and the quality of Argabrightening mitigation.
+
+===========================================================================
+
+                              Contents
+
+===========================================================================
+k2_pa_dawg_metrics_script.m
+
+    This is the main K2 DAWG script, which calls many of the other 
+    functions listed here. Typically it is called as follows:
+
+    k2_pa_dawg_metrics_script(k2_configure_pa_dawg_script)
+
+k2_configure_pa_dawg_script.m
+
+    The top section of this function should be modified by the user for 
+    each new campaign. 
+
+
+Motion Polynomials & Centroids
+==============================
+plot_mp_centroid_residuals_fov.m
+	
+	Generate a color-coded FOV plot of the distances between motion 
+	polynomial-predicted centroid positions and the computed centroid 
+	positions (either PRF or flux-weighted) for PPA and/or non-PPA
+	targets.
+
+summarize_mp_centroid_residuals.m
+
+	Used by plot_mp_centroid_residuals_fov.m. Compute an arbitrary function
+	of the residual errors between motion polynomial-predicted centroid 
+	positions and the centroid positions determined by either PRF fitting
+	or spatial averaging of observed flux.
+
+plot_mp_centroid_stats_fov.m
+
+    Examine the number of centroids used in motion polynomial computation 
+    for each channel at each cadence and plot statistics across the FOV. 
+    Also examine the results of RA/Dec fitting for each channel. 
+
+compare_motion_polynomials.m
+
+	Compare two sets of motion polynomials.
+
+
+Raw Light Curves
+================
+plot_detrended_flux_attribute_fov.m
+
+    Generate a color-coded FOV plot of a user-defined attribute (standard
+    deviation by default) of detrended light curves for a given quarter or 
+    campaign. The result for each target is plotted at the location of its
+    flux-weighted centroid.
+
+
+Cosmic Ray
+==========
+generate_cosmic_ray_lc_figs_and_data.m
+
+    Analyze the distribution of detected background cosmic rays for each 
+    channel. Compare the distribution of detected events with the expected
+    distribution and plot (1) the goodness-of-fit across the FOV, and (2) 
+    the expected and observed histogram for each channel.
+
+
+Argabrightening Mitigation
+==========================
+plot_argabrightening_mitigation.m
+
+    Generate a plot of mean calibrated background flux for all specified 
+    channels with Argabrightening cadences marked.
+
+PA-COA 
+======
+Image Modeling:
+--------------
+scoop_ra_dec_mag_fit_results_fov.m
+
+    Aggregates PA-COA magnitude/position fitting results from PA state 
+    files into a signle struct array.
+
+plot_modeled_vs_catalog_ra_dec_mag_fov.m
+
+    Generate plots of the differences from catalog values of fitted 
+    target positions and magnitudes.
+
+scatter_plot_ra_dec_mag_results.m
+
+    A general plotting tool for explorign the results of magnitude and 
+    position fitting in PA-COA.
+
+Aperture Selection:
+------------------
+convert_cdpp_fov_struct_to_target_array.m
+add_aperture_sizes_and_target_positions.m
+
+    These two fucntion work together to transform results from 
+    paCoaClass.compile_FOV_statistics() into a more convenient format.
+
+plot_aperture_sizes.m
+
+    Plot the sizes of the PA optimal aperture actually used for photometry
+    against those (from TAD) in the PA input structures.
+
+
+===========================================================================
+
+                              Usage
+
+===========================================================================
+The following is a step-by-step account of how to generate DAWG figures and
+data using the tools in this directory:
+
+1) Add this directory to the Matlab path, so that the scripts herein are
+   visible.
+
+2) Add test directories to the Matlab path.
+
+   	>> addpath('/path/to/matlab/pa/test')
+   	>> addpath('/path/to/matlab/pa/test/k2_dawg')
+
+3) Create a directory within which to store V&V figures and data, and make 
+   it the current working Matlab directory.
+
+	>> mkdir('c3_dawg')
+	>> cd c3_dawg
+
+4) Modify the function k2_configure_pa_dawg_script.m
+
+5) Run the function k2_pa_dawg_metrics_script() with the config struct 
+   returned by k2_configure_pa_dawg_script() as an argument.
+
+	>> k2_pa_dawg_metrics_script(k2_configure_pa_dawg_script)
+
+
+-RLM
+

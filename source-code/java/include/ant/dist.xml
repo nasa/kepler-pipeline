@@ -1,0 +1,234 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Copyright 2017 United States Government as represented by the
+  Administrator of the National Aeronautics and Space Administration.
+  All Rights Reserved.
+  
+  This file is available under the terms of the NASA Open Source Agreement
+  (NOSA). You should have received a copy of this agreement with the
+  Kepler source code; see the file NASA-OPEN-SOURCE-AGREEMENT.doc.
+  
+  No Warranty: THE SUBJECT SOFTWARE IS PROVIDED "AS IS" WITHOUT ANY
+  WARRANTY OF ANY KIND, EITHER EXPRESSED, IMPLIED, OR STATUTORY,
+  INCLUDING, BUT NOT LIMITED TO, ANY WARRANTY THAT THE SUBJECT SOFTWARE
+  WILL CONFORM TO SPECIFICATIONS, ANY IMPLIED WARRANTIES OF
+  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, OR FREEDOM FROM
+  INFRINGEMENT, ANY WARRANTY THAT THE SUBJECT SOFTWARE WILL BE ERROR
+  FREE, OR ANY WARRANTY THAT DOCUMENTATION, IF PROVIDED, WILL CONFORM
+  TO THE SUBJECT SOFTWARE. THIS AGREEMENT DOES NOT, IN ANY MANNER,
+  CONSTITUTE AN ENDORSEMENT BY GOVERNMENT AGENCY OR ANY PRIOR RECIPIENT
+  OF ANY RESULTS, RESULTING DESIGNS, HARDWARE, SOFTWARE PRODUCTS OR ANY
+  OTHER APPLICATIONS RESULTING FROM USE OF THE SUBJECT SOFTWARE.
+  FURTHER, GOVERNMENT AGENCY DISCLAIMS ALL WARRANTIES AND LIABILITIES
+  REGARDING THIRD-PARTY SOFTWARE, IF PRESENT IN THE ORIGINAL SOFTWARE,
+  AND DISTRIBUTES IT "AS IS."
+  
+  Waiver and Indemnity: RECIPIENT AGREES TO WAIVE ANY AND ALL CLAIMS
+  AGAINST THE UNITED STATES GOVERNMENT, ITS CONTRACTORS AND
+  SUBCONTRACTORS, AS WELL AS ANY PRIOR RECIPIENT. IF RECIPIENT'S USE OF
+  THE SUBJECT SOFTWARE RESULTS IN ANY LIABILITIES, DEMANDS, DAMAGES,
+  EXPENSES OR LOSSES ARISING FROM SUCH USE, INCLUDING ANY DAMAGES FROM
+  PRODUCTS BASED ON, OR RESULTING FROM, RECIPIENT'S USE OF THE SUBJECT
+  SOFTWARE, RECIPIENT SHALL INDEMNIFY AND HOLD HARMLESS THE UNITED
+  STATES GOVERNMENT, ITS CONTRACTORS AND SUBCONTRACTORS, AS WELL AS ANY
+  PRIOR RECIPIENT, TO THE EXTENT PERMITTED BY LAW. RECIPIENT'S SOLE
+  REMEDY FOR ANY SUCH MATTER SHALL BE THE IMMEDIATE, UNILATERAL
+  TERMINATION OF THIS AGREEMENT.
+-->
+
+<project name="dist">
+
+  <property name="dist" value="${build.top}/dist" />
+  <property name="dist.bin" value="${dist}/${bin}" />
+  <property name="dist.doc" value="${dist}/${doc}" />
+  <property name="dist.etc" value="${dist}/${etc}" />
+  <property name="dist.images" value="${dist}/${images}" />
+  <property name="dist.lib" value="${dist}/${lib}" />
+  <property name="dist.xml" value="${dist}/${xml}" />
+  <property name="dist.seed-data" value="${dist}/${seed-data}" />
+
+  <property name="build.top.skel" value="${build.top}/skel" />
+  <property name="soc-classpath.jar.name"
+            value="${dist.lib}/soc-classpath.jar" />
+
+  <!-- The target dist-pre is designed to be overridden so do not -->
+  <!-- add any dependencies or content. -->
+  <target name="dist-pre"
+          description="Override to perform actions before dist target">
+  </target>
+
+  <!-- The target dist-post is designed to be overridden so do not -->
+  <!-- add any dependencies or content. -->
+  <target name="dist-post"
+          description="Override to perform actions after dist target">
+  </target>
+
+  <!-- Prepare the dist directory structure. -->
+  <target name="dist-prep">
+    <mkdir dir="${dist.bin}" />
+    <mkdir dir="${dist.etc}" />
+    <mkdir dir="${dist.images}" />
+    <mkdir dir="${dist.lib}" />
+    <mkdir dir="${dist.xml}" />
+  </target>
+
+  <!-- Prune dist directory and add skel files. -->
+  <!-- Usually only called by java/build.xml -->
+  <target name="dist-setup"
+          description="Create dist directory structure and copy files from skel">
+    <!-- Remove previous and possibly dangling artifacts. -->
+    <delete dir="${dist}" />
+
+    <!-- Copy skel files into dist. -->
+    <antcall target="dist-skel" inheritRefs="true" />
+  </target>
+
+  <target name="uname-init" 
+          description="Initialize properties derived from uname(1)" >
+    <exec executable="uname" osfamily="unix" outputproperty="uname.s" >
+      <arg line="-s" />
+    </exec>
+    <echo>uname.s=${uname.s}</echo>
+    <if>
+      <equals arg1="${uname.s}" arg2="Linux" />
+      <then>
+        <property name="uname.s.lowercase" value="linux" />
+      </then>
+      <elseif>
+        <equals arg1="${uname.s}" arg2="Darwin" />
+        <then>
+          <property name="uname.s.lowercase" value="darwin" />
+        </then>
+      </elseif>
+      <else>
+        <echo>Unrecognized operating system: ${uname.s}</echo>
+        <property name="uname.s.lowercase" value="linux" />
+      </else>
+    </if>
+    <echo>uname.s.lowercase=${uname.s.lowercase}</echo>
+  </target>
+
+  <target name="shared-object-init" depends="uname-init"
+          description="Initialize shared object properties" >
+
+    <var name="so.ext" value="so" />
+    <if>
+      <equals arg1="${uname.s.lowercase}" arg2="darwin" />
+      <then>
+        <var name="so.ext" value="dylib" />
+      </then>
+    </if>
+    <property name="shared.object.ext" value="${so.ext}" />
+    <echo>shared.object.ext=${so.ext}</echo>
+    <var name="so.ext" unset="true" />
+  </target>
+
+  <!-- Copy the files from skel to dist -->
+  <!-- This is implemented as a separate target to allow the dist -->
+  <!-- files from skel to be easily refreshed in development without -->
+  <!-- wiping out all of dist -->
+  <target name="dist-skel" depends="dist-prep, shared-object-init"
+          description="Copy files from skel" >
+    <!-- Copy skel files into dist. -->
+    <copy todir="${dist}" overwrite="true">
+      <fileset dir="${build.top.skel}">
+        <exclude name="**/.svn" />
+      </fileset>
+    </copy>
+
+    <!-- Overwrite system specific files in dist. -->
+    <copy todir="${dist}" overwrite="true">
+      <mapper>
+        <chainedmapper>
+          <identitymapper/>
+          <globmapper from="*-${uname.s.lowercase}.${shared.object.ext}"
+                      to="*.${shared.object.ext}" />
+        </chainedmapper>
+        <chainedmapper>
+          <identitymapper/>
+          <globmapper from="*-${uname.s.lowercase}"
+                      to="*" />
+        </chainedmapper>
+      </mapper>
+      <fileset dir="${build.top.skel}">
+        <exclude name="**/.svn" />
+      </fileset>
+    </copy>
+
+    <chmod perm="+x" dir="${dist.bin}" includes="*" />
+  </target>
+
+  <!-- Copies typical build products into the ${dist} dir. -->
+  <target name="dist" depends="build,dist-prep,dist-pre"
+          description="Copy build products from individual projects to the dist tree">
+    <if>
+      <isset property="manifest" />
+      <then>
+        <jar destfile="${dist.lib}/${ant.project.name}.jar"
+             manifest="${manifest}">
+          <fileset dir="${classes.src.dir}" />
+          <!-- Temporarily adding test classes to the dist jar. This
+               is necessary to support early testing since the mocked
+               versions of many of the pipeline modules are in the
+               test code. -->
+          <fileset dir="${classes.test.dir}" />
+        </jar>
+      </then>
+      <else>
+        <jar destfile="${dist.lib}/${ant.project.name}.jar">
+          <fileset dir="${classes.src.dir}" />
+          <!-- Temporarily adding test classes to the dist jar. This
+               is necessary to support early testing since the mocked
+               versions of many of the pipeline modules are in the
+               test code. -->
+          <fileset dir="${classes.test.dir}" />
+        </jar>
+      </else>
+    </if>
+
+    <!-- Copy other project-specific files to dist -->
+    <copy todir="${dist.lib}">
+      <fileset dir="${build}/${lib}" includes="**/*" />
+    </copy>
+
+    <!-- perform any project-specific tasks after dist -->
+    <antcall target="dist-post" inheritRefs="true" />
+  </target>
+
+  <!-- Install third-party jars in dist/lib (flatten hierarchy). -->
+  <!-- Create empty soc-classpath.jar file that contains a useful Class-Path. -->
+  <!-- Usually only called by java/build.xml, after dist -->
+  <target name="dist-finalize">
+    <copy todir="${dist.lib}" flatten="true">
+      <fileset dir="${build.top.java}/jars/runtime" includes="**/*.jar" />
+    </copy>
+
+    <!-- Set runtime.classpath to contain all jars that were copied -->
+    <!-- into the dist/lib directory. -->
+    <!-- This needs to happen after dist so that project jars get -->
+    <!-- included in the classpath -->
+    <path id="runtime.classpath">
+      <fileset dir="${dist.lib}">
+        <include name="**/*.jar" />
+      </fileset>
+      <pathelement location="${dist.etc}" />
+    </path>
+
+    <!-- Associate that classpath with soc-classpath.jar.name. -->
+    <manifestclasspath property="manifest.classpath"
+                       jarfile="${soc-classpath.jar.name}">
+      <classpath refid="runtime.classpath" />
+    </manifestclasspath>
+
+    <!-- This is an empty jar that only contains MF/MANIFEST.MF with a -->
+    <!-- Class-Path property. This jar will be the only entry in the -->
+    <!-- wrapper.conf classpath so wrapper.conf will never have to be -->
+    <!-- updated when the classpath changes. -->
+    <jar destfile="${soc-classpath.jar.name}">
+      <manifest>
+        <attribute name="Class-Path" value="${manifest.classpath}" />
+      </manifest>
+    </jar>
+
+  </target>
+</project>

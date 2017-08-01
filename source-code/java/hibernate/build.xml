@@ -1,0 +1,753 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Copyright 2017 United States Government as represented by the
+  Administrator of the National Aeronautics and Space Administration.
+  All Rights Reserved.
+  
+  This file is available under the terms of the NASA Open Source Agreement
+  (NOSA). You should have received a copy of this agreement with the
+  Kepler source code; see the file NASA-OPEN-SOURCE-AGREEMENT.doc.
+  
+  No Warranty: THE SUBJECT SOFTWARE IS PROVIDED "AS IS" WITHOUT ANY
+  WARRANTY OF ANY KIND, EITHER EXPRESSED, IMPLIED, OR STATUTORY,
+  INCLUDING, BUT NOT LIMITED TO, ANY WARRANTY THAT THE SUBJECT SOFTWARE
+  WILL CONFORM TO SPECIFICATIONS, ANY IMPLIED WARRANTIES OF
+  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, OR FREEDOM FROM
+  INFRINGEMENT, ANY WARRANTY THAT THE SUBJECT SOFTWARE WILL BE ERROR
+  FREE, OR ANY WARRANTY THAT DOCUMENTATION, IF PROVIDED, WILL CONFORM
+  TO THE SUBJECT SOFTWARE. THIS AGREEMENT DOES NOT, IN ANY MANNER,
+  CONSTITUTE AN ENDORSEMENT BY GOVERNMENT AGENCY OR ANY PRIOR RECIPIENT
+  OF ANY RESULTS, RESULTING DESIGNS, HARDWARE, SOFTWARE PRODUCTS OR ANY
+  OTHER APPLICATIONS RESULTING FROM USE OF THE SUBJECT SOFTWARE.
+  FURTHER, GOVERNMENT AGENCY DISCLAIMS ALL WARRANTIES AND LIABILITIES
+  REGARDING THIRD-PARTY SOFTWARE, IF PRESENT IN THE ORIGINAL SOFTWARE,
+  AND DISTRIBUTES IT "AS IS."
+
+  Waiver and Indemnity: RECIPIENT AGREES TO WAIVE ANY AND ALL CLAIMS
+  AGAINST THE UNITED STATES GOVERNMENT, ITS CONTRACTORS AND
+  SUBCONTRACTORS, AS WELL AS ANY PRIOR RECIPIENT. IF RECIPIENT'S USE OF
+  THE SUBJECT SOFTWARE RESULTS IN ANY LIABILITIES, DEMANDS, DAMAGES,
+  EXPENSES OR LOSSES ARISING FROM SUCH USE, INCLUDING ANY DAMAGES FROM
+  PRODUCTS BASED ON, OR RESULTING FROM, RECIPIENT'S USE OF THE SUBJECT
+  SOFTWARE, RECIPIENT SHALL INDEMNIFY AND HOLD HARMLESS THE UNITED
+  STATES GOVERNMENT, ITS CONTRACTORS AND SUBCONTRACTORS, AS WELL AS ANY
+  PRIOR RECIPIENT, TO THE EXTENT PERMITTED BY LAW. RECIPIENT'S SOLE
+  REMEDY FOR ANY SUCH MATTER SHALL BE THE IMMEDIATE, UNILATERAL
+  TERMINATION OF THIS AGREEMENT.
+-->
+
+<project basedir="." default="build" name="hibernate">
+
+  <import file="../include/ant/standard.xml" />
+<!-- Commented out because this does not work with java 8.
+  <import file="../include/ant/jaxb-schemagen.xml" />
+-->
+  <property file="../../dist/etc/kepler.properties" />
+
+  <!-- Override the following properties if necessary on command line or -->
+  <!-- in ~/.kepler/hibernate-build.properties. -->
+
+  <property name="sql.driver" value="${hibernate.connection.driver_class}" />
+  <property name="sql.url" value="${hibernate.connection.url}" />
+  <property name="sql.userid" value="${hibernate.connection.username}" />
+  <property name="sql.password" value="${hibernate.connection.password}" />
+  <property name="sql.dialect" value="${hibernate.dialect}" />
+  <property name="use.local.data" value="false" />
+  <property name="using.hsqldb" value="false" />
+  <property name="force.clean.oracle" value="false" />
+
+  <!-- To upper case -->
+  <scriptdef language="javascript" name="upper">
+    <attribute name="string" /> 
+    <attribute name="to" />
+    project.setProperty(attributes.get("to"),attributes.get("string").toUpperCase());
+  </scriptdef>
+
+  <if>
+    <not><equals arg1="${use.local.data}" arg2="true"/></not>
+    <then>
+      <available file="${data}" type="dir" property="data.dir.present"/>
+    </then>
+  </if>
+  <if>
+    <isset property="data.dir.present" />
+    <then>
+      <property name="oracle.clean.script.rootdir"
+                value="${data}" />
+      <property name="oracle.clean.script.dir"
+                value="${oracle.clean.script.rootdir}/hibernate/schema/${user.name}" />
+    </then>
+    <else>
+      <property name="oracle.clean.script.rootdir"
+                value="${soc.local.data}" />
+      <property name="oracle.clean.script.dir"
+                value="${oracle.clean.script.rootdir}/hibernate/schema/${user.name}" />
+    </else>
+  </if>
+  <available file="${oracle.clean.script.rootdir}" type="dir" property="oracle.clean.script.rootdir.present"/>
+  <property name="oracle.clean.script"
+            value="${oracle.clean.script.dir}/ddl.oracle-drop.sql" />
+
+  <property name="hsqldb.server.port" value="9001" />
+
+  <target name="compile-post"
+          depends="copy-metadata,schema-hsqldb,schema-oracle,dv-xmlschemagen,copy-xmlschema,copy-script"
+          description="Run KeplerSchemaExport to generate schema DDL files" />
+
+  <target name="dist-post">
+    <copy todir="${dist.etc}/schema">
+      <fileset dir="${build}/schema" includes="*.sql" />
+    </copy>
+  </target>
+
+  <target name="build-script">
+    <mkdir dir="${build}/bin" />
+    <copy todir="${build}/bin">
+      <fileset dir="${src}" includes="**/*.sh" />
+      <globmapper from="*.sh" to="*"/>
+    </copy>
+    <chmod dir="${build}/bin" perm="ugo+rx" includes="*"/>
+  </target>
+
+  <target name="copy-script" depends="build-script">
+    <copy todir="${dist}/bin">
+      <fileset dir="${build}/bin" includes="**/*" />
+    </copy>
+  </target>
+
+  <target name="copy-metadata">
+    <!-- <copy todir="${classes.src.dir}"> -->
+      <!-- Also uncomment associated line in KeplerHibernateConfiguration. -->
+      <!-- <fileset dir="${src}" includes="**/hbm.cfg.xml" /> -->
+      <!-- <fileset dir="${src}" includes="**/orm.xml" /> -->
+    <!-- </copy> -->
+  </target>
+ 
+  <target name="copy-xmlschema">
+   <copy todir="${classes.src.dir}/gov/nasa/kepler/hibernate">
+     <fileset dir="xml" includes="*.xsd" />
+   </copy>
+  </target> 
+
+  <target name="row-counts"
+          description="Total row count of all tables in the database">
+
+    <if>
+      <not><equals trim="true" arg1="${tablename}" arg2="" /></not>
+      <then>
+        <sql driver="${sql.driver}"
+             url="${sql.url}"
+             userid="${sql.userid}"
+             password="${sql.password}"
+             src="${build}/table-row-counts.sql"
+             onerror="abort"
+             showheaders="false"
+             showtrailers="false"
+             output="${build}/row-counts.txt"
+             append="false"
+             print="true"
+             >
+             <classpath refid="classpath.buildtime" />
+        </sql>
+      </then>
+    </if>
+  </target>
+
+  <target name="schema"
+          depends="build, schema-hsqldb, schema-oracle, schema-postgresql"
+          description="Generate SQL schemas for HSQLDB and Oracle" />
+
+  <!--        -->
+  <!-- HSQLDB -->
+  <!--        -->
+
+  <target name="table-row-counts-hsqldb"
+          description="Generate count row statements for each table in the HSQLDB database">
+
+    <if>
+    <not><equals arg1="${sql.dialect}" arg2="org.hibernate.dialect.HSQLDialect"/></not>
+    <then>
+        <fail message="Aborting, dialect is not 'HSQLDialect'!" />
+    </then>
+    </if>
+
+    <upper to="sql.owner" string="${sql.userid}"/>
+
+    <sql driver="${sql.driver}"
+         url="${sql.url}"
+         userid="${sql.userid}"
+         password="${sql.password}"
+         onerror="abort"
+         showheaders="false"
+         showtrailers="false"
+         expandproperties="true"
+         output="${build}/table-row-counts.sql"
+         append="false"
+         print="true"
+         >
+         <classpath refid="classpath.buildtime" />
+         <![CDATA[
+
+         select concat('select count (*) from ', concat(TABLE_NAME, ';')) from INFORMATION_SCHEMA.tables
+         where TABLE_SCHEMA = 'PUBLIC' and TABLE_NAME != 'DDL_INITIALIZER_CREATED';
+
+         ]]>
+    </sql>
+  </target>
+
+  <target name="count-tables-hsqldb"
+          description="Count the tables in the HSQLDB database">
+
+    <if>
+    <not><equals arg1="${sql.dialect}" arg2="org.hibernate.dialect.HSQLDialect"/></not>
+    <then>
+        <fail message="Aborting, dialect is not 'HSQLDialect'!" />
+    </then>
+    </if>
+
+    <sql driver="${sql.driver}"
+         url="${sql.url}"
+         userid="${sql.userid}"
+         password="${sql.password}"
+         onerror="abort"
+         showheaders="false"
+         showtrailers="false"
+         expandproperties="true"
+         output="${build}/count-tables.txt"
+         append="false"
+         print="true"
+         >
+         <classpath refid="classpath.buildtime" />
+         <![CDATA[
+
+         select count(*) from INFORMATION_SCHEMA.tables
+         where TABLE_SCHEMA = 'PUBLIC' and TABLE_NAME != 'DDL_INITIALIZER_CREATED';
+
+         ]]>
+    </sql>
+  </target>
+
+  <target name="schema-postgresql"
+          depends="compile"
+          description="Generate SQL schema for Postgresql">
+
+    <delete dir="${build}/schema/postgresql" failonerror="false" />
+
+    <mkdir dir="${build}/schema" />
+
+    <!-- Generate create script -->
+    <java classname="gov.nasa.kepler.hibernate.dbservice.KeplerSchemaExport"
+          failonerror="true"
+          fork="yes">
+      <classpath refid="classpath.runtime" />
+      <jvmarg value="-Dhibernate.connection.driver_class=org.hsqldb.jdbcDriver" />
+      <jvmarg value="-Dhibernate.dialect=org.hibernate.dialect.PostgreSQLDialect" />
+      <jvmarg value="-Dhibernate.jdbc.batch_size=0" />
+      <jvmarg value="-Dlog4j.configuration=${log4j.configuration}" />
+      <arg value="--create" />
+      <arg value="--output=${build}/schema/ddl.postgresql-create.sql" />
+    </java>
+
+    <!-- Generate drop script -->
+    <java classname="gov.nasa.kepler.hibernate.dbservice.KeplerSchemaExport"
+          failonerror="true"
+          fork="yes">
+      <classpath refid="classpath.runtime" />
+      <jvmarg value="-Dhibernate.connection.driver_class=org.hsqldb.jdbcDriver" />
+      <jvmarg value="-Dhibernate.dialect=org.hibernate.dialect.PostgreSQLDialect" />
+      <jvmarg value="-Dhibernate.jdbc.batch_size=0" />
+      <jvmarg value="-Dlog4j.configuration=${log4j.configuration}" />
+      <arg value="--drop" />
+      <arg value="--output=${build}/schema/ddl.postgresql-drop.sql" />
+    </java>
+  </target>
+  
+  <target name="schema-hsqldb"
+          depends="compile"
+          description="Generate SQL schema for HSQLDB">
+
+    <delete dir="${build}/schema/hsqldb" failonerror="false" />
+
+    <mkdir dir="${build}/schema" />
+
+    <!-- Generate create script -->
+    <java classname="gov.nasa.kepler.hibernate.dbservice.KeplerSchemaExport"
+          failonerror="true"
+          fork="yes">
+      <classpath refid="classpath.runtime" />
+      <jvmarg value="-Dhibernate.connection.driver_class=org.hsqldb.jdbcDriver" />
+      <jvmarg value="-Dhibernate.dialect=org.hibernate.dialect.HSQLDialect" />
+      <jvmarg value="-Dhibernate.jdbc.batch_size=0" />
+      <jvmarg value="-Dlog4j.configuration=${log4j.configuration}" />
+      <arg value="--create" />
+      <arg value="--output=${build}/schema/ddl.hsqldb-create.sql" />
+    </java>
+
+    <!-- Generate drop script -->
+    <java classname="gov.nasa.kepler.hibernate.dbservice.KeplerSchemaExport"
+          failonerror="true"
+          fork="yes">
+      <classpath refid="classpath.runtime" />
+      <jvmarg value="-Dhibernate.connection.driver_class=org.hsqldb.jdbcDriver" />
+      <jvmarg value="-Dhibernate.dialect=org.hibernate.dialect.HSQLDialect" />
+      <jvmarg value="-Dhibernate.jdbc.batch_size=0" />
+      <jvmarg value="-Dlog4j.configuration=${log4j.configuration}" />
+      <arg value="--drop" />
+      <arg value="--output=${build}/schema/ddl.hsqldb-drop.sql" />
+    </java>
+  </target>
+  
+
+  <target name="pop-hsqldb" description="Populate HSQL database">
+
+    <if>
+    <not><equals arg1="${sql.dialect}" arg2="org.hibernate.dialect.HSQLDialect"/></not>
+    <then>
+        <fail message="Aborting, dialect is not 'HSQLDialect'!" />
+    </then>
+    </if>
+
+    <echo message="Populating HSQL database with generated schema." />
+    <sql driver="${sql.driver}"
+         url="${sql.url}"
+         userid="${sql.userid}"
+         password="${sql.password}"
+         onerror="abort"
+         src="${build}/schema/ddl.hsqldb-create.sql"
+         print="yes">
+      <classpath refid="classpath.buildtime" />
+    </sql>
+
+    <echo message="Adding extra definitions." />
+    <sql driver="${sql.driver}"
+         url="${sql.url}"
+         userid="${sql.userid}"
+         password="${sql.password}"
+         onerror="abort"
+         src="${basedir}/schema/shared-extra-ddl-create.sql"
+         print="yes">
+      <classpath refid="classpath.buildtime" />
+    </sql>
+
+  </target>
+
+  <target name="clean-hsqldb"
+          depends="table-row-counts-hsqldb,row-counts,schema-hsqldb"
+          description="Drop everything in schema from HSQL database">
+
+    <if>
+    <not><equals arg1="${sql.dialect}" arg2="org.hibernate.dialect.HSQLDialect"/></not>
+    <then>
+        <fail message="Aborting, dialect is not 'HSQLDialect'!" />
+    </then>
+    </if>
+
+    <exec executable="awk" input="${build}/row-counts.txt" outputproperty="total.rows" >
+      <arg value="BEGIN {total_rows=0;} {total_rows+=$1;} END {print total_rows}"/>
+    </exec>
+    <echo message="Database contains ${total.rows} rows of data." />
+
+    <!-- Check if database contains any tables with rows (data) -->
+    <!-- unless overriden by force.clean.oracle -->
+    <if>
+      <and>
+      <not><equals trim="true" casesensitive="false" arg1="${force.clean.oracle}" arg2="true" /></not>
+      <not><equals trim="true" casesensitive="false" arg1="${total.rows}" arg2="null"/></not>
+      <not><equals trim="true" casesensitive="false" arg1="${total.rows}" arg2="0"/></not>
+      </and>
+      <then>
+        <input message="All ${total.rows} rows of data is going to be deleted from the HSQLDB database, continue (y/n)?"
+               validargs="y,n"
+               addproperty="continue.clean"
+               />
+        <condition property="abort.clean">
+          <equals arg1="n" arg2="${continue.clean}"/>
+        </condition>
+        <fail if="abort.clean">Database contains data!  Build aborted by user.</fail>
+      </then>
+    </if>
+
+    <antcall target="count-tables-hsqldb" />
+    
+    <loadfile srcFile="${build}/count-tables.txt" property="clean.count.tables" />
+    <if>
+      <and>
+      <not><equals trim="true" arg1="${clean.count.tables}" arg2="0" /></not>
+      <not><equals trim="true" arg1="${clean.count.tables}" arg2="-1" /></not>
+      </and>
+      <then>
+        <echo message="Dropping extra definitions." />
+        <sql driver="${sql.driver}"
+             url="${sql.url}"
+             userid="${sql.userid}"
+             password="${sql.password}"
+             onerror="continue"
+             src="${basedir}/schema/shared-extra-ddl-drop.sql"
+             print="yes">
+          <classpath refid="classpath.buildtime" />
+        </sql>
+
+        <sql driver="${sql.driver}"
+             url="${sql.url}"
+             userid="${sql.userid}"
+             password="${sql.password}"
+             onerror="continue"
+             src="${build}/schema/ddl.hsqldb-drop.sql"
+             print="yes">
+          <classpath refid="classpath.buildtime" />
+        </sql>
+      </then>
+      <else>
+        <echo>
+        Database is already empty!</echo>
+      </else>
+    </if>
+  </target>
+
+  <target name="start-hsqldb" description="Run HSQL in network (shared) mode">
+
+    <if>
+    <not><equals arg1="${sql.dialect}" arg2="org.hibernate.dialect.HSQLDialect"/></not>
+    <then>
+        <fail message="Aborting, dialect is not 'HSQLDialect'!" />
+    </then>
+    </if>
+
+    <java classname="org.hsqldb.Server" failonerror="true" fork="yes">
+      <classpath refid="classpath.buildtime" />
+      <jvmarg value="-Xmx1000m" />
+      <arg value="-database.0" />
+      <arg value="file:${build}/schema/hsqldb/kepler" />
+      <arg value="-dbname.0" />
+      <arg value="kepler" />
+      <arg value="-port" />
+      <arg value="${hsqldb.server.port}" />
+    </java>
+  </target>
+
+  <!--        -->
+  <!-- Oracle -->
+  <!--        -->
+
+  <target name="table-row-counts-oracle"
+          description="Generate count row statements for each table in the Oracle database">
+
+    <if>
+    <not><equals arg1="${sql.dialect}" arg2="org.hibernate.dialect.OracleDialect"/></not>
+    <then>
+        <fail message="Aborting, dialect is not 'OracleDialect'!" />
+    </then>
+    </if>
+
+    <upper to="sql.owner" string="${sql.userid}"/>
+
+    <sql driver="${sql.driver}"
+         url="${sql.url}"
+         userid="${sql.userid}"
+         password="${sql.password}"
+         onerror="abort"
+         showheaders="false"
+         showtrailers="false"
+         rdbms="oracle"
+         expandproperties="true"
+         output="${build}/table-row-counts.sql"
+         append="false"
+         print="true"
+         >
+         <classpath refid="classpath.buildtime" />
+         <![CDATA[
+
+         select 'select count (*) from ' || TABLE_NAME || ';' from SYS.ALL_TABLES
+         where OWNER = '${sql.owner}' and TABLE_NAME != 'DDL_INITIALIZER_CREATED';
+
+         ]]>
+    </sql>
+  </target>
+
+  <target name="count-tables-oracle"
+          description="Count the tables in the Oracle database">
+
+    <if>
+    <not><equals arg1="${sql.dialect}" arg2="org.hibernate.dialect.OracleDialect"/></not>
+    <then>
+        <fail message="Aborting, dialect is not 'OracleDialect'!" />
+    </then>
+    </if>
+
+    <upper to="sql.owner" string="${sql.userid}"/>
+
+    <sql driver="${sql.driver}"
+         url="${sql.url}"
+         userid="${sql.userid}"
+         password="${sql.password}"
+         onerror="abort"
+         showheaders="false"
+         showtrailers="false"
+         rdbms="oracle"
+         expandproperties="true"
+         output="${build}/count-tables.txt"
+         append="false"
+         print="true"
+         >
+         <classpath refid="classpath.buildtime" />
+         <![CDATA[
+
+         select count(*) from SYS.ALL_TABLES
+         where OWNER = '${sql.owner}' and TABLE_NAME != 'DDL_INITIALIZER_CREATED';
+
+         ]]>
+    </sql>
+  </target>
+
+  <target name="schema-oracle"
+          depends="compile"
+          description="Generate SQL schema for Oracle">
+
+    <!-- Generate create script -->
+    <antcall target="rotate">
+       <param name="file" value="${build}/schema/ddl.oracle-create.sql" />
+    </antcall>
+
+    <java classname="gov.nasa.kepler.hibernate.dbservice.KeplerSchemaExport"
+          failonerror="true"
+          fork="yes">
+      <classpath refid="classpath.runtime" />
+      <jvmarg value="-Dhibernate.connection.driver_class=oracle.jdbc.driver.OracleDriver" />
+      <jvmarg value="-Dhibernate.dialect=org.hibernate.dialect.OracleDialect" />
+      <jvmarg value="-Dhibernate.jdbc.batch_size=0" />
+      <jvmarg value="-Dlog4j.configuration=${log4j.configuration}" />
+      <arg value="--create" />
+      <arg value="--output=${build}/schema/ddl.oracle-create.sql" />
+    </java>
+
+    <!-- Generate drop script -->
+    <if>
+      <isset property="oracle.clean.script.rootdir.present" />
+      <then>
+        <mkdir dir="${oracle.clean.script.dir}" />
+
+        <antcall target="rotate">
+          <param name="file" value="${oracle.clean.script}" />
+        </antcall>
+
+        <java classname="gov.nasa.kepler.hibernate.dbservice.KeplerSchemaExport"
+              failonerror="true"
+              fork="yes">
+          <classpath refid="classpath.runtime" />
+          <jvmarg value="-Dhibernate.connection.driver_class=oracle.jdbc.driver.OracleDriver" />
+          <jvmarg value="-Dhibernate.dialect=org.hibernate.dialect.OracleDialect" />
+          <jvmarg value="-Dhibernate.jdbc.batch_size=0" />
+          <jvmarg value="-Dlog4j.configuration=${log4j.configuration}" />
+          <arg value="--drop" />
+          <arg value="--output=${oracle.clean.script}" />
+        </java>
+	<available file="${oracle.clean.script}" type="file" property="${oracle.clean.script}.present"/>
+	<if>
+          <isset property="${oracle.clean.script}.present" />
+	  <then>
+            <echo message="${oracle.clean.script} successfully generated." />
+	  </then>
+	  <else>
+            <echo message="${oracle.clean.script} NOT generated!" />
+	  </else>
+	</if>
+      </then>
+    </if>
+  </target>
+
+  <target name="schema-update-oracle"
+          depends="compile"
+          description="Generate update (migration) SQL schema for Oracle">
+
+    <if>
+    <not><equals arg1="${sql.dialect}" arg2="org.hibernate.dialect.OracleDialect"/></not>
+    <then>
+        <fail message="Aborting, dialect is not 'OracleDialect'!" />
+    </then>
+    </if>
+
+    <!-- Generate update script -->
+    <java classname="gov.nasa.kepler.hibernate.dbservice.KeplerSchemaUpdate"
+          failonerror="true"
+          fork="yes"
+          output="${build}/schema/ddl.oracle-update.sql">
+      <classpath refid="classpath.runtime" />
+      <jvmarg value="-Dhibernate.connection.driver_class=oracle.jdbc.driver.OracleDriver" />
+      <jvmarg value="-Dhibernate.connection.url=${sql.url}" />
+      <jvmarg value="-Dhibernate.connection.username=${sql.userid}" />
+      <jvmarg value="-Dhibernate.connection.password=${sql.password}" />
+      <jvmarg value="-Dhibernate.dialect=org.hibernate.dialect.OracleDialect" />
+      <jvmarg value="-Dhibernate.jdbc.batch_size=0" />
+      <jvmarg value="-Dlog4j.configuration=${log4j.configuration}" />
+    </java>
+  </target>
+
+  <target name="schema-validate-oracle"
+          depends="compile"
+          description="Validate the SQL schema for Oracle">
+
+    <if>
+    <not><equals arg1="${sql.dialect}" arg2="org.hibernate.dialect.OracleDialect"/></not>
+    <then>
+        <fail message="Aborting, dialect is not 'OracleDialect'!" />
+    </then>
+    </if>
+
+    <!-- Generate update script -->
+    <java classname="gov.nasa.kepler.hibernate.dbservice.KeplerSchemaValidator"
+          failonerror="true"
+          fork="yes">
+      <classpath refid="classpath.runtime" />
+      <jvmarg value="-Dhibernate.connection.driver_class=oracle.jdbc.driver.OracleDriver" />
+      <jvmarg value="-Dhibernate.connection.url=${sql.url}" />
+      <jvmarg value="-Dhibernate.connection.username=${sql.userid}" />
+      <jvmarg value="-Dhibernate.connection.password=${sql.password}" />
+      <jvmarg value="-Dhibernate.dialect=org.hibernate.dialect.OracleDialect" />
+      <jvmarg value="-Dhibernate.jdbc.batch_size=0" />
+      <jvmarg value="-Dlog4j.configuration=${log4j.configuration}" />
+    </java>
+  </target>
+
+  <target name="pop-oracle"
+          depends="schema-oracle"
+          description="Populate Oracle database">
+
+    <if>
+    <not><equals arg1="${sql.dialect}" arg2="org.hibernate.dialect.OracleDialect"/></not>
+    <then>
+        <fail message="Aborting, dialect is not 'OracleDialect'!" />
+    </then>
+    </if>
+
+    <echo message="Populating Oracle database with generated schema." />
+    <echo message="Connecting to ${sql.url}." />
+    <echo message="Logging in with ${sql.userid}/${sql.password}." />
+
+    <antcall target="count-tables-oracle" />
+    
+    <loadfile srcFile="${build}/count-tables.txt" property="pop.count.tables" />
+    <if>
+      <equals trim="true" arg1="${pop.count.tables}" arg2="0" />
+      <then>
+
+        <sql driver="${sql.driver}"
+             url="${sql.url}"
+             userid="${sql.userid}"
+             password="${sql.password}"
+             src="${build}/schema/ddl.oracle-create.sql"
+             print="yes">
+          <classpath refid="classpath.buildtime" />
+        </sql>
+
+        <echo message="Adding extra definitions." />
+        <sql driver="${sql.driver}"
+             url="${sql.url}"
+             userid="${sql.userid}"
+             password="${sql.password}"
+             src="${basedir}/schema/shared-extra-ddl-create.sql"
+             print="yes">
+          <classpath refid="classpath.buildtime" />
+        </sql>
+      </then>
+      <else>
+        <fail message="Aborting, database contains tables!" />
+      </else>
+    </if>
+  </target>
+
+  <target name="clean-oracle"
+          depends="table-row-counts-oracle,row-counts,schema-oracle"
+          description="Drop everything in schema from Oracle database">
+
+    <if>
+    <not><equals arg1="${sql.dialect}" arg2="org.hibernate.dialect.OracleDialect"/></not>
+    <then>
+        <fail message="Aborting, dialect is not 'OracleDialect'!" />
+    </then>
+    </if>
+
+    <echo message="Purging Oracle database with generated SQL." />
+    <echo message="using ${oracle.clean.script}." />
+    <echo message="Connecting to ${sql.url}." />
+    <echo message="Logging in with ${sql.userid}/${sql.password}." />
+
+    <exec executable="awk" input="${build}/row-counts.txt" outputproperty="total.rows" >
+      <arg value="BEGIN {total_rows=0;} {total_rows+=$1;} END {print total_rows}"/>
+    </exec>
+    <echo message="Database contains ${total.rows} rows of data." />
+
+    <!-- Check if database contains any tables with rows (data) -->
+    <!-- unless overriden by force.clean.oracle -->
+    <if>
+      <and>
+      <not><equals trim="true" casesensitive="false" arg1="${force.clean.oracle}" arg2="true" /></not>
+      <not><equals trim="true" casesensitive="false" arg1="${total.rows}" arg2="null"/></not>
+      <not><equals trim="true" casesensitive="false" arg1="${total.rows}" arg2="0"/></not>
+      </and>
+      <then>
+        <input message="All ${total.rows} rows of data is going to be deleted from the Oracle database, continue (y/n)?"
+               validargs="y,n"
+               addproperty="continue.clean"
+               />
+        <condition property="abort.clean">
+          <equals arg1="n" arg2="${continue.clean}"/>
+        </condition>
+        <fail if="abort.clean">Database contains data!  Build aborted by user.</fail>
+      </then>
+    </if>
+
+    <antcall target="count-tables-oracle" />
+    
+    <loadfile srcFile="${build}/count-tables.txt" property="clean.count.tables" />
+    <if>
+      <and>
+      <not><equals trim="true" arg1="${clean.count.tables}" arg2="0" /></not>
+      <not><equals trim="true" arg1="${clean.count.tables}" arg2="-1" /></not>
+      </and>
+      <then>
+        <sql driver="${sql.driver}"
+             url="${sql.url}"
+             userid="${sql.userid}"
+             password="${sql.password}"
+             src="${basedir}/schema/shared-extra-ddl-drop.sql"
+             onerror="continue"
+             print="yes">
+          <classpath refid="classpath.buildtime" />
+        </sql>
+
+        <sql driver="${sql.driver}"
+             url="${sql.url}"
+             userid="${sql.userid}"
+             password="${sql.password}"
+             src="${oracle.clean.script}"
+             onerror="continue"
+             print="yes">
+          <classpath refid="classpath.buildtime" />
+        </sql>
+      </then>
+      <else>
+        <echo>
+        Database is already empty!</echo>
+      </else>
+    </if>
+  </target>
+
+  <target name="oracle"
+          depends="clean-oracle, pop-oracle"
+          description="Clean Oracle database, rebuild schema, and populate">
+  </target>
+
+   <!-- DV export xml schema generation -->
+
+  <target name="dv-xmlschemagen">
+<!-- Commented out because this does not work with java 8.
+    <schemagen destdir="xml" srcdir="${src}" includeantruntime="false">
+      <include name="gov/nasa/kepler/hibernate/dv/Dv*.java" />
+      <exclude name="**/DvCrud.java" />
+      <classpath refid="classpath.buildtime" />
+    </schemagen>
+    <move file="xml/schema1.xsd" tofile="xml/dv.xsd" />
+-->
+  </target>
+ 
+</project>

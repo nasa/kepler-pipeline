@@ -1,0 +1,226 @@
+#!/usr/bin/perl -w
+# 
+# Copyright 2017 United States Government as represented by the
+# Administrator of the National Aeronautics and Space Administration.
+# All Rights Reserved.
+# 
+# This file is available under the terms of the NASA Open Source Agreement
+# (NOSA). You should have received a copy of this agreement with the
+# Kepler source code; see the file NASA-OPEN-SOURCE-AGREEMENT.doc.
+# 
+# No Warranty: THE SUBJECT SOFTWARE IS PROVIDED "AS IS" WITHOUT ANY
+# WARRANTY OF ANY KIND, EITHER EXPRESSED, IMPLIED, OR STATUTORY,
+# INCLUDING, BUT NOT LIMITED TO, ANY WARRANTY THAT THE SUBJECT SOFTWARE
+# WILL CONFORM TO SPECIFICATIONS, ANY IMPLIED WARRANTIES OF
+# MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, OR FREEDOM FROM
+# INFRINGEMENT, ANY WARRANTY THAT THE SUBJECT SOFTWARE WILL BE ERROR
+# FREE, OR ANY WARRANTY THAT DOCUMENTATION, IF PROVIDED, WILL CONFORM
+# TO THE SUBJECT SOFTWARE. THIS AGREEMENT DOES NOT, IN ANY MANNER,
+# CONSTITUTE AN ENDORSEMENT BY GOVERNMENT AGENCY OR ANY PRIOR RECIPIENT
+# OF ANY RESULTS, RESULTING DESIGNS, HARDWARE, SOFTWARE PRODUCTS OR ANY
+# OTHER APPLICATIONS RESULTING FROM USE OF THE SUBJECT SOFTWARE.
+# FURTHER, GOVERNMENT AGENCY DISCLAIMS ALL WARRANTIES AND LIABILITIES
+# REGARDING THIRD-PARTY SOFTWARE, IF PRESENT IN THE ORIGINAL SOFTWARE,
+# AND DISTRIBUTES IT "AS IS."
+#
+# Waiver and Indemnity: RECIPIENT AGREES TO WAIVE ANY AND ALL CLAIMS
+# AGAINST THE UNITED STATES GOVERNMENT, ITS CONTRACTORS AND
+# SUBCONTRACTORS, AS WELL AS ANY PRIOR RECIPIENT. IF RECIPIENT'S USE OF
+# THE SUBJECT SOFTWARE RESULTS IN ANY LIABILITIES, DEMANDS, DAMAGES,
+# EXPENSES OR LOSSES ARISING FROM SUCH USE, INCLUDING ANY DAMAGES FROM
+# PRODUCTS BASED ON, OR RESULTING FROM, RECIPIENT'S USE OF THE SUBJECT
+# SOFTWARE, RECIPIENT SHALL INDEMNIFY AND HOLD HARMLESS THE UNITED
+# STATES GOVERNMENT, ITS CONTRACTORS AND SUBCONTRACTORS, AS WELL AS ANY
+# PRIOR RECIPIENT, TO THE EXTENT PERMITTED BY LAW. RECIPIENT'S SOLE
+# REMEDY FOR ANY SUCH MATTER SHALL BE THE IMMEDIATE, UNILATERAL
+# TERMINATION OF THIS AGREEMENT.
+#
+
+=head1 NAME
+
+representativeTargets - finds a target near the middle of each module/output
+
+=head1 SYNOPSIS
+
+representativeTargets directory
+
+=head1 DESCRIPTION
+
+Reads the raw KIC files and returns a list of Kepler IDs, one near the
+middle of each module/output.
+
+Options include:
+
+=over
+
+=item -v
+
+Display targets as they are found.
+
+=item directory
+
+A directory that contains the KIC input data files.
+
+=back
+
+For example,
+
+  representativeTargets /path/to/kic/kic-v9
+
+=head1 AUTHOR
+
+ Bill Wohler
+
+=cut
+
+use File::Basename;
+use strict;
+
+# Constants you can play around with.
+my $WIDTH = 79;                         # Term::ReadKey would be nice
+my $nRowsImaging = 1024;		# From FcConstants
+my $nColsImaging = 1100;
+my $MIN_ROW = $nRowsImaging/2-250;
+my $MAX_ROW = $nRowsImaging/2+250;
+my $MIN_COL = $nColsImaging/2-250;
+my $MAX_COL = $nColsImaging/2+250;
+my $DEFAULT_SEASON = 2;			# when mod/out 2/1 has largest dec
+
+# Additional variables.
+$| = 1;                                 # unbuffered output
+
+my $KEPLER_ID_COL = 15;                 # 0-based column number
+my $RA_COL = 0;
+my $DEC_COL = 1;
+
+# Parse arguments.
+my $directory;
+my $verbose = 0;
+
+while (@ARGV) {
+    $_ = shift;
+    /^-h$/ and usage();
+    /^-v$/ and $verbose = 1, next;
+    /^-/ and usage("Unknown argument: $_\n");
+    if (!defined($directory)) {
+        $directory = $_;
+    }
+}
+if (!defined($directory)) {
+    usage("Please specify a directory with input files.\n");
+} elsif (! -d $directory) {
+    usage("Directory $directory does not exist\n");
+}
+
+my $dataFilePattern = "d*.mrg";	      # filename pattern for |-delimited files
+my %skyGroupIdToKeplerId = ();
+
+findTargets($directory . "/" . $dataFilePattern);
+&printTargets();
+
+# Display usage.
+sub usage {
+    my ($error) = @_;
+
+    if ($error) {
+        print($error);
+        die("\nTry \"", basename($0), " -h\" for help.\n");
+    } else {
+        system('pod2text ' . $0 . '| ${PAGER:-less}');
+        exit 0;
+    }
+}
+
+# findTargets($pattern) - Find targets in given files
+sub findTargets {
+    my ($pattern) = @_;
+
+    my @files = `ls -1 $pattern`;
+    my $fileCount = @files;
+    my $i = 0;
+    foreach my $file (@files) {
+	$i++;
+	chomp($file);
+	my $line = sprintf("%d/%d Kepler IDs %d/%d files %d%% [%s]",
+			   scalar(keys(%skyGroupIdToKeplerId)), 84,
+			   $i, $fileCount, $i*100/$fileCount, basename($file));
+	printf("\r%-${WIDTH}s", $line);
+	print("\n") if ($verbose);
+
+	processFile($file);
+
+	last if (scalar(keys(%skyGroupIdToKeplerId)) == 84);
+    }
+    print("\n") unless ($verbose);
+}
+
+# processFile - process the given file
+sub processFile {
+    my ($file) = @_;
+
+    open(DATA, $file)
+	or die("Can't open $file: $!\n");
+    while (<DATA>) {
+	chomp;
+	my ($keplerId, $ra, $dec)
+	    = (split(/\|/))[$KEPLER_ID_COL, $RA_COL, $DEC_COL];
+	$ra = 15 * $ra; 		# convert from hours to degrees
+
+	my $skyGroupId = processLine($ra, $dec);
+
+	if ($skyGroupId != 0 && !defined($skyGroupIdToKeplerId{$skyGroupId})) {
+	    print("Adding $skyGroupId, $keplerId\n") if ($verbose);
+	    $skyGroupIdToKeplerId{$skyGroupId} = $keplerId;
+	}
+    }
+    close(DATA);
+}
+
+# Runs raDec2Pix on the given ra and dec and default season. Returns the sky
+# group ID if the star is near the middle of a module/output; otherwise, 0.
+# TODO Run ra2pixcgi in a pipe rather than fork of a new process for each line.
+sub processLine {
+    my ($ra, $dec) = @_;
+
+    my $cmd = "./ra2pixcgi -s $DEFAULT_SEASON -type d -r $ra -d $dec";
+
+    open(RADEC2PIX, "$cmd |")
+	or die("\n");
+
+    while (<RADEC2PIX>) {
+	# Skip to the last line.
+	next unless /^FPA: /;
+
+	# Ignore entries that aren't in the focal plane.
+	last if /Coordinate well out of the FOV /;
+
+	# Or there is some other problem.
+	last if /nan/;
+	last if /row= *-/ or /coln= *-/;
+
+	# Parse the line with the channel, row, column data.
+	my ($skyGroupId, $row, $col)
+	    = /chn= *(\d+) row= *([0-9.]+) coln= *([0-9.]+)/;
+
+	#print;
+	#print("For ra=$ra, dec=$dec: "
+	#      . "skyGroupId=$skyGroupId, row=$row, col=$col\n");
+
+	if ($row > $MIN_ROW && $row < $MAX_ROW
+	    && $col > $MIN_COL && $col < $MAX_COL) {
+	    #print("Found skyGroupId=$skyGroupId\n")
+	    return $skyGroupId;
+	} else {
+	    return 0
+	}
+    }
+    close(RADEC2PIX);
+}
+
+# Prints the given targets.
+sub printTargets() {
+    foreach my $key (sort({ $a <=> $b; } keys(%skyGroupIdToKeplerId))) {
+	print("$key, $skyGroupIdToKeplerId{$key}\n");
+    }
+}
+

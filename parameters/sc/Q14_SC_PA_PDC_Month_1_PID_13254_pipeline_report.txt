@@ -1,0 +1,649 @@
+
+Instance Summary
+
+ID     Pipeline Name                                           State      P-time    
+------------------------------------------------------------------------------------
+13254  PA+PDC x 3: r9.3.48: Q14M1 SC PA+PDC re-run, KSOP-2191  COMPLETED  02:02:18  
+
+Instance ID: 13254
+Instance Name: r9.3.48: Q14M1 SC PA+PDC re-run, KSOP-2191
+Instance Priority: 4
+Instance State: COMPLETED
+Instance Software Revisions: [svn+ssh://murzim/repo/soc/tags/release/9.3.48@61429]
+
+Definition Name: PA+PDC x 3
+Definition Version: 0
+Definition ID: 155870311
+
+Pipeline Parameter Sets
+  Parameter Set: moduleOutputLists (SC) (type=ModuleOutputListsParameters, version=2)
+    cadenceOfDeathArray = 376528,376528,376528,376528
+    channelForStoringNonChannelSpecificData = 1
+    channelGroupsEnabled = false
+    channelsPerTask = 0
+    deadChannelArray = 5,6,7,8
+
+  Parameter Set: pseudoTargetList (type=PseudoTargetListParameters, version=0)
+    (no parameters)
+
+  Parameter Set: gapFill (type=GapFillModuleParameters, version=4)
+    arAutoCorrelationThreshold = 0.05
+    gapFillModeIsAddBackPredictionError = true
+    giantTransitPolyFitChunkLengthInHours = 72.0
+    madXFactor = 10.0
+    maxArOrderLimit = 25
+    maxCorrelationWindowXFactor = 5
+    maxDetrendPolyOrder = 25
+    maxGiantTransitDurationInHours = 72.0
+    removeEclipsingBinariesOnList = false
+    waveletFamily = daub
+    waveletFilterLength = 12
+
+  Parameter Set: saturationSegment (SC) (type=SaturationSegmentModuleParameters, version=0)
+    maxSaturationMagnitude = 11.5
+    satSegExclusionZone = 2000
+    satSegThreshold = 12.0
+    sgFrameSize = 2881
+    sgPolyOrder = 4
+
+  Parameter Set: pa (coa=FALSE,mbi=TRUE) (type=PaModuleParameters, version=0)
+    brightRobustThreshold = 0.05
+    cosmicRayCleaningEnabled = true
+    debugLevel = 0
+    discretePrfCentroidingEnabled = false
+    discretePrfOversampleFactor = 50
+    k2GapIfNotFinePntData = true
+    k2GapPreTweakData = true
+    k2TrimAperturesEnabled = true
+    k2TrimMinSizeInPixels = 35
+    k2TrimRadiusInPrfWidths = 0.5
+    madThresholdForCentroidOutliers = 4.0
+    maxPixelSamples = 25000000
+    maxReadFsIds = 6000
+    minimumBrightTargets = 5
+    motionBlobsInputEnabled = true
+    oapEnabled = false
+    onlyProcessPpaTargetsEnabled = false
+    paCoaEnabled = false
+    ppaTargetPrfCentroidingEnabled = true
+    reactionWheelMedianFilterLength = 5.0
+    removeMedianSimulatedFlux = true
+    rollingBandContaminationFlagsEnabled = true
+    simulatedTransitsEnabled = false
+    stellarVariabilityDetrendOrder = 6
+    stellarVariabilityThreshold = 0.01
+    targetPrfCentroidingEnabled = false
+    testPulseDurations = 3,6,12,24,31
+    thresholdMultiplierForPositiveCentroidOutliers = 1.5
+
+  Parameter Set: cadenceType (SC) (type=CadenceTypePipelineParameters, version=0)
+    cadenceType = SHORT
+
+  Parameter Set: oapAncillaryEngineering (type=OapAncillaryEngineeringParameters, version=0)
+    (no parameters)
+
+  Parameter Set: spsdDetection (SC) (type=SpsdDetectionParameters, version=3)
+    discontinuityRatioTolerance = 0.7
+    endpointFitWindowWidth = 48
+    excludeWindowHalfWidth = 4
+    falsePositiveRateLimit = 0.005
+    harmonicsRemovalEnabled = false
+    maxDetectionIterations = 5
+    quickSpsdEnabled = true
+    transitSpsdMinmaxDiscriminator = 0.7
+    useCentroids = false
+    validationSignificanceThreshold = 3.0
+
+  Parameter Set: paCoa (type=PaCoaModuleParameters, version=0)
+    boundedBoxWidth = 64.0
+    cadenceStep = 10
+    cdppMedFiltSmoothLength = 100
+    cdppOptimizationEnabled = true
+    cdppSweepLength = 100
+    cdppVsSnrStrengthFactor = 1.0
+    computeForSaturatedTargetsEnabled = false
+    mnrAddedFluxBeta = 1.412E-8
+    mnrBeta0 = 7.888
+    mnrDiscriminationThreshold = 0.2
+    mnrFractionalChangeInApertureBeta = 0.0
+    mnrFractionalChangeInMedianFluxBeta = -7.414
+    mnrMaskUsageRatioBeta = -8.094
+    numberOfHalosToAddToAperture = 2
+    raDecFittingCadenceStep = 100
+    revertToTadIfApertureShrank = false
+    superResolutionFactor = 1.0
+    trialTransitPulseDurationInHours = 6.0
+    usePolyFitTransitModel = false
+    varianceWindowLengthMultiplier = 7.0
+    waveletFilterLength = 12
+
+  Parameter Set: ancillaryDesignMatrix (SC) (type=AncillaryDesignMatrixParameters, version=1)
+    bandpassFlags = true,false,true
+    filteringEnabled = true
+    sgFrameSizes = 4321,361
+    sgPolyOrders = 2,2
+
+  Parameter Set: ancillary (type=AncillaryPipelineParameters, version=0)
+    (no parameters)
+
+  Parameter Set: ancillaryEngineering (PDC) (type=AncillaryEngineeringParameters, version=4)
+    (no parameters)
+
+  Parameter Set: customTarget (type=CustomTargetParameters, version=2)
+    processingEnabled = true
+
+  Parameter Set: bandSplitting (type=BandSplittingParameters, version=0)
+    edgeEffectMitigationExtrapolationRange = 500
+    edgeEffectMitigationMethod = expointmirrortaper
+    groupingManualBandBoundaries = 1023,3
+    groupingMethod = manual
+    numberOfBands = 3
+    numberOfWaveletTaps = 12
+    splittingMethod = wavelet
+    waveletFamily = daubechies
+
+  Parameter Set: reactionWheelAncillaryEngineering (Q14-Q17) (type=ReactionWheelAncillaryEngineeringParameters, version=0)
+    intrinsicUncertainties = 0.0,0.0,0.0
+    mnemonics = ADRW1SPD_,ADRW3SPD_,ADRW4SPD_
+    modelOrders = 1,1,1
+    quantizationLevels = 0.0,0.0,0.0
+
+  Parameter Set: apertureModel (type=ApertureModelParameters, version=2)
+    amplitudeFitMethod = bbnnls
+    excludeSnrThreshold = 100.0
+    lockSnrThreshold = 500.0
+    maxDeltaMagnitude = 1.0
+    maxNumStars = 30
+    raDecFitMethod = nlinfit
+    raDecFittingEnabled = true
+    raDecMaxDeltaPixels = 1.5
+    raDecMaxIter = 100
+    raDecRepulsiveCoef = 0.1
+    raDecRestoringCoef = 0.0
+    raDecTolFun = 1.0E-8
+    raDecTolX = 1.0E-8
+    ukirtMagnitudeThreshold = 18.0
+
+  Parameter Set: spsdRemoval (type=SpsdRemovalParameters, version=1)
+    bigPicturePolyOrder = 6
+    harmonicFalsePositiveRate = 0.01
+    logTimeConstantIncrement = 1
+    logTimeConstantMaxValue = 0.0
+    logTimeConstantStartValue = -2
+    polyWindowHalfWidth = 480
+    recoveryWindowWidth = 240
+    shortCadencePostCorrectionEnabled = false
+    shortCadencePostCorrectionLeftWindow = 5
+    shortCadencePostCorrectionMethod = gapfill
+    shortCadencePostCorrectionRightWindow = 30
+    useMapBasisVectors = true
+
+  Parameter Set: spsdDetector (type=SpsdDetectorParameters, version=0)
+    minWindowWidth = 9
+    mode = 1
+    sgPolyOrder = 3
+    sgStepPolyOrder = 2
+    shortSgPolyOrder = 1
+    shortSgStepPolyOrder = 1
+    shortWindowWidth = 11
+    windowWidth = 193
+
+  Parameter Set: pdcMap (SC) (type=PdcMapParameters, version=4)
+    coarseDetrendPolyOrder = 3
+    debugRun = false
+    denoiseBasisVectorsEnabled = false
+    ditherFlux = false
+    ditherMagnitude = 0.05
+    entropyCleaningCutoff = -0.7
+    entropyCleaningEnabled = true
+    entropyMadFactor = 10.0
+    entropyMaxIterations = 30
+    fitNormalizationMethod = mean
+    forceRobustFit = false
+    fractionOfStarsToUseForPriorPdf = 1.0
+    fractionOfStarsToUseForSvd = 0.5
+    goodnessMetricIterationsCutoff = 0.8
+    goodnessMetricIterationsEnabled = false
+    goodnessMetricIterationsPriorWeightStepSize = 2.0
+    goodnessMetricMaxIterations = 50
+    maxNumMaximizerIteration = 10
+    maxTolerance = 1.0E-4
+    minFractionOfTargetsForSvd = 0.1
+    numPointsForMaximizerFirstGuess = 100
+    priorCentroidMotionScalingFactor = 0.0
+    priorDecScalingFactor = 1.0
+    priorEffTempScalingFactor = 0.0
+    priorGoodnessPowerFactor = 3.0
+    priorGoodnessScalingFactor = 5.0
+    priorKeplerMagnitudeScalingFactor = 2.0
+    priorLogRadiusScalingFactor = 0.0
+    priorPdfGoodnessGain = 1.0
+    priorPdfGoodnessWeight = 1.0
+    priorPdfVariabilityWeight = 2.0
+    priorRaScalingFactor = 1.0
+    priorWeightGoodnessCutoff = 0.01
+    priorWeightVariabilityCutoff = 0.5
+    quickMapEnabled = true
+    quickMapVariabilityCutoff = 1.0
+    randomStreamSeed = 1
+    spikeBasisVectorWindow = 15
+    spikeIsolationEnabled = false
+    svdMaxOrder = 8
+    svdNormalizationMethod = noiseFloor
+    svdOrder = 0
+    svdOrderForReducedRobustFit = 4
+    svdSnrCutoff = 5.0
+    useBasisVectorsAndPriorsFromBlob = false
+    useBasisVectorsAndPriorsFromPixels = false
+    useBasisVectorsFromBlob = false
+    useCentroidPriors = false
+    useOnlyQuietStarsForPriorPdf = true
+    useOnlyQuietStarsForSvd = true
+    variabilityCutoff = 1.3
+
+  Parameter Set: goodnessMetric (SC) (type=PdcGoodnessMetricParameters, version=1)
+    correlationScale = 12.0
+    earthPointScale = 1.0
+    noiseScale = 2.0E-5
+    spikeScale = 5.0E-6
+    variabilityScale = 10000.0
+
+
+Modules
+
+  Module Definition: pa, version=0
+    Java Classname: PaPipelineModule
+    exe timeout seconds: 180000
+    exe name: pa
+    min memory MB: 0
+    # Tasks (total/completed/failed): 80/80/0
+    Software Revisions for node:[svn+ssh://murzim/repo/soc/tags/release/9.3.48@61429]
+    Parameter Set: background (type=BackgroundModuleParameters, version=1)
+      aicOrderSelectionEnabled = true
+      fitMaxOrder = 4
+      fitMinPoints = 100
+      fitOrder = 2
+
+    Parameter Set: cadenceRange (SCM1) (type=CadenceRangeParameters, version=69)
+      binByTargetTable = true
+      endCadence = 1744509
+      excludeCadences = 345190:345789,1015240:1015569,1442200:1442649,1844440:1845039
+      minimumBinSize = 1
+      numberOfBins = 1
+      startCadence = 1699180
+
+    Parameter Set: encircledEnergy (type=EncircledEnergyModuleParameters, version=4)
+      aicFraction = 0.1
+      fluxFraction = 0.95
+      maxPixels = 300
+      maxPolyOrder = 10
+      maxRadius = 0.0
+      maxTargets = 250
+      plotsEnabled = false
+      polyOrder = -1
+      robustLimitEnabled = false
+      robustThreshold = 0.05
+      seedRadius = 0.6
+      targetLabel = PPA_STELLAR
+      targetPolyOrder = 10000
+
+    Parameter Set: paHarmonicsIdentification (type=PaHarmonicsIdentificationParameters, version=2)
+      falseDetectionProbabilityForTimeSeries = 0.001
+      maxHarmonicComponents = 25
+      medianWindowLengthForPeriodogramSmoothing = 47
+      medianWindowLengthForTimeSeriesSmoothing = 21
+      minHarmonicSeparationInBins = 25
+      movingAverageWindowLength = 47
+      retainFrequencyCombsEnabled = false
+      timeOutInMinutes = 2.5
+
+    Parameter Set: pou (pa) (type=PouModuleParameters, version=1)
+      cadenceChunkSize = 240
+      compressionEnabled = true
+      interpDecimation = 24
+      interpMethod = linear
+      maxBackgroundCadenceChunkSize = 1
+      maxSvdOrder = 10
+      numErrorPropVars = 30
+      pixelChunkSize = 2500
+      pouEnabled = false
+
+    Parameter Set: tadSc1 (type=TadParameters, version=38)
+      associatedLcTargetListSetName = quarter14_summer2012_trimmed_lc_paCoa_ksop2183
+      quarters = q14
+      supplementalFor = quarter14_summer2012_trimmed_sc1
+      targetListSetName = quarter14_summer2012_trimmed_sc1_paCoa_ksop2189
+
+    Parameter Set: motion (type=MotionModuleParameters, version=2)
+      aicDecimationFactor = 8
+      aicOrderSelectionEnabled = true
+      centroidBiasFitOrder = 2
+      centroidBiasRemovalIterations = 2
+      columnFitOrder = 3
+      fitMaxOrder = 3
+      fitMinPoints = 100
+      k2PpaTargetRejectionEnabled = false
+      maxGappingIterations = 20
+      robustWeightGappingThreshold = 0.1
+      rowFitOrder = 3
+
+    Parameter Set: thrusterDataAncillaryEngineering (type=ThrusterDataAncillaryEngineeringParameters, version=0)
+      thrusterFiringDataCadenceSeconds = 0.0
+
+    Parameter Set: paCosmicRay (SC) (type=PaCosmicRayParameters, version=1)
+      arOrder = 50
+      cleanZeroCrossingCadencesEnabled = false
+      consecutiveCosmicRayCleaningEnabled = false
+      detectionThreshold = 4.0
+      detrendOrder = 2
+      gapLengthThreshold = 10
+      k2BackgroundCleaningEnabled = true
+      k2BackgroundThrusterFiringExcludeHalfWindow = 3
+      k2TargetCleaningEnabled = false
+      k2TargetThrusterFiringExcludeHalfWindow = 4
+      longMedianFilterLength = 49
+      madThreshold = 12.0
+      madWindowLength = 145
+      medianFilterLength = 5
+      shortMedianFilterLength = 3
+      thresholdMultiplierForNegativeEvents = 2.0
+      twoSidedFinalThresholdingEnabled = false
+
+    Parameter Set: rollingBandArtifact (type=RollingBandArtifactParameters, version=0)
+      cleaningScale = 21
+      meanSigmaThreshold = 1.0
+      numberOfFlagVariables = 9
+      pixelBiasThresholdAduPerRead = 0.016
+      pixelNoiseThresholdAduPerRead = 1.65
+      robustWeightThreshold = 0.5
+      severityQuantiles = 0.977,0.5
+      testPulseDurations = 3,6,12,24,31
+      transitDepthSigmaThreshold = 0.0
+
+    Parameter Set: taskFileCopy (SCM1 PA) (type=TaskFileCopyParameters, version=41)
+      deleteAfterCopy = true
+      deleteWithoutCopy = false
+      destinationPath = /soc/nfs/production-nfs1/soc-9.3-reprocessing/pipeline_results/sc/pa/q14/
+      enabled = true
+      excludeWildcards = *.bin
+      failTaskOnError = true
+      uowSymlinkPath = /soc/nfs/production-nfs1/soc-9.3-reprocessing/pipeline_results/sc/pa/q14/uow/
+      uowSymlinksEnabled = true
+      uowSymlinksIncludeCadenceRange = false
+      uowSymlinksIncludeMonths = true
+
+    Parameter Set: argabrightening (SC) (type=ArgabrighteningModuleParameters, version=0)
+      fitOrder = 2
+      madThreshold = 60.0
+      medianFilterLength = 25
+      mitigationEnabled = true
+
+
+  Module Definition: pdc, version=1
+    Java Classname: PdcPipelineModule
+    exe timeout seconds: 360000
+    exe name: pdc
+    min memory MB: 0
+    # Tasks (total/completed/failed): 80/80/0
+    Software Revisions for node:[svn+ssh://murzim/repo/soc/tags/release/9.3.48@61429]
+    Parameter Set: fluxType (type=FluxTypeParameters, version=0)
+      fluxType = SAP
+
+    Parameter Set: cadenceRange (SCM1) (type=CadenceRangeParameters, version=69)
+      binByTargetTable = true
+      endCadence = 1744509
+      excludeCadences = 345190:345789,1015240:1015569,1442200:1442649,1844440:1845039
+      minimumBinSize = 1
+      numberOfBins = 1
+      startCadence = 1699180
+
+    Parameter Set: pdcHarmonicsIdentification (SC) (type=PdcHarmonicsIdentificationParameters, version=2)
+      falseDetectionProbabilityForTimeSeries = 0.01
+      maxHarmonicComponents = 50
+      medianWindowLengthForPeriodogramSmoothing = 193
+      medianWindowLengthForTimeSeriesSmoothing = 21
+      minHarmonicSeparationInBins = 50
+      movingAverageWindowLength = 193
+      retainFrequencyCombsEnabled = false
+      timeOutInMinutes = 10.0
+
+    Parameter Set: discontinuity (type=DiscontinuityParameters, version=1)
+      discontinuityModel = 0.0,-1.5151515,-1.8939394,-1.461039,-0.54112554,0.54112554,1.461039,1.8939394,1.5151515,0.0
+      discontinuityThresholdInSigma = 5.0
+      maxNumberOfUnexplainedDiscontinuities = 4
+      medianWindowLength = 49
+      ruleOutTransitRatio = 0.5
+      savitzkyGolayFilterLength = 9
+      savitzkyGolayPolyOrder = 2
+      varianceWindowLengthMultiplier = 10
+
+    Parameter Set: thrusterDataAncillaryEngineering (type=ThrusterDataAncillaryEngineeringParameters, version=0)
+      thrusterFiringDataCadenceSeconds = 0.0
+
+    Parameter Set: taskFileCopy (SCM1 PDC) (type=TaskFileCopyParameters, version=41)
+      deleteAfterCopy = true
+      deleteWithoutCopy = false
+      destinationPath = /soc/nfs/production-nfs1/soc-9.3-reprocessing/pipeline_results/sc/pdc/q14/
+      enabled = true
+      excludeWildcards = *.bin
+      failTaskOnError = true
+      uowSymlinkPath = /soc/nfs/production-nfs1/soc-9.3-reprocessing/pipeline_results/sc/pdc/q14/uow/
+      uowSymlinksEnabled = true
+      uowSymlinksIncludeCadenceRange = false
+      uowSymlinksIncludeMonths = true
+
+    Parameter Set: pdc (SC) (type=PdcModuleParameters, version=6)
+      astrophysicalEventBridgeInDays = 0.008333
+      attitudeTweakBufferInDays = 0.008333
+      bandSplittingEnabled = false,false,false
+      bandSplittingEnabledQuarters = q0:q1,q2:q16,q17
+      coarsePointBufferInDays = 0.0
+      cotrendPerformanceLimit = 1.025
+      cotrendRatioMaxTimeScaleInDays = 3.0
+      debugLevel = 0
+      earthPointBufferInDays = 0.008333
+      excludeTargetLabels = ARTIFACT_REMOVAL,NGC6791_20x100_custom_aperture,NGC6819_20x100_custom_aperture,PPA_LDE_UNDERSHOOT,background_superaperture,BACKGROUND_SUBAPERTURE,PDQ_DYNAMIC,PDQ_DYNAMIC_RANGE,REVERSE_CLOCK_FT,REVERSE_CLOCK_PT,REVERSE_CLOCK_ST,STAR_BLOOM,NO_SOC_PHOTOMETRY
+      harmonicDetrendOrder = 1
+      harmonicsRemovalEnabled = false
+      mapEnabled = true
+      mapSelectionMethod = regular
+      mapSelectionMethodCutoff = 0.8
+      mapSelectionMethodMultiscaleBias = 0.0
+      medianFilterLength = 11
+      minHarmonicsForDetrending = 8
+      neighborhoodRadiusForAttitudeTweak = 25
+      normalizationEnabled = true
+      outlierThresholdXFactor = 8.0
+      preMapIterations = 1
+      robustCotrendFitFlag = false
+      safeModeBufferInDays = 0.008333
+      stellarVariabilityDetrendOrder = 6
+      stellarVariabilityRemoveEclipsingBinariesEnabled = true
+      stellarVariabilityThreshold = 0.005
+      thermalRecoveryDurationInDays = 5.0
+      thrusterSawtoothRemovalDetectionThreshold = 5.0
+      thrusterSawtoothRemovalMaxDetectionThreshold = 100.0
+      thrusterSawtoothRemovalMaxIterations = 6
+      variabilityDetrendPolyOrder = 3
+      variabilityEpRecoveryMaskEnabled = true
+      variabilityEpRecoveryMaskWindow = 150
+
+
+Data Model Registry
+version=150, locked=true, lockTimestamp=2016-03-16 14:03:15.0
+  type=BAD_PIXELS
+    importTime=2009-02-24 14:00:01.0
+    revision=svn+ssh://murzim/data-repo/trunk/data/flight/so/models/invalid-pixels/09054_01_tklaus_invalid_pixels (LCR=305)
+    description=Added as seed data during r6.2 migration
+    locked=true
+    lockTime=2016-03-16 14:03:15.0
+
+  type=DATA_ANOMALY_FLAGS
+    importTime=2015-07-17 09:07:41.0
+    revision=28
+    description=Default description
+    locked=true
+    lockTime=2016-03-16 14:03:15.0
+
+  type=EB_TRANSIT_PARAMETER
+    importTime=2015-07-15 11:19:18.0
+    revision=2
+    description=kplr20150714170000_ebham.txt: URL: svn+ssh://murzim/data-repo/trunk/data/flight/so/exo_archive/koi_tables/150714_ksop2203/kplr20150714170000_ebham.txt R7203 r9.3.16 KSOP-2203 EB Parameters Model import, kzamudio, 20150715
+    locked=true
+    lockTime=2016-03-16 14:03:15.0
+
+  type=EXTERNAL_TCE
+    importTime=2014-04-02 07:41:02.0
+    revision=2
+    description=r9.1.27: TCE Model import, KSOP-1970 svn+ssh://murzim/data-repo/trunk/data/flight/so/models/external-tce/140401_jlcoughl_q1q16_orphan_dvsuprun/Q16OrphanDVSuppInput.txt R6170 kzamudio 20140402
+    locked=true
+    lockTime=2016-03-16 14:03:15.0
+
+  type=GAIN
+    importTime=2009-02-24 13:59:55.0
+    revision=svn+ssh://murzim/data-repo/trunk/data/flight/so/models/gain/09054_01_tklaus_gain (LCR=299)
+    description=Added as seed data during r6.2 migration
+    locked=true
+    lockTime=2016-03-16 14:03:15.0
+
+  type=GEOMETRY
+    importTime=2009-06-04 20:02:48.0
+    revision=svn+ssh://murzim/data-repo/trunk/data/flight/so/models/geometry/09156_01_pt_geometry (LCR=700)
+    description=Added as seed data during r6.2 migration
+    locked=true
+    lockTime=2016-03-16 14:03:15.0
+
+  type=KIC_EXTENSION
+    importTime=2013-07-15 11:49:05.0
+    revision=1
+    description=r9.0.7: Import UKIRT KIC Extenstion KSOP-1662 svn+ssh://murzim/data-repo/trunk/data/flight/so/catalogs/kicExtensions/ukirt_kic_extension_full_fov.txt R4651, kibrahim, KSOP-1662, 20130715
+    locked=true
+    lockTime=2016-03-16 14:03:15.0
+
+  type=KIC_OVERRIDE
+    importTime=2015-09-30 09:50:48.0
+    revision=7
+    description=Importing the KOM file for Q0-Q17 KSOP-2201, svn+ssh://murzim/data-repo/trunk/data/flight/so/models/kic-overrides/15271_mergedHuberPropertiesBrysonMagnitudes_ksop-2201/mergedPropertiesKepmagsKom_20150928.txt R7422, kzamudio, 20150930
+    locked=true
+    lockTime=2016-03-16 14:03:15.0
+
+  type=LARGEFLATFIELD
+    importTime=2009-06-25 09:41:47.0
+    revision=svn+ssh://murzim/data-repo/trunk/data/flight/so/models/large-flat/09175_01_jvancleve_large-flat (LCR=771)
+    description=Added as seed data during r6.2 migration
+    locked=true
+    lockTime=2016-03-16 14:03:15.0
+
+  type=LEAP_SECONDS
+    importTime=2015-07-14 16:54:06.0
+    revision=svn+ssh://murzim/data-repo/trunk/data/flight/moc/leap-seconds/15162_01_jcampbell_leap_seconds/kplr2015160212506_senm.xml@7164
+    description=Adding the 2015 Leap Second update: naif0011.tls, KSOP-2336, jcampbell, 20150714
+    locked=true
+    lockTime=2016-03-16 14:03:15.0
+
+  type=LINEARITY
+    importTime=2009-06-10 14:37:13.0
+    revision=svn+ssh://murzim/data-repo/trunk/data/flight/so/models/linearity/09153_01_jvancleve_linearity (LCR=683)
+    description=Added as seed data during r6.2 migration
+    locked=true
+    lockTime=2016-03-16 14:03:15.0
+
+  type=OBS_LOG
+    importTime=2015-02-24 10:36:35.0
+    revision=4
+    description=r9.2.31: Importing the Observing Log XML KSOC-4609, svn+ssh://murzim/data-repo/trunk/data/flight/so/misc/data_observing_log/observing-log.xml R6845, kzamudio, 20150224
+    locked=true
+    lockTime=2016-03-16 14:03:15.0
+
+  type=PLANETARY_EPHEMERIS
+    importTime=2009-02-24 16:34:14.0
+    revision=svn+ssh://murzim/data-repo/trunk/data/flight/moc/planetary-ephemeris/09055_01_tklaus_planetary_ephemeris/kplr2009055103710_senm.xml (LCR=327)
+    description=Added as seed data during r6.2 migration
+    locked=true
+    lockTime=2016-03-16 14:03:15.0
+
+  type=POINTING
+    importTime=2016-03-07 09:42:11.0
+    revision=svn+ssh://kzamudio@murzim/data-repo/trunk/data/flight/so/models/pointing/16064_01_kzamudio_pointing_use16027roll_useL2535ephem (LCR=7703)
+    description=r9.3: KSOP-2559 K1+K2 model w/L2535ephem+16027roll svn+ssh://murzim/data-repo/trunk/data/flight/so/models/pointing/16064_01_kzamudio_pointing_use16027roll_useL2535ephem/kplr2016030409_pointing.txt R7703 kzamudio 160307 created by makeNextVersionHistory
+    locked=true
+    lockTime=2016-03-16 14:03:15.0
+
+  type=PRF
+    importTime=2009-05-29 16:26:43.0
+    revision=svn+ssh://murzim/data-repo/trunk/data/flight/so/models/prf/09146_01_sbryson_c039_prf_5prf_delivery (LCR=636)
+    description=Added as seed data during r6.2 migration
+    locked=true
+    lockTime=2016-03-16 14:03:15.0
+
+  type=READNOISE
+    importTime=2009-02-24 14:05:36.0
+    revision=svn+ssh://murzim/data-repo/trunk/data/flight/so/models/read-noise/09054_01_tklaus_read_noise (LCR=302)
+    description=Added as seed data during r6.2 migration
+    locked=true
+    lockTime=2016-03-16 14:03:15.0
+
+  type=ROLLTIME
+    importTime=2016-02-09 13:32:47.0
+    revision=svn+ssh://murzim/data-repo/trunk/data/flight/so/models/roll-time/16027_01_kzamudio_roll_time_c10_update (LCR=7635)
+    description=r9.3.42 KSOP-2550 Roll-time update, svn+ssh://murzim/data-repo/trunk/data/flight/so/models/roll-time/16027_01_kzamudio_roll_time_c10_update/kplr2016012711_rolltime.txt R7635, kzamudio, 20160209 created by makeNextVersionHistory
+    locked=true
+    lockTime=2016-03-16 14:03:15.0
+
+  type=SATURATION
+    importTime=2011-04-27 15:13:35.0
+    revision=svn+ssh://murzim/data-repo/trunk/data/flight/so/models/saturation/2011111_01_sbryson_saturation_model (LCR=2760)
+    description=r6.2v42444 svn+ssh://murzim/data-repo/trunk/data/flight/so/models/saturation/2011111_01_sbryson_saturation_model/kplr2011042115_saturation.txt R2760 kibrahim 110427 KSOP-844 created by makeNextVersionHistory
+    locked=true
+    lockTime=2016-03-16 14:03:15.0
+
+  type=SCLK
+    importTime=2015-07-15 10:19:23.0
+    revision=svn+ssh://murzim/data-repo/trunk/data/flight/moc/sclk/15138_01_kzamudio_sclk/kplr2015135192506_sknm.xml@7085
+    description=Adding new SCLK: kplr2015135185757.tsc, KSOP-2314, kzamudio, 20150715
+    locked=true
+    lockTime=2016-03-16 14:03:15.0
+
+  type=SMALLFLATFIELD
+    importTime=2009-06-25 10:23:25.0
+    revision=svn+ssh://murzim/data-repo/trunk/data/flight/so/models/small-flat/09174_01_dcaldwell_small_flat (LCR=772)
+    description=Added as seed data during r6.2 migration
+    locked=true
+    lockTime=2016-03-16 14:03:15.0
+
+  type=SPACECRAFT_EPHEMERIS
+    importTime=2016-03-07 09:39:56.0
+    revision=svn+ssh://murzim/data-repo/trunk/data/flight/moc/spacecraft-ephemeris/16050_01_kzamudio_spacecraft_ephemeris_L2535/kplr2016048224329_senm.xml@7672
+    description=Adding L+2535 ephemeris:spk_2016046000000_2016048223540_kplr.bsp, kzamudio, 160307
+    locked=true
+    lockTime=2016-03-16 14:03:15.0
+
+  type=TRANSIT_NAME
+    importTime=2015-09-30 08:59:29.0
+    revision=4
+    description=keplernames_20150925110000.csv: URL:svn+ssh://murzim/data-repo/trunk/data/flight/so/models/nexsci/20150925_jcampbell_koi_and_kepler_names/keplernames_20150925110000.csv R7421 r9.3.29 KSOP-2202 Transit Name Model import, kzamudio, 20150930
+    locked=true
+    lockTime=2016-03-16 14:03:15.0
+
+  type=TRANSIT_PARAMETER
+    importTime=2015-09-30 08:54:06.0
+    revision=5
+    description=cumulative_20150925110000.csv: URL:svn+ssh://murzim/data-repo/trunk/data/flight/so/models/nexsci/20150925_jcampbell_koi_and_kepler_names/cumulative_20150925110000.csv R7421 r9.3.29 KSOP-2202 Transit Parameters Model import, kzamudio, 20150930
+    locked=true
+    lockTime=2016-03-16 14:03:15.0
+
+  type=TWODBLACK
+    importTime=2010-03-03 14:55:18.0
+    revision=svn+ssh://murzim/data-repo/trunk/data/flight/so/models/two-d-black/10062_01_kibrahim_combine_09165_02_pgazis_10042_01_dcaldwell_two_d_black (LCR=1240)
+    description=Added as seed data during r6.2 migration
+    locked=true
+    lockTime=2016-03-16 14:03:15.0
+
+  type=UNDERSHOOT
+    importTime=2009-02-24 14:11:02.0
+    revision=svn+ssh://murzim/data-repo/trunk/data/flight/so/models/undershoot/09054_01_tklaus_undershoot (LCR=304)
+    description=Added as seed data during r6.2 migration
+    locked=true
+    lockTime=2016-03-16 14:03:15.0
+
+

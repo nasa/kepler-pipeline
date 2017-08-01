@@ -1,0 +1,1317 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Copyright 2017 United States Government as represented by the
+  Administrator of the National Aeronautics and Space Administration.
+  All Rights Reserved.
+  
+  This file is available under the terms of the NASA Open Source Agreement
+  (NOSA). You should have received a copy of this agreement with the
+  Kepler source code; see the file NASA-OPEN-SOURCE-AGREEMENT.doc.
+  
+  No Warranty: THE SUBJECT SOFTWARE IS PROVIDED "AS IS" WITHOUT ANY
+  WARRANTY OF ANY KIND, EITHER EXPRESSED, IMPLIED, OR STATUTORY,
+  INCLUDING, BUT NOT LIMITED TO, ANY WARRANTY THAT THE SUBJECT SOFTWARE
+  WILL CONFORM TO SPECIFICATIONS, ANY IMPLIED WARRANTIES OF
+  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, OR FREEDOM FROM
+  INFRINGEMENT, ANY WARRANTY THAT THE SUBJECT SOFTWARE WILL BE ERROR
+  FREE, OR ANY WARRANTY THAT DOCUMENTATION, IF PROVIDED, WILL CONFORM
+  TO THE SUBJECT SOFTWARE. THIS AGREEMENT DOES NOT, IN ANY MANNER,
+  CONSTITUTE AN ENDORSEMENT BY GOVERNMENT AGENCY OR ANY PRIOR RECIPIENT
+  OF ANY RESULTS, RESULTING DESIGNS, HARDWARE, SOFTWARE PRODUCTS OR ANY
+  OTHER APPLICATIONS RESULTING FROM USE OF THE SUBJECT SOFTWARE.
+  FURTHER, GOVERNMENT AGENCY DISCLAIMS ALL WARRANTIES AND LIABILITIES
+  REGARDING THIRD-PARTY SOFTWARE, IF PRESENT IN THE ORIGINAL SOFTWARE,
+  AND DISTRIBUTES IT "AS IS."
+
+  Waiver and Indemnity: RECIPIENT AGREES TO WAIVE ANY AND ALL CLAIMS
+  AGAINST THE UNITED STATES GOVERNMENT, ITS CONTRACTORS AND
+  SUBCONTRACTORS, AS WELL AS ANY PRIOR RECIPIENT. IF RECIPIENT'S USE OF
+  THE SUBJECT SOFTWARE RESULTS IN ANY LIABILITIES, DEMANDS, DAMAGES,
+  EXPENSES OR LOSSES ARISING FROM SUCH USE, INCLUDING ANY DAMAGES FROM
+  PRODUCTS BASED ON, OR RESULTING FROM, RECIPIENT'S USE OF THE SUBJECT
+  SOFTWARE, RECIPIENT SHALL INDEMNIFY AND HOLD HARMLESS THE UNITED
+  STATES GOVERNMENT, ITS CONTRACTORS AND SUBCONTRACTORS, AS WELL AS ANY
+  PRIOR RECIPIENT, TO THE EXTENT PERMITTED BY LAW. RECIPIENT'S SOLE
+  REMEDY FOR ANY SUCH MATTER SHALL BE THE IMMEDIATE, UNILATERAL
+  TERMINATION OF THIS AGREEMENT.
+-->
+
+<project basedir="." default="build" name="systest">
+  
+  <!-- uncomment for debugging only
+    <property name="getEclipseClasspath.suppress" value="true" />
+  -->
+
+  <import file="../include/ant/standard.xml" />
+  <import file="${targets}/gen-xmlbeans.xml"/>
+
+  <target name="compile-pre" depends="gen-xmlbeans"/>
+
+  <property name="dev.dir" value="build/test" />
+  <property name="test.name" value="Nominal" />
+  <property name="schema.file" value="${dev.dir}/schema/hsqldb/kepler" />
+  <property name="hsqldb.server.base.port.default" value="9002" />
+  <property name="hsqldb.server.port" value="9002" />
+  <property name="jvmarg.mx" value="-Xmx2G" />
+
+  <!-- These are only used for checking for offline usage. The actual -->
+  <!-- properties for KicCopy are accessed via KicCopyParameters. -->
+  <property name="oracle.host" value="host" />
+  <property name="oracle.port" value="port" />
+
+  <property name="test.descriptor" value="BASIC" />
+
+  <!-- Class names -->
+  <property name="InitDbClass"
+            value="gov.nasa.kepler.aft.misc.InitDbTestDataGenerator" />
+  <property name="KicClass"
+            value="gov.nasa.kepler.aft.cm.KicTestDataGenerator" />
+  <property name="CmTadClass"
+            value="gov.nasa.kepler.aft.cm.CmTadTestDataGenerator" />
+  <property name="RequantImporterClass"
+            value="gov.nasa.kepler.aft.gar.RequantImporterTestDataGenerator" />
+  <property name="EtemClass"
+            value="gov.nasa.kepler.aft.etem.EtemTestDataGenerator" />
+  <property name="HistogramClass"
+            value="gov.nasa.kepler.aft.gar.HistogramTestDataGenerator" />
+  <property name="HuffmanClass"
+            value="gov.nasa.kepler.aft.gar.HuffmanTestDataGenerator" />
+  <property name="HuffmanImporterClass"
+            value="gov.nasa.kepler.aft.gar.HuffmanImporterTestDataGenerator" />
+  <property name="CalClass"
+            value="gov.nasa.kepler.aft.cal.CalNominalTest" />
+  <property name="PaClass"
+            value="gov.nasa.kepler.aft.pa.PaNominalTest" />
+  <property name="PadClass"
+            value="gov.nasa.kepler.aft.ppa.PadNominalTest" />
+  <property name="PdcClass"
+            value="gov.nasa.kepler.aft.pdc.PdcNominalTest" />
+  <property name="TpsClass"
+            value="gov.nasa.kepler.aft.tps.TpsNominalTest" />
+  <property name="PmdClass"
+            value="gov.nasa.kepler.aft.ppa.PmdNominalTest" />
+
+  <propertyset id="aft-system-properties" >
+    <propertyref name="aft.smokeTestMode" />
+    <propertyref name="hsqldb.server.port" />
+    <propertyref name="log4j.configuration" />
+    <propertyref name="test.descriptor" />
+  </propertyset>
+
+  <target name="aft-init" depends="build, test.init, get-aft-properties" />
+
+  <target name="get-aft-properties">
+
+    <!-- Do not set this at the top level. The automated builds must -->
+    <!-- use the default log4j configuration file. -->
+    <var name="log4j.configuration" value="file:etc/log4j.xml" />
+
+    <available file="etc/aft-kepler.properties"
+               property="aft-kepler.properties.present" />
+    <if>
+      <isset property="aft-kepler.properties.present" />
+      <then>
+        <echo message="reading etc/aft-kepler.properties" />
+        <!-- read properties -->
+        <property file="etc/aft-kepler.properties" />
+
+        <if> <!-- actual.dir -->
+          <isset property="aft.actualDir" />
+          <then>
+            <property name="actual.dir" value="${aft.actualDir}" />
+          </then>
+          <else>
+            <if>
+              <isset property="socenv.SOC_AFT_ROOT" />
+              <then>
+                <property name="actual.dir"
+                          value="${socenv.SOC_AFT_ROOT}" />
+              </then>
+              <else>
+                <property name="actual.dir"
+                          value="/path/to/aft" />
+              </else>
+            </if>
+          </else>
+        </if> <!-- actual.dir -->
+        <echo>actual.dir=${actual.dir}</echo>
+        <if> <!-- dist.dir -->
+          <isset property="socenv.SOC_CODE_ROOT" />
+          <then>
+            <property name="dist.dir" value="${socenv.SOC_CODE_ROOT}/dist" />
+          </then>
+          <else>
+            <property name="dist.dir" value="/path/to/dist" />
+          </else>
+        </if> <!-- dist.dir -->
+        <echo>dist.dir=${dist.dir}</echo>
+        <if> <!-- hsqldb.server.base.port -->
+          <isset property="hsqldb.server.base.port" />
+          <then>
+          </then>
+          <else>
+            <property name="hsqldb.server.base.port"
+                      value="${hsqldb.server.base.port.default}" />
+          </else>
+        </if> <!-- hsqldb.server.base.port -->
+        <echo>hsqldb.server.base.port=${hsqldb.server.base.port}</echo>
+        <if> <!-- fs.data.dir -->
+          <isset property="fs.data.dir" />
+          <then>
+          </then>
+          <else>
+            <property name="fs.data.dir" value="${build}/tmp/fsdata" />
+          </else>
+        </if> <!-- fs.data.dir -->
+        <echo>fs.data.dir=${fs.data.dir}</echo>
+      </then>
+    </if>
+    <exec executable="id" os="Linux,Mac OS X" outputproperty="uid" >
+      <arg line="-u" />
+    </exec>
+    <echo>uid=${uid}</echo>
+    <math result="hsqldb.server.port.default" datatype="int" >
+      <add>
+        <num value="${hsqldb.server.base.port}" />
+	<num value="${uid}" />
+      </add>
+    </math>
+    <echo>hsqldb.server.port.default=${hsqldb.server.port.default}</echo>
+    <math result="aft.hsqldb.server.base.port" datatype="int" >
+      <add>
+        <num value="${hsqldb.server.port.default}" />
+        <num value="10000" />
+      </add>
+    </math>
+    <echo>aft.hsqldb.server.base.port=${aft.hsqldb.server.base.port}</echo>
+    <property name="initdb.hsqldb.server.port" value="${aft.hsqldb.server.base.port}" />
+    <echo>initdb.hsqldb.server.port=${initdb.hsqldb.server.port}</echo>
+    <math result="kic.hsqldb.server.port" datatype="int" >
+      <add>
+        <num value="${initdb.hsqldb.server.port}" />
+        <num value="1" />
+      </add>
+    </math>
+    <echo>kic.hsqldb.server.port=${kic.hsqldb.server.port}</echo>
+    <math result="cmtad.hsqldb.server.port" datatype="int" >
+      <add>
+        <num value="${kic.hsqldb.server.port}" />
+        <num value="1" />
+      </add>
+    </math>
+    <echo>cmtad.hsqldb.server.port=${cmtad.hsqldb.server.port}</echo>
+    <math result="huffman.hsqldb.server.port" datatype="int" >
+      <add>
+        <num value="${kic.hsqldb.server.port}" />
+        <num value="1" />
+      </add>
+    </math>
+    <math result="requant.hsqldb.server.port" datatype="int" >
+      <add>
+        <num value="${huffman.hsqldb.server.port}" />
+        <num value="1" />
+      </add>
+    </math>
+    <echo>requant.hsqldb.server.port=${requant.hsqldb.server.port}</echo>
+    <math result="histogram.hsqldb.server.port" datatype="int" >
+      <add>
+        <num value="${requant.hsqldb.server.port}" />
+        <num value="1" />
+      </add>
+    </math>
+    <math result="etem.hsqldb.server.port" datatype="int" >
+      <add>
+        <num value="${histogram.hsqldb.server.port}" />
+        <num value="1" />
+      </add>
+    </math>
+    <echo>etem.hsqldb.server.port=${etem.hsqldb.server.port}</echo>
+    <math result="sggen.hsqldb.server.port" datatype="int" >
+      <add>
+        <num value="${etem.hsqldb.server.port}" />
+        <num value="1" />
+      </add>
+    </math>
+    <echo>sggen.hsqldb.server.port=${sggen.hsqldb.server.port}</echo>
+    <math result="tad.hsqldb.server.port" datatype="int" >
+      <add>
+        <num value="${sggen.hsqldb.server.port}" />
+        <num value="1" />
+      </add>
+    </math>
+    <echo>tad.hsqldb.server.port=${tad.hsqldb.server.port}</echo>
+    <math result="pdq.hsqldb.server.port" datatype="int" >
+      <add>
+        <num value="${tad.hsqldb.server.port}" />
+        <num value="1" />
+      </add>
+    </math>
+    <echo>pdq.hsqldb.server.port=${pdq.hsqldb.server.port}</echo>
+    <math result="cal.hsqldb.server.port" datatype="int" >
+      <add>
+        <num value="${pdq.hsqldb.server.port}" />
+        <num value="1" />
+      </add>
+    </math>
+    <echo>cal.hsqldb.server.port=${cal.hsqldb.server.port}</echo>
+    <math result="pa-lc.hsqldb.server.port" datatype="int" >
+      <add>
+        <num value="${cal.hsqldb.server.port}" />
+        <num value="1" />
+      </add>
+    </math>
+    <echo>pa-lc.hsqldb.server.port=${pa-lc.hsqldb.server.port}</echo>
+    <math result="pa-sc.hsqldb.server.port" datatype="int" >
+      <add>
+        <num value="${pa-lc.hsqldb.server.port}" />
+        <num value="1" />
+      </add>
+    </math>
+    <math result="pad.hsqldb.server.port" datatype="int" >
+      <add>
+        <num value="${pa-sc.hsqldb.server.port}" />
+        <num value="1" />
+      </add>
+    </math>
+    <echo>pad.hsqldb.server.port=${pad.hsqldb.server.port}</echo>
+    <math result="pdc.hsqldb.server.port" datatype="int" >
+      <add>
+        <num value="${pad.hsqldb.server.port}" />
+        <num value="1" />
+      </add>
+    </math>
+    <math result="tps.hsqldb.server.port" datatype="int" >
+      <add>
+        <num value="${pdc.hsqldb.server.port}" />
+        <num value="1" />
+      </add>
+    </math>
+    <echo>tps.hsqldb.server.port=${tps.hsqldb.server.port}</echo>
+    <math result="pmd.hsqldb.server.port" datatype="int" >
+      <add>
+        <num value="${tps.hsqldb.server.port}" />
+        <num value="1" />
+      </add>
+    </math>
+    <math result="dv.hsqldb.server.port" datatype="int" >
+      <add>
+        <num value="${pmd.hsqldb.server.port}" />
+        <num value="1" />
+      </add>
+    </math>
+    <echo>dv.hsqldb.server.port=${dv.hsqldb.server.port}</echo>
+
+    <echo>oracle.host=${oracle.host}</echo>
+    <echo>oracle.port=${oracle.port}</echo>
+  </target>
+
+  <!-- Users of this macro must add aft-init to their dependencies. -->
+  <macrodef name="aft-gen" description="Run a test data generator">
+    <attribute name="test.descriptor" default="${test.descriptor}" />
+    <attribute name="generator.name" />
+    <attribute name="jvmarg.mx" default="${jvmarg.mx}" />
+    <attribute name="existingHsqldb" default="" />
+    <attribute name="fs.data.seed.dir" default="" />
+    <attribute name="class" />
+
+    <sequential>
+      <var name="aft.actual.dir" 
+           value="${actual.dir}/@{generator.name}/@{test.descriptor}" />
+      <delete dir="${aft.actual.dir}" quiet="true" />
+      <delete dir="${dev.dir}/schema" quiet="true" />
+      <delete quiet="true">
+        <fileset dir="${build}">
+          <include name="pipeline.log*" />
+        </fileset>
+      </delete>
+
+      <java classname="@{class}" failonerror="true" fork="yes">
+        <classpath refid="classpath.runtime" />
+        <jvmarg value="-Dtest.descriptor=@{test.descriptor}" />
+        <jvmarg value="-Daft.existingHsqldb=@{existingHsqldb}" />
+        <jvmarg value="-Daft.fs.data.seed.dir=@{fs.data.seed.dir}" />
+        <jvmarg value="-Dlog4j.configuration=${log4j.configuration}" />
+        <jvmarg value="@{jvmarg.mx}" />
+      </java>
+
+      <copy-aft-files aft.actual.dir="${aft.actual.dir}" />
+      <var name="aft.actual.dir" unset="true" />
+    </sequential>
+  </macrodef>
+
+  <!-- Users of this macro must add aft-init to their dependencies. -->
+  <macrodef name="aft-module-test" description="Run a pipeline AFT">
+    <attribute name="test.descriptor" default="${test.descriptor}" />
+    <attribute name="module.name" />
+    <attribute name="test.name" default="${test.name}" />
+    <attribute name="jvmarg.mx" default="${jvmarg.mx}" />
+    <attribute name="existingHsqldb" default="" />
+    <attribute name="fs.data.seed.dir" default="" />
+    <attribute name="class" />
+
+    <sequential>
+      <var name="aft.actual.dir" 
+           value="${actual.dir}/@{module.name}/@{test.name}-@{test.descriptor}" />
+      <delete dir="${aft.actual.dir}" quiet="true" />
+      <delete dir="${dev.dir}/schema" quiet="true" />
+      <delete quiet="true">
+        <fileset dir="${build}">
+          <include name="pipeline.log*" />
+        </fileset>
+      </delete>
+
+      <junit dir="${basedir}" printsummary="yes" fork="yes" haltonfailure="yes">
+        <classpath refid="classpath.runtime" />
+        <jvmarg value="-Dtest.descriptor=@{test.descriptor}" />
+        <jvmarg value="-Daft.existingHsqldb=@{existingHsqldb}" />
+        <jvmarg value="-Daft.fs.data.seed.dir=@{fs.data.seed.dir}" />
+        <jvmarg value="-Djava.library.path=../common/native" />
+        <jvmarg value="-Dlog4j.configuration=${log4j.configuration}" />
+        <jvmarg value="@{jvmarg.mx}" />
+        <formatter type="xml" />
+        <test name="@{class}" todir="${reports.junit}" />
+      </junit>
+
+      <copy-aft-files aft.actual.dir="${aft.actual.dir}" />
+      <var name="aft.actual.dir" unset="true" />
+    </sequential>
+  </macrodef>
+
+  <macrodef name="copy-aft-files">
+    <attribute name="aft.actual.dir" />
+    <sequential>
+      <copy todir="@{aft.actual.dir}" >
+        <fileset dir="${build}" >
+          <include name="pipeline.log*" />
+        </fileset>
+      </copy>
+      <!--
+          Use mv since ant's move does not do a sparse copy.
+          Filestore files grow from 200 kB to 5.5 MB!
+      -->
+      <exec executable="mv">
+        <arg value="${fs.data.dir}" />
+        <arg value="@{aft.actual.dir}" />
+      </exec>
+      <move todir="@{aft.actual.dir}" >
+        <fileset dir="${dist.dir}/tmp" >
+          <include name="@{module.name}-matlab-*/**" />
+        </fileset>
+        <fileset dir="${dev.dir}" >
+          <include name="schema/**/kepler.*" />
+        </fileset>
+      </move>
+    </sequential>
+  </macrodef>
+
+  <macrodef name="start-file-hsqldb"
+            description="Run HSQLDB in network (shared) mode on default schema file">
+    <attribute name="schema.file" default="${schema.file}" />
+    <attribute name="port" default="${hsqldb.server.port}" />
+    <attribute name="jvmarg.mx" default="${jvmarg.mx}" />
+
+    <sequential>
+      <echo>
+        Starting hsqldb on file:@{schema.file}, port @{port}...
+      </echo>
+      <echo message="Starting hsqldb on " />
+      <java classname="org.hsqldb.Server" failonerror="true" fork="yes">
+        <classpath refid="classpath.runtime" />
+        <arg value="-database.0" />
+        <arg value="file:@{schema.file}" />
+        <arg value="-dbname.0" />
+        <arg value="kepler" />
+        <arg value="-port" />
+        <arg value="@{port}" />
+        <jvmarg value="@{jvmarg.mx}" />
+        <jvmarg value="-Dlog4j.configuration=file:etc/log4j.xml" />
+      </java>
+    </sequential>
+  </macrodef>
+
+  <!-- Users of this macro must add get-aft-properties to their dependencies. -->
+  <macrodef name="start-aftgen-hsqldb"
+            description="Run HSQLDB in network (shared) mode on named schema file">
+    <attribute name="test.descriptor" default="${test.descriptor}" />
+    <attribute name="module.name" />
+    <attribute name="schema.file" default="${schema.file}" />
+    <attribute name="port" default="${hsqldb.server.port}" />
+    <attribute name="jvmarg.mx" default="${jvmarg.mx}" />
+    
+    <sequential>
+      <start-file-hsqldb
+         schema.file="${actual.dir}/@{module.name}/@{test.descriptor}/schema/hsqldb/kepler"
+         port="@{port}"
+         jvmarg.mx="@{jvmarg.mx}" />
+    </sequential>
+  </macrodef>
+
+  <!-- Users of this macro must add get-aft-properties to their dependencies. -->
+  <macrodef name="start-aft-hsqldb"
+            description="Run HSQLDB in network (shared) mode on named schema file">
+    <attribute name="test.descriptor" default="${test.descriptor}" />
+    <attribute name="module.name" />
+    <attribute name="test.name" default="${test.name}" />
+    <attribute name="schema.file" default="${schema.file}" />
+    <attribute name="port" default="${hsqldb.server.port}" />
+    <attribute name="jvmarg.mx" default="${jvmarg.mx}" />
+    
+    <sequential>
+      <start-file-hsqldb
+         schema.file="${actual.dir}/@{module.name}/@{test.name}-@{test.descriptor}/schema/hsqldb/kepler"
+         port="@{port}"
+         jvmarg.mx="@{jvmarg.mx}" />
+    </sequential>
+  </macrodef>
+
+  <target name="start-hsqldb" depends="get-aft-properties"
+          description="Run HSQLDB in network (shared) mode" >
+    <start-file-hsqldb port="${hsqldb.server.port.default}" />
+  </target>
+
+  <target name="start-initdb-hsqldb" depends="get-aft-properties"
+          description="Run HSQLDB using InitDB (BASIC) snapshot" >
+    <start-aftgen-hsqldb module.name="initdb" port="${initdb.hsqldb.server.port}" />
+  </target>
+
+  <target name="start-kic-hsqldb" depends="get-aft-properties"
+          description="Run HSQLDB using KIC (BASIC) snapshot" >
+    <start-aftgen-hsqldb module.name="kic" port="${kic.hsqldb.server.port}" />
+  </target>
+
+  <target name="start-cmtad-hsqldb" depends="get-aft-properties"
+          description="Run HSQLDB using CMTAD (BASIC) snapshot" >
+    <start-aftgen-hsqldb module.name="cmtad"
+                         port="${cmtad.hsqldb.server.port}" />
+  </target>
+
+  <target name="start-huffman-hsqldb" depends="get-aft-properties"
+          description="Run HSQLDB using Huffman (BASIC) snapshot" >
+    <start-aftgen-hsqldb module.name="huffmanimporter"
+                         port="${huffman.hsqldb.server.port}" />
+  </target>
+
+  <target name="start-requant-hsqldb" depends="get-aft-properties"
+          description="Run HSQLDB using requant (BASIC) snapshot" >
+    <start-aftgen-hsqldb module.name="requantimporter"
+                         port="${requant.hsqldb.server.port}" />
+  </target>
+
+  <target name="start-histogram-hsqldb" depends="get-aft-properties"
+          description="Run HSQLDB using histogram (BASIC) snapshot" >
+    <start-aftgen-hsqldb module.name="histogram" port="${histogram.hsqldb.server.port}" />
+  </target>
+
+  <target name="start-etem-hsqldb" depends="get-aft-properties"
+          description="Run HSQLDB using ETEM (BASIC) snapshot" >
+    <start-aftgen-hsqldb module.name="etem" port="${etem.hsqldb.server.port}" />
+  </target>
+
+  <target name="start-sggen-hsqldb" depends="get-aft-properties"
+          description="Run HSQLDB using sggen (BASIC) snapshot" >
+    <start-aft-hsqldb module.name="sggen"
+                      port="${sggen.hsqldb.server.port}" />
+  </target>
+
+  <target name="start-tad-hsqldb" depends="get-aft-properties"
+          description="Run HSQLDB using TAD (BASIC) snapshot" >
+    <start-aft-hsqldb module.name="tad" port="${tad.hsqldb.server.port}" />
+  </target>
+
+  <target name="start-pdq-hsqldb" depends="get-aft-properties"
+          description="Run HSQLDB using PDQ (DUAL_MOD_OUT_PDQ) snapshot" >
+    <start-aft-hsqldb module.name="pdq" test.descriptor="DUAL_MOD_OUT_PDQ"
+                      port="${pdq.hsqldb.server.port}" />
+  </target>
+
+  <target name="start-cal-hsqldb" depends="get-aft-properties"
+          description="Run HSQLDB using CAL (BASIC) snapshot" >
+    <start-aft-hsqldb module.name="cal" port="${cal.hsqldb.server.port}" />
+  </target>
+
+  <target name="start-pa-lc-hsqldb" depends="get-aft-properties"
+          description="Run HSQLDB using PA (BASIC) snapshot" >
+    <start-aft-hsqldb module.name="pa" port="${pa-lc.hsqldb.server.port}" />
+  </target>
+
+  <target name="start-pa-sc-hsqldb" depends="get-aft-properties"
+          description="Run HSQLDB using PA (SC_BASIC) snapshot" >
+    <start-aft-hsqldb module.name="pa" test.descriptor="SC_BASIC"
+                      port="pa-sc.hsqldb.server.port}" />
+  </target>
+
+  <target name="start-pad-hsqldb" depends="get-aft-properties"
+          description="Run HSQLDB using PAD (BASIC) snapshot" >
+    <start-aft-hsqldb module.name="pad" port="${pad.hsqldb.server.port}" />
+  </target>
+
+  <target name="start-pdc-hsqldb" depends="get-aft-properties"
+          description="Run HSQLDB using PDC (BASIC) snapshot" >
+    <start-aft-hsqldb module.name="pdc" port="${pdc.hsqldb.server.port}" />
+  </target>
+
+  <target name="start-tps-hsqldb" depends="get-aft-properties"
+          description="Run HSQLDB using TPS (BASIC) snapshot" >
+    <start-aft-hsqldb module.name="tps" port="${tps.hsqldb.server.port}" /> 
+  </target>
+
+  <target name="start-pmd-hsqldb" depends="get-aft-properties"
+          description="Run HSQLDB using PMD &amp; PAG (BASIC) snapshot" >
+    <start-aft-hsqldb module.name="pmd" port="${pmd.hsqldb.server.port}" /> 
+  </target>
+
+  <target name="start-dv-hsqldb" depends="get-aft-properties"
+          description="Run HSQLDB using DV (DV) snapshot" >
+    <start-aft-hsqldb module.name="dv" test.descriptor="DV"
+                      port="${dv.hsqldb.server.port}" />
+  </target>
+
+  <target name="start-pig" depends="get-aft-properties"
+          description="Run PIG" >
+    <var name="hsqldb.server.port" value="${hsqldb.server.port.default}" />
+    <java classname="gov.nasa.kepler.ui.PipelineConsole"
+          failonerror="true" fork="yes">
+      <classpath refid="classpath.runtime" />
+      <jvmarg value="-Xmx1G" />
+      <jvmarg value="-Dconfig.propfile=etc/aft-kepler.properties" />
+      <syspropertyset refid="aft-system-properties" />
+    </java>
+  </target>
+
+  <target name="aftgen"
+          depends="aftgen-initdb, aftgen-kic, aftgen-cmtad, aftgen-requant-importer, aftgen-huffman-importer"
+          description="Generate the basic .hsql files needed by AFTs" />
+
+  <macrodef name="aftgen-intern">
+    <attribute name="test.descriptor" default="${test.descriptor}" />
+    <sequential>
+      <aftgen-initdb-intern test.descriptor="@{test.descriptor}" />
+      <aftgen-kic-intern test.descriptor="@{test.descriptor}" />
+      <aftgen-cmtad-intern test.descriptor="@{test.descriptor}" />
+      <aftgen-requant-importer-intern test.descriptor="@{test.descriptor}" />
+      <aftgen-huffman-importer-intern test.descriptor="@{test.descriptor}" />
+    </sequential>
+  </macrodef>
+
+  <target name="aftgen-initdb" depends="aft-init"
+          description="Generate the initdb data needed by AFTs">
+    <aftgen-initdb-intern />
+  </target>
+
+  <macrodef name="aftgen-initdb-intern">
+    <attribute name="test.descriptor" default="${test.descriptor}" />
+    <sequential>
+      <aft-gen test.descriptor="@{test.descriptor}"
+               generator.name="initdb"
+               jvmarg.mx="-Xmx512M"
+               class="${InitDbClass}" />
+    </sequential>
+  </macrodef>
+
+  <target name="aftgen-kic" depends="aft-init"
+          description="Generate the KIC data needed by AFTs">
+    <aftgen-kic-intern />
+  </target>
+
+  <macrodef name="aftgen-kic-intern">
+    <attribute name="test.descriptor" default="${test.descriptor}" />
+    <sequential>
+      <condition property="oracle.isreachable" else="false" >
+        <socket server="${oracle.host}" port="${oracle.port}" />
+      </condition>
+      <if>
+        <istrue value="${oracle.isreachable}" />
+        <then>
+          <aft-gen test.descriptor="@{test.descriptor}"
+                   generator.name="kic"
+                   existingHsqldb="hsqldb://${InitDbClass}"
+                   class="${KicClass}" />
+        </then>
+        <else>
+          <echo message="oracle.isreachable=${oracle.isreachable}" />
+          <property name="local.kic.hsql" 
+                    value="${actual.dir}/kic/@{test.descriptor}/kic.hsql" />
+          <condition property="kic.hsql.present" else="false" >
+            <available file="${local.kic.hsql}" />
+          </condition>
+          <if>
+            <istrue value="${kic.hsql.present}" />
+            <then>
+              <property name="local.hsqldb.dir" 
+                        value="${actual.dir}/@{test.descriptor}/hsqldb" />
+              <echo message="kic.hsql.present" />
+              <echo message="file=${local.kic.hsql}" />
+            </then>
+            <else>
+              <echo message="kic.hsql=${local.kic.hsql}" />
+              <echo message="kic.hsql.present=${kic.hsql.present}" />
+              <fail
+                 message="${oracle.host}: oracle host is not reachable" />
+            </else>
+          </if>
+        </else>
+      </if>
+    </sequential>
+  </macrodef>
+
+  <target name="aftgen-cmtad" depends="aft-init"
+          description="Generate the CM/TAD data needed by AFTs">
+    <aftgen-cmtad-intern />
+  </target>
+
+  <macrodef name="aftgen-cmtad-intern">
+    <attribute name="test.descriptor" default="${test.descriptor}" />
+    <sequential>
+      <aft-gen test.descriptor="@{test.descriptor}"
+               generator.name="cmtad"
+               existingHsqldb="hsqldb://${KicClass}"
+               class="${CmTadClass}" />
+    </sequential>
+  </macrodef>
+
+  <target name="aftgen-requant" depends="aft-init"
+          description="Generate the requant data needed by AFTs">
+    <aft-gen test.descriptor="ALL_MOD_OUT"
+             generator.name="requantization" jvmarg.mx="-Xmx3750M"
+             existingHsqldb="hsqldb://${CmTadClass}"
+             class="gov.nasa.kepler.aft.gar.RequantTestDataGenerator" />
+  </target>
+
+  <target name="aftgen-requant-importer" depends="aft-init"
+          description="Generate the requant data needed by AFTs">
+    <aftgen-requant-importer-intern />
+  </target>
+
+  <macrodef name="aftgen-requant-importer-intern">
+    <attribute name="test.descriptor" default="${test.descriptor}" />
+    <sequential>
+      <aft-gen test.descriptor="@{test.descriptor}"
+               generator.name="requantization"
+               existingHsqldb="hsqldb://${CmTadClass}"
+	       fs.data.seed.dir="${actual.dir}/cmtad/@{test.descriptor}/fs"
+               class="${RequantImporterClass}" />
+    </sequential>
+  </macrodef>
+
+  <target name="aftgen-huffman" depends="aft-init"
+          description="Generate the Huffman data needed by AFTs">
+    <aft-gen generator.name="huffman"
+             existingHsqldb="hsqldb://${HistogramClass}"
+             class="${HuffmanClass}" />
+  </target>
+
+  <target name="aftgen-huffman-importer" depends="aft-init"
+          description="Generate the Huffman data needed by AFTs">
+    <aftgen-huffman-importer-intern />
+  </target>
+
+  <macrodef name="aftgen-huffman-importer-intern">
+    <attribute name="test.descriptor" default="${test.descriptor}" />
+    <sequential>
+      <aft-gen test.descriptor="@{test.descriptor}"
+               generator.name="huffman"
+               existingHsqldb="hsqldb://${RequantImporterClass}"
+	       fs.data.seed.dir="${actual.dir}/requantization/@{test.descriptor}/fs"
+               class="${HuffmanImporterClass}" />
+    </sequential>
+  </macrodef>
+
+  <target name="aftgen-compression"
+          depends="aftgen, aftgen-requant, aftgen-histogram, aftgen-huffman, aftgen-etem"
+          description="Generate data needed for GAR requirements verification" />
+
+  <target name="aftgen-etem" depends="aft-init"
+          description="Generate the ETEM data needed by AFTs">
+    <aftgen-etem-intern />
+  </target>
+
+  <macrodef name="aftgen-etem-intern">
+    <attribute name="test.descriptor" default="${test.descriptor}" />
+    <attribute name="existingHsqldb" default="hsqldb://${HuffmanImporterClass}" />
+    <attribute name="fs.data.seed.dir" default="${actual.dir}/huffman/@{test.descriptor}/fs" />
+    <sequential>
+      <aft-gen test.descriptor="@{test.descriptor}"
+               generator.name="etem"
+               existingHsqldb="@{existingHsqldb}"
+               fs.data.seed.dir="@{fs.data.seed.dir}"
+               class="${EtemClass}" />
+    </sequential>
+  </macrodef>
+
+  <target name="aftgen-histogram" depends="aft-init"
+          description="Generate the histogram data needed by AFTs">
+    <aft-gen generator.name="histogram"
+             existingHsqldb="hsqldb://${EtemClass}"
+             fs.data.seed.dir="${actual.dir}/etem/${test.descriptor}/fs"
+             class="${HistogramClass}" />
+  </target>
+
+  <target name="aftdep-pi" depends="aftgen-initdb" />
+
+  <target name="aft-pi" depends="aft-pi-simple, aft-pi-matlab"
+          description="Run the debug pipeline AFTs" />
+
+  <target name="aft-pi-simple" depends="aft-init"
+          description="Run the DebugSimple pipeline AFT">
+    <aft-module-test
+       module.name="pi" test.name="DebugSimple"
+       existingHsqldb="hsqldb://${InitDbClass}"
+       class="gov.nasa.kepler.aft.pi.DebugSimplePipelineFeatureTest" />
+  </target>
+
+  <target name="aft-pi-matlab" depends="aft-init"
+          description="Run the DebugMatlab pipeline AFT">
+    <aft-module-test
+       module.name="pi" test.name="DebugMatlab"
+       existingHsqldb="hsqldb://${InitDbClass}"
+       class="gov.nasa.kepler.aft.pi.DebugMatlabPipelineFeatureTest" />
+  </target>
+
+  <target name="aftdep-requant" depends="aft-init"
+          description="Generate data needed by the requant AFT">
+    <aftgen-initdb-intern test.descriptor="ALL_MOD_OUT" />
+  </target>
+
+  <target name="aft-requant" depends="aft-init"
+          description="Run the Requant pipeline AFT">
+    <aft-module-test test.descriptor="ALL_MOD_OUT"
+                     module.name="requantization" jvmarg.mx="-Xmx3750M"
+                     existingHsqldb="hsqldb://${InitDbClass}/ALL_MOD_OUT"
+                     class="gov.nasa.kepler.aft.gar.Requant${test.name}Test" />
+  </target>
+
+  <target name="aftdep-histogram" depends="aftgen, aftgen-etem"
+          description="Generate data needed by the histogram AFT" />
+
+  <target name="aft-histogram" depends="aft-init"
+          description="Run the Histogram Nominal pipeline AFT">
+    <aft-module-test
+       module.name="histogram" jvmarg.mx="-Xmx4G"
+       existingHsqldb="hsqldb://${EtemClass}"
+       fs.data.seed.dir="${actual.dir}/etem/${test.descriptor}/fs"
+       class="gov.nasa.kepler.aft.gar.Histogram${test.name}Test" />
+  </target>
+
+  <target name="aftdep-huffman" depends="aftdep-histogram, aftgen-histogram"
+          description="Generate data needed by the Huffman AFT" />
+
+  <target name="aft-huffman" depends="aft-init"
+          description="Run the Huffman pipeline AFT">
+    <aft-huffman-intern />
+  </target>
+
+  <macrodef name="aft-huffman-intern">
+    <attribute name="existingHsqldb" default="hsqldb://${HistogramClass}" />
+    <sequential>
+      <aft-module-test
+         module.name="huffman"
+         existingHsqldb="@{existingHsqldb}"
+         class="gov.nasa.kepler.aft.gar.Huffman${test.name}Test" />
+    </sequential>
+  </macrodef>
+
+  <target name="aftdep-sggen" depends="aftgen-initdb, aftgen-kic"
+          description="Generate data needed by the SkyGroupGen AFT" />
+
+  <target name="aft-sggen" depends="aft-init"
+          description="Run the sggen pipeline AFT">
+    <aft-module-test module.name="sggen"
+                     existingHsqldb="hsqldb://${KicClass}"
+                     class="gov.nasa.kepler.aft.sggen.Sggen${test.name}Test" />
+  </target>
+
+  <target name="aftdep-tad" depends="aftgen-initdb, aftgen-kic"
+          description="Generate data needed by the TAD AFT" />
+
+  <target name="aft-tad" depends="aft-init"
+          description="Run the TAD pipeline AFT">
+    <aft-module-test module.name="tad"
+                     existingHsqldb="hsqldb://${KicClass}"
+                     class="gov.nasa.kepler.aft.tad.Tad${test.name}Test" />
+  </target>
+
+  <target name="aftdep-cal" depends="aft-init"
+          description="Generate data needed by CAL AFTs">
+    <aftdep-cal-intern />
+  </target>
+
+  <macrodef name="aftdep-cal-intern">
+    <attribute name="test.descriptor" default="${test.descriptor}" />
+    <sequential>
+      <aftgen-intern test.descriptor="@{test.descriptor}" />
+      <aftgen-etem-intern test.descriptor="@{test.descriptor}" />
+    </sequential>
+  </macrodef>
+
+  <target name="aft-cal" depends="aft-cal-Nominal, aft-cal-Overwrite"
+          description="Run the CAL pipeline AFTs" />
+
+  <target name="aft-cal-Nominal" depends="aft-init"
+          description="Run the CAL pipeline AFT">
+    <aft-cal-Nominal-intern />
+  </target>
+
+  <macrodef name="aft-cal-Nominal-intern">
+    <attribute name="test.descriptor" default="${test.descriptor}" />
+    <sequential>
+      <aft-module-test module.name="cal"
+                       existingHsqldb="hsqldb://${EtemClass}"
+                       fs.data.seed.dir="${actual.dir}/etem/@{test.descriptor}/fs"
+                       class="gov.nasa.kepler.aft.cal.Cal${test.name}Test" />
+    </sequential>
+  </macrodef>
+
+  <target name="aft-cal-Overwrite" depends="aft-init"
+          description="Run the CAL Overwrite pipeline AFT" >
+    <aft-module-test module.name="cal" test.name="Overwrite"
+                     existingHsqldb="hsqldb://${EtemClass}"
+                     fs.data.seed.dir="${actual.dir}/etem/${test.descriptor}/fs"
+                     class="gov.nasa.kepler.aft.cal.CalOverwriteTest" />
+  </target>
+        
+  <target name="aftdep-pdq" depends="aft-init"
+          description="Generate data needed by PDQ AFTs">
+    <aftgen-intern test.descriptor="DUAL_MOD_OUT_PDQ" />
+    <aftgen-etem-intern test.descriptor="DUAL_MOD_OUT_PDQ" />
+  </target>
+
+  <target name="aft-pdq" depends="aft-pdq-FirstContact, aft-pdq-SecondContact, aft-pdq-ThirdContact, aft-pdq-SecondContactGaps, aft-pdq-Reprocessing, aft-pdq-OutOfOrder, aft-pdq-Exclude"
+          description="Run all PDQ pipeline AFTs" >
+
+  </target>
+
+  <target name="aft-pdq-FirstContact" depends="aft-init"
+          description="Run the PDQ FirstContact pipeline AFT">
+    <aft-module-test test.descriptor="DUAL_MOD_OUT_PDQ"
+                     module.name="pdq" test.name="FirstContact"
+                     existingHsqldb="hsqldb://${EtemClass}/DUAL_MOD_OUT_PDQ"
+                     fs.data.seed.dir="${actual.dir}/etem/DUAL_MOD_OUT_PDQ/fs"
+                     class="gov.nasa.kepler.aft.pdq.PdqFirstContactTest" />
+  </target>
+
+  <target name="aft-pdq-SecondContact" depends="aft-init"
+          description="Run the PDQ SecondContact pipeline AFT">
+    <aft-module-test test.descriptor="DUAL_MOD_OUT_PDQ"
+                     module.name="pdq" test.name="SecondContact"
+                     existingHsqldb="hsqldb://${EtemClass}/DUAL_MOD_OUT_PDQ"
+                     fs.data.seed.dir="${actual.dir}/etem/DUAL_MOD_OUT_PDQ/fs"
+                     class="gov.nasa.kepler.aft.pdq.PdqSecondContactTest" />
+  </target>
+
+  <target name="aft-pdq-ThirdContact" depends="aft-init"
+          description="Run the PDQ ThirdContact pipeline AFT">
+    <aft-module-test test.descriptor="DUAL_MOD_OUT_PDQ"
+                     module.name="pdq" test.name="ThirdContact"
+                     existingHsqldb="hsqldb://${EtemClass}/DUAL_MOD_OUT_PDQ"
+                     fs.data.seed.dir="${actual.dir}/etem/DUAL_MOD_OUT_PDQ/fs"
+                     class="gov.nasa.kepler.aft.pdq.PdqThirdContactTest" />
+  </target>
+
+  <target name="aft-pdq-SecondContactGaps" depends="aft-init"
+          description="Run the PDQ SecondContactGaps pipeline AFT">
+    <aft-module-test test.descriptor="DUAL_MOD_OUT_PDQ"
+                     module.name="pdq" test.name="SecondContactGaps"
+                     existingHsqldb="hsqldb://${EtemClass}/DUAL_MOD_OUT_PDQ"
+                     fs.data.seed.dir="${actual.dir}/etem/DUAL_MOD_OUT_PDQ/fs"
+                     class="gov.nasa.kepler.aft.pdq.PdqSecondContactGapsTest" />
+  </target>
+
+  <target name="aft-pdq-AllContact" depends="aft-init"
+          description="Run the PDQ AllContact pipeline AFT">
+    <aft-module-test test.descriptor="DUAL_MOD_OUT_PDQ"
+                     module.name="pdq" test.name="AllContact"
+                     existingHsqldb="hsqldb://${EtemClass}/DUAL_MOD_OUT_PDQ"
+                     fs.data.seed.dir="${actual.dir}/etem/DUAL_MOD_OUT_PDQ/fs"
+                     class="gov.nasa.kepler.aft.pdq.PdqAllContactTest" />
+  </target>
+
+  <target name="aft-pdq-Reprocessing" depends="aft-init"
+          description="Run the PDQ Reprocessing pipeline AFT">
+    <aft-module-test test.descriptor="DUAL_MOD_OUT_PDQ"
+                     module.name="pdq" test.name="Reprocessing"
+                     existingHsqldb="hsqldb://${EtemClass}/DUAL_MOD_OUT_PDQ"
+                     fs.data.seed.dir="${actual.dir}/etem/DUAL_MOD_OUT_PDQ/fs"
+                     class="gov.nasa.kepler.aft.pdq.PdqReprocessingTest" />
+  </target>
+
+  <target name="aft-pdq-OutOfOrder" depends="aft-init"
+          description="Run the PDQ OutOfOrder pipeline AFT">
+    <aft-module-test test.descriptor="DUAL_MOD_OUT_PDQ"
+                     module.name="pdq" test.name="OutOfOrder"
+                     existingHsqldb="hsqldb://${EtemClass}/DUAL_MOD_OUT_PDQ"
+                     fs.data.seed.dir="${actual.dir}/etem/DUAL_MOD_OUT_PDQ/fs"
+                     class="gov.nasa.kepler.aft.pdq.PdqOutOfOrderTest" />
+  </target>
+
+  <target name="aft-pdq-Exclude" depends="aft-init"
+          description="Run the PDQ Exclude pipeline AFT">
+    <aft-module-test test.descriptor="DUAL_MOD_OUT_PDQ"
+                     module.name="pdq" test.name="Exclude"
+                     existingHsqldb="hsqldb://${EtemClass}/DUAL_MOD_OUT_PDQ"
+                     fs.data.seed.dir="${actual.dir}/etem/DUAL_MOD_OUT_PDQ/fs"
+                     class="gov.nasa.kepler.aft.pdq.PdqExcludeTest" />
+  </target>
+
+  <target name="aftdep-pa-lc" depends="aft-init"
+          description="Generate data needed by the LC PA AFTs">
+    <aftdep-pa-lc-intern />
+  </target>
+
+  <macrodef name="aftdep-pa-lc-intern">
+    <attribute name="test.descriptor" default="${test.descriptor}" />
+    <sequential>
+      <aftdep-cal-intern test.descriptor="@{test.descriptor}" />
+      <aft-cal-Nominal-intern test.descriptor="@{test.descriptor}" />
+    </sequential>
+  </macrodef>
+
+  <target name="aft-pa-lc-all" depends="aft-pa-lc-Nominal, aft-pa-lc-Overwrite"
+          description="Run the LC PA pipeline AFTs" />
+
+  <target name="aft-pa-lc-Nominal" depends="aft-init" >
+    <aft-pa-lc-Nominal-intern />
+  </target> 
+
+  <macrodef name="aft-pa-lc-Nominal-intern">
+    <attribute name="test.descriptor" default="${test.descriptor}" />
+    <sequential>
+      <aft-module-test
+         module.name="pa"
+         existingHsqldb="hsqldb://${CalClass}"
+         fs.data.seed.dir="${actual.dir}/cal/${test.name}-@{test.descriptor}/fs"
+         class="gov.nasa.kepler.aft.pa.Pa${test.name}Test" />
+    </sequential>
+  </macrodef> 
+
+  <target name="aft-pa-lc-Overwrite" depends="aft-init" 
+          description="Run the PA Overwrite pipeline AFT" >
+    <aft-module-test
+       module.name="pa" test.name="Overwrite"
+       existingHsqldb="hsqldb://${PaClass}"
+       fs.data.seed.dir="${actual.dir}/pa/Nominal-${test.descriptor}/fs"
+       class="gov.nasa.kepler.aft.pa.PaOverwriteTest" />
+  </target>
+
+  <target name="aft-pa-lc-MultipleBatch" depends="aft-init" >
+    <aft-module-test
+       module.name="pa" test.name="MultipleBatch"
+       existingHsqldb="hsqldb://${CalClass}"
+       fs.data.seed.dir="${actual.dir}/cal/Nominal-${test.descriptor}/fs"
+       class="gov.nasa.kepler.aft.pa.PaMultipleBatchTest" />
+  </target> 
+     
+  <target name="aftdep-pdc" depends="aft-init"
+          description="Generate data needed by PDC AFTs">
+    <aftdep-pdc-intern />
+  </target>
+
+  <macrodef name="aftdep-pdc-intern">
+    <attribute name="test.descriptor" default="${test.descriptor}" />
+    <sequential>
+      <aftdep-pa-lc-intern test.descriptor="@{test.descriptor}" />
+      <aft-pa-lc-Nominal-intern test.descriptor="@{test.descriptor}" />
+    </sequential>
+  </macrodef>
+
+  <target name="aft-pdc" depends="aft-pdc-Nominal"
+          description="Run all PDC pipeline AFTs" />
+
+  <target name="aft-pdc-Nominal" depends="aft-init">
+    <aft-pdc-Nominal-intern />
+  </target>
+
+  <macrodef name="aft-pdc-Nominal-intern">
+    <attribute name="test.descriptor" default="${test.descriptor}" />
+    <sequential>
+      <aft-module-test
+         module.name="pdc"
+         existingHsqldb="hsqldb://${PaClass}"
+         fs.data.seed.dir="${actual.dir}/pa/Nominal-@{test.descriptor}/fs"
+         class="gov.nasa.kepler.aft.pdc.Pdc${test.name}Test" />
+    </sequential>
+  </macrodef>
+
+  <target name="aft-tps" depends="aft-init"
+          description="Run the TPS pipeline AFT" >
+    <aft-module-test
+       module.name="tps"
+       existingHsqldb="hsqldb://${PdcClass}"
+       fs.data.seed.dir="${actual.dir}/pdc/Nominal-${test.descriptor}/fs"
+       class="gov.nasa.kepler.aft.tps.Tps${test.name}Test" />
+  </target>
+
+  <target name="aftdep-tps" depends="aft-init"
+          description="Generate data needed by TPS AFTs">
+    <aftdep-pdc-intern test.descriptor="TPS_BASIC" />
+    <aft-pdc-Nominal-intern test.descriptor="TPS_BASIC" />
+  </target>
+
+  <target name="aftdep-tps-lite" depends="aftdep-pdc,aft-pdc-Nominal"
+          description="Generate data needed by TPS AFTs" />
+
+  <target name="aft-tps-lite" depends="aft-init"
+          description="Run the TPS pipeline AFT" >
+    <aft-module-test
+       module.name="tps" test.name="Default"
+       existingHsqldb="hsqldb://${PdcClass}"
+       fs.data.seed.dir="${actual.dir}/pdc/Nominal-${test.descriptor}/fs"
+       class="gov.nasa.kepler.aft.tps.TpsLiteFeatureTest" />
+  </target>
+
+  <target name="aft-tps-lite-Nominal" depends="aft-init"
+          description="Run the TPS Nominal pipeline AFT (TPS_BASIC)" >
+    <aft-module-test
+       test.descriptor="TPS_BASIC" module.name="tps"
+       existingHsqldb="hsqldb://${PdcClass}"
+       fs.data.seed.dir="${actual.dir}/pdc/Nominal-TPS_BASIC/fs"
+       class="gov.nasa.kepler.aft.tps.TpsLite${test.name}Test" />
+  </target>
+
+  <target name="aft-tps-lite-Overwrite" depends="aft-init"
+          description="Run the TPS Overwrite pipeline AFT (TPS_BASIC)" >
+    <aft-module-test
+       test.descriptor="TPS_BASIC"
+       module.name="tps" test.name="Overwrite"
+       existingHsqldb="hsqldb://${PdcClass}"
+       fs.data.seed.dir="${actual.dir}/pdc/Nominal-TPS_BASIC/fs"
+       class="gov.nasa.kepler.aft.tps.TpsLiteOverwriteTest" />
+  </target>
+
+  <target name="aftdep-pmd" depends="aftdep-tps-lite, aft-tps-lite"
+          description="Generate data needed by PMD AFTs" />
+
+  <target name="aft-pmd" depends="aft-init"
+          description="Run the PPA:PMD+PAG pipeline AFT">
+    <aft-module-test
+       module.name="pmd"
+       existingHsqldb="hsqldb://${TpsClass}"
+       fs.data.seed.dir="${actual.dir}/tps/${test.name}-${test.descriptor}/fs"
+       class="gov.nasa.kepler.aft.ppa.Pmd${test.name}Test" />
+  </target>
+
+  <target name="aft-pmd-missing-metrics" depends="aft-init"
+          description="Run the PPA:PMD+PAG pipeline AFT with missing metrics">
+    <aft-module-test
+       module.name="pmd"
+       existingHsqldb="hsqldb://${TpsClass}"
+       fs.data.seed.dir="${actual.dir}/tps/Default-${test.descriptor}/fs"
+       class="gov.nasa.kepler.aft.ppa.Pmd${test.name}Test" />
+  </target>
+
+  <target name="aftdep-pad" depends="aftdep-pa-lc, aft-pa-lc-Nominal"
+          description="Generate data needed by the PPA:PAD AFT" />
+
+  <target name="aft-pad" depends="aft-init"
+          description="Run the PPA:PAD pipeline AFT" >
+    <aft-module-test
+       module.name="pad"
+       existingHsqldb="hsqldb://${PaClass}"
+       fs.data.seed.dir="${actual.dir}/pa/${test.name}-${test.descriptor}/fs"
+       class="gov.nasa.kepler.aft.ppa.Pad${test.name}Test" />
+  </target>
+
+  <target name="aftdep-dv" depends="aftdep-tps, aft-tps"
+          description="Generate data needed by DV AFTs" />
+
+  <target name="aft-dv" depends="aft-dv-Nominal"
+          description="Run the DV pipeline AFT"/>
+
+  <target name="aft-dv-Nominal" depends="aft-init"
+          description="Run the DV pipeline AFT">
+    <aft-module-test
+       module.name="dv"
+       existingHsqldb="hsqldb://${TpsClass}"
+       fs.data.seed.dir="${actual.dir}/tps/${test.name}-${test.descriptor}/fs"
+       class="gov.nasa.kepler.aft.dv.Dv${test.name}Test" />
+  </target>
+
+  <target name="aft-dv-Reprocess" depends="aft-init"
+          description="Run the DV pipeline AFT">
+    <aft-module-test
+       module.name="dv" test.name="Reprocess"
+       existingHsqldb="hsqldb://${TpsClass}"
+       fs.data.seed.dir="${actual.dir}/tps/Nominal-${test.descriptor}/fs"
+       class="gov.nasa.kepler.aft.dv.DvReprocessTest" />
+  </target>
+
+  <!--==== Targets used by Hudson - do not remove! ===-->
+
+  <target name="aft-all"
+          depends="aft-all-basic, aft-all-pdq, aft-all-requant, aft-all-sc"
+          description="Run all AFTs" />
+
+  <target name="aft-all-basic"
+          depends="aftgen, aftgen-etem, aftdep-huffman, aft-huffman, aft-sggen, aft-tad, aft-cal-Nominal, aft-pa-lc-Nominal, aft-pdc, aft-tps, aft-pmd, aft-pad, aft-dv"
+          description="Run all AFTs that use the BASIC descriptor" />
+
+  <target name="aft-all-pdq" depends="aftdep-pdq, aft-pdq"
+          description="Run all AFTs that use the DUAL_MOD_OUT_PDQ descriptor" />
+
+  <target name="aft-all-requant" depends="aftdep-requant, aft-requant"
+          description="Run all AFTs that use the ALL_MOD_OUT descriptor" />
+
+  <target name="aft-all-sc" depends="aftgen-lc, aftgen-etem-lc, aftgen-etem-sc, aft-cal-lc, aft-cal-sc, aft-pa-lc, aft-pa-sc, aft-pdc-lc, aft-pdc-sc"
+          description="Run all AFTs that use the SC_BASIC descriptor" />
+
+  <!--==== Short cadence targets ===-->
+
+  <target name="aftgen-lc" depends="aft-init" >
+    <var name="marker.file" value="aftgen-lc.done" />
+    <if>
+      <not><available file="${marker.file}" /></not>
+      <then>
+        <aftgen-intern test.descriptor="BASIC"/>
+        <touch file="${marker.file}" />
+      </then>
+      <else>
+        <echo>${marker.file} file exists</echo>
+      </else>
+    </if>
+    <var name="marker.file" unset="true" />
+  </target>
+
+  <target name="aftgen-etem-lc" >
+    <var name="marker.file" value="aftgen-etem-lc.done" />
+    <if>
+      <not><available file="${marker.file}" /></not>
+      <then>
+        <aftgen-etem-intern
+	    test.descriptor="BASIC"
+	    existingHsqldb="hsqldb://${HuffmanImporterClass}/BASIC"
+	    fs.data.seed.dir="${actual.dir}/huffman/BASIC/fs" />
+        <touch file="${marker.file}" />
+      </then>
+      <else>
+        <echo>${marker.file} file exists</echo>
+      </else>
+    </if>
+    <var name="marker.file" unset="true" />
+  </target>
+
+  <target name="aftgen-etem-sc" depends="aft-init" >
+    <var name="marker.file" value="aftgen-etem-sc.done" />
+    <if>
+      <not><available file="${marker.file}" /></not>
+      <then>
+        <aftgen-etem-intern
+           test.descriptor="SC_BASIC"
+           existingHsqldb="hsqldb://${EtemClass}/BASIC"
+           fs.data.seed.dir="${actual.dir}/etem/BASIC/fs" />
+        <touch file="${marker.file}" />
+      </then>
+      <else>
+        <echo>${marker.file} file exists</echo>
+      </else>
+    </if>
+    <var name="marker.file" unset="true" />
+  </target>
+
+  <target name="aft-cal-lc" depends="aft-init">
+    <var name="marker.file" value="aft-cal-lc.done" />
+    <if>
+      <not><available file="${marker.file}" /></not>
+      <then>
+        <aft-module-test test.descriptor="BASIC" module.name="cal"
+                         existingHsqldb="hsqldb://${EtemClass}/SC_BASIC"
+                         fs.data.seed.dir="${actual.dir}/etem/SC_BASIC/fs"
+                         class="${CalClass}" />
+        <touch file="${marker.file}" />
+      </then>
+      <else>
+        <echo>${marker.file} file exists</echo>
+      </else>
+    </if>
+    <var name="marker.file" unset="true" />
+  </target>
+
+  <target name="aft-cal-sc" depends="aft-init">
+    <var name="marker.file" value="aft-cal-sc.done" />
+    <if>
+      <not><available file="${marker.file}" /></not>
+      <then>
+        <aft-module-test test.descriptor="SC_BASIC" module.name="cal"
+                         existingHsqldb="hsqldb://${CalClass}/BASIC"
+                         fs.data.seed.dir="${actual.dir}/cal/Nominal-BASIC/fs"
+                         class="${CalClass}" />
+        <touch file="${marker.file}" />
+      </then>
+      <else>
+        <echo>${marker.file} file exists</echo>
+      </else>
+    </if>
+    <var name="marker.file" unset="true" />
+  </target>
+
+  <target name="aft-pa-lc" depends="aft-init">
+    <var name="marker.file" value="aft-pa-lc.done" />
+    <if>
+      <not><available file="${marker.file}" /></not>
+      <then>
+        <aft-module-test test.descriptor="BASIC" module.name="pa"
+                         existingHsqldb="hsqldb://${CalClass}/SC_BASIC"
+                         fs.data.seed.dir="${actual.dir}/cal/Nominal-SC_BASIC/fs"
+                         class="${PaClass}" />
+        <touch file="${marker.file}" />
+      </then>
+      <else>
+        <echo>${marker.file} file exists</echo>
+      </else>
+    </if>
+    <var name="marker.file" unset="true" />
+  </target>
+
+  <target name="aft-pa-sc" depends="aft-init">
+    <var name="marker.file" value="aft-pa-sc.done" />
+    <if>
+      <not><available file="${marker.file}" /></not>
+      <then>
+        <aft-module-test test.descriptor="SC_BASIC" module.name="pa"
+                         existingHsqldb="hsqldb://${PaClass}/BASIC"
+                         fs.data.seed.dir="${actual.dir}/pa/Nominal-BASIC/fs"
+                         class="${PaClass}" />
+        <touch file="${marker.file}" />
+      </then>
+      <else>
+        <echo>${marker.file} file exists</echo>
+      </else>
+    </if>
+    <var name="marker.file" unset="true" />
+  </target>
+
+  <target name="aft-pdc-lc" depends="aft-init">
+    <var name="marker.file" value="aft-pdc-lc.done" />
+    <if>
+      <not><available file="${marker.file}" /></not>
+      <then>
+        <aft-module-test test.descriptor="BASIC" module.name="pdc" 
+                         existingHsqldb="hsqldb://${PaClass}/SC_BASIC"
+                         fs.data.seed.dir="${actual.dir}/pa/Nominal-SC_BASIC/fs"
+                         class="${PdcClass}" />
+        <touch file="${marker.file}" />
+      </then>
+      <else>
+        <echo>${marker.file} file exists</echo>
+      </else>
+    </if>
+    <var name="marker.file" unset="true" />
+  </target>
+
+  <target name="aft-pdc-sc" depends="aft-init">
+    <var name="marker.file" value="aft-pdc-sc.done" />
+    <if>
+      <not><available file="${marker.file}" /></not>
+      <then>
+        <aft-module-test test.descriptor="SC_BASIC" module.name="pdc"
+                         existingHsqldb="hsqldb://${PdcClass}/BASIC"
+                         fs.data.seed.dir="${actual.dir}/pdc/Nominal-BASIC/fs"
+                         class="${PdcClass}" />
+        <touch file="${marker.file}" />
+      </then>
+      <else>
+        <echo>${marker.file} file exists</echo>
+      </else>
+    </if>
+    <var name="marker.file" unset="true" />
+  </target>
+
+</project>

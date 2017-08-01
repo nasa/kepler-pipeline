@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Copyright 2017 United States Government as represented by the
+  Administrator of the National Aeronautics and Space Administration.
+  All Rights Reserved.
+  
+  This file is available under the terms of the NASA Open Source Agreement
+  (NOSA). You should have received a copy of this agreement with the
+  Kepler source code; see the file NASA-OPEN-SOURCE-AGREEMENT.doc.
+  
+  No Warranty: THE SUBJECT SOFTWARE IS PROVIDED "AS IS" WITHOUT ANY
+  WARRANTY OF ANY KIND, EITHER EXPRESSED, IMPLIED, OR STATUTORY,
+  INCLUDING, BUT NOT LIMITED TO, ANY WARRANTY THAT THE SUBJECT SOFTWARE
+  WILL CONFORM TO SPECIFICATIONS, ANY IMPLIED WARRANTIES OF
+  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, OR FREEDOM FROM
+  INFRINGEMENT, ANY WARRANTY THAT THE SUBJECT SOFTWARE WILL BE ERROR
+  FREE, OR ANY WARRANTY THAT DOCUMENTATION, IF PROVIDED, WILL CONFORM
+  TO THE SUBJECT SOFTWARE. THIS AGREEMENT DOES NOT, IN ANY MANNER,
+  CONSTITUTE AN ENDORSEMENT BY GOVERNMENT AGENCY OR ANY PRIOR RECIPIENT
+  OF ANY RESULTS, RESULTING DESIGNS, HARDWARE, SOFTWARE PRODUCTS OR ANY
+  OTHER APPLICATIONS RESULTING FROM USE OF THE SUBJECT SOFTWARE.
+  FURTHER, GOVERNMENT AGENCY DISCLAIMS ALL WARRANTIES AND LIABILITIES
+  REGARDING THIRD-PARTY SOFTWARE, IF PRESENT IN THE ORIGINAL SOFTWARE,
+  AND DISTRIBUTES IT "AS IS."
+  
+  Waiver and Indemnity: RECIPIENT AGREES TO WAIVE ANY AND ALL CLAIMS
+  AGAINST THE UNITED STATES GOVERNMENT, ITS CONTRACTORS AND
+  SUBCONTRACTORS, AS WELL AS ANY PRIOR RECIPIENT. IF RECIPIENT'S USE OF
+  THE SUBJECT SOFTWARE RESULTS IN ANY LIABILITIES, DEMANDS, DAMAGES,
+  EXPENSES OR LOSSES ARISING FROM SUCH USE, INCLUDING ANY DAMAGES FROM
+  PRODUCTS BASED ON, OR RESULTING FROM, RECIPIENT'S USE OF THE SUBJECT
+  SOFTWARE, RECIPIENT SHALL INDEMNIFY AND HOLD HARMLESS THE UNITED
+  STATES GOVERNMENT, ITS CONTRACTORS AND SUBCONTRACTORS, AS WELL AS ANY
+  PRIOR RECIPIENT, TO THE EXTENT PERMITTED BY LAW. RECIPIENT'S SOLE
+  REMEDY FOR ANY SUCH MATTER SHALL BE THE IMMEDIATE, UNILATERAL
+  TERMINATION OF THIS AGREEMENT.
+-->
+
+<obs:observing-log xmlns:obs="http://kepler.nasa.gov/mc/observing-log">
+  <observation quarter="0" month="1" season="3" cadenceType="LONG" cadenceStart="568" cadenceEnd="1043" mjdStart="54953.02793552" mjdEnd="54962.754328" targetTableId="14"/>
+  <observation quarter="1" month="1" season="3" cadenceType="LONG" cadenceStart="1105" cadenceEnd="2743" mjdStart="54964.00077704" mjdEnd="54997.4914417" targetTableId="20"/>
+  <observation quarter="2" month="1" season="0" cadenceType="LONG" cadenceStart="2965" cadenceEnd="4471" mjdStart="55002.25246" mjdEnd="55032.8006887" targetTableId="21"/>
+  <observation quarter="2" month="2" season="0" cadenceType="LONG" cadenceStart="4473" cadenceEnd="5939" mjdStart="55032.82112224" mjdEnd="55062.7972078" targetTableId="21"/>
+  <observation quarter="2" month="3" season="0" cadenceType="LONG" cadenceStart="5992" cadenceEnd="7318" mjdStart="55063.85975504" mjdEnd="55090.9751373" targetTableId="21"/>
+  <observation quarter="3" month="1" season="1" cadenceType="LONG" cadenceStart="7404" cadenceEnd="8888" mjdStart="55092.71199294" mjdEnd="55123.0558836" targetTableId="26"/>
+  <observation quarter="3" month="2" season="1" cadenceType="LONG" cadenceStart="8931" cadenceEnd="10400" mjdStart="55123.91409464" mjdEnd="55153.9514828" targetTableId="26"/>
+  <observation quarter="3" month="3" season="1" cadenceType="LONG" cadenceStart="10502" cadenceEnd="11773" mjdStart="55156.01527904" mjdEnd="55182.006815" targetTableId="26"/>
+  <observation quarter="4" month="1" season="2" cadenceType="LONG" cadenceStart="11914" cadenceEnd="13433" mjdStart="55184.86751874" mjdEnd="55215.9265884" targetTableId="29"/>
+  <observation quarter="4" month="2" season="2" cadenceType="LONG" cadenceStart="13477" cadenceEnd="14892" mjdStart="55216.8052" mjdEnd="55245.7392" targetTableId="29"/>
+  <observation quarter="4" month="3" season="2" cadenceType="LONG" cadenceStart="14896" cadenceEnd="16310" mjdStart="55245.80051194" mjdEnd="55274.7140549" targetTableId="29"/>
+  <observation quarter="5" month="1" season="3" cadenceType="LONG" cadenceStart="16373" cadenceEnd="17915" mjdStart="55275.98093814" mjdEnd="55307.5099832" targetTableId="32"/>
+  <observation quarter="5" month="2" season="3" cadenceType="LONG" cadenceStart="17978" cadenceEnd="19329" mjdStart="55308.77686304" mjdEnd="55336.403094" targetTableId="32"/>
+  <observation quarter="5" month="3" season="3" cadenceType="LONG" cadenceStart="19364" cadenceEnd="21006" mjdStart="55337.09783664" mjdEnd="55370.6702468" targetTableId="32"/>
+  <observation quarter="6" month="1" season="0" cadenceType="LONG" cadenceStart="21069" cadenceEnd="22394" mjdStart="55371.93711104" mjdEnd="55399.0320696" targetTableId="35"/>
+  <observation quarter="6" month="2" season="0" cadenceType="LONG" cadenceStart="22436" cadenceEnd="23948" mjdStart="55399.86984734" mjdEnd="55430.7858891" targetTableId="35"/>
+  <observation quarter="6" month="3" season="0" cadenceType="LONG" cadenceStart="23993" cadenceEnd="25466" mjdStart="55431.68494614" mjdEnd="55461.8040773" targetTableId="35"/>
+  <observation quarter="7" month="1" season="1" cadenceType="LONG" cadenceStart="25509" cadenceEnd="26982" mjdStart="55462.66228864" mjdEnd="55492.781421" targetTableId="38"/>
+  <observation quarter="7" month="2" season="1" cadenceType="LONG" cadenceStart="27020" cadenceEnd="28448" mjdStart="55493.53746434" mjdEnd="55522.7370852" targetTableId="38"/>
+  <observation quarter="7" month="3" season="1" cadenceType="LONG" cadenceStart="28492" cadenceEnd="29883" mjdStart="55523.61573024" mjdEnd="55552.0593083" targetTableId="38"/>
+  <observation quarter="8" month="1" season="2" cadenceType="LONG" cadenceStart="30657" cadenceEnd="31522" mjdStart="55567.85446564" mjdEnd="55585.5499676" targetTableId="41"/>
+  <observation quarter="8" month="2" season="2" cadenceType="LONG" cadenceStart="31526" cadenceEnd="32949" mjdStart="55585.61126844" mjdEnd="55614.7087061" targetTableId="41"/>
+  <observation quarter="8" month="3" season="2" cadenceType="LONG" cadenceStart="32953" cadenceEnd="33935" mjdStart="55614.77000694" mjdEnd="55634.8562409" targetTableId="41"/>
+  <observation quarter="9" month="1" season="3" cadenceType="LONG" cadenceStart="34237" cadenceEnd="36018" mjdStart="55641.00674164" mjdEnd="55677.4194262" targetTableId="44"/>
+  <observation quarter="9" month="2" season="3" cadenceType="LONG" cadenceStart="36053" cadenceEnd="37447" mjdStart="55678.11416884" mjdEnd="55706.6190478" targetTableId="44"/>
+  <observation quarter="9" month="3" season="3" cadenceType="LONG" cadenceStart="37479" cadenceEnd="39004" mjdStart="55707.25248964" mjdEnd="55738.43417" targetTableId="44"/>
+  <observation quarter="10" month="1" season="0" cadenceType="LONG" cadenceStart="39049" cadenceEnd="40522" mjdStart="55739.33321604" mjdEnd="55769.4523489" targetTableId="47"/>
+  <observation quarter="10" month="2" season="0" cadenceType="LONG" cadenceStart="40564" cadenceEnd="42102" mjdStart="55770.29012674" mjdEnd="55801.7374432" targetTableId="47"/>
+  <observation quarter="10" month="3" season="0" cadenceType="LONG" cadenceStart="42144" cadenceEnd="43621" mjdStart="55802.57522094" mjdEnd="55832.7760872" targetTableId="47"/>
+  <observation quarter="11" month="1" season="1" cadenceType="LONG" cadenceStart="43667" cadenceEnd="45187" mjdStart="55833.69556944" mjdEnd="55864.7750815" targetTableId="50"/>
+  <observation quarter="11" month="2" season="1" cadenceType="LONG" cadenceStart="45225" cadenceEnd="46702" mjdStart="55865.53112494" mjdEnd="55895.71155944" targetTableId="50"/>
+  <observation quarter="11" month="3" season="1" cadenceType="LONG" cadenceStart="46746" cadenceEnd="48420" mjdStart="55896.61063814" mjdEnd="55930.8369025" targetTableId="50"/>
+  <observation quarter="12" month="1" season="2" cadenceType="LONG" cadenceStart="48473" cadenceEnd="49769" mjdStart="55931.89944274" mjdEnd="55958.401829" targetTableId="53"/>
+  <observation quarter="12" month="2" season="2" cadenceType="LONG" cadenceStart="49805" cadenceEnd="51144" mjdStart="55959.11700514" mjdEnd="55986.4980371" targetTableId="53"/>
+  <observation quarter="12" month="3" season="2" cadenceType="LONG" cadenceStart="51189" cadenceEnd="52516" mjdStart="55987.39711584" mjdEnd="56014.532944" targetTableId="53"/>
+  <observation quarter="13" month="1" season="3" cadenceType="LONG" cadenceStart="52551" cadenceEnd="54129" mjdStart="56015.22765424" mjdEnd="56047.4923173" targetTableId="56"/>
+  <observation quarter="13" month="2" season="3" cadenceType="LONG" cadenceStart="54164" cadenceEnd="55594" mjdStart="56048.18705994" mjdEnd="56077.4275494" targetTableId="56"/>
+  <observation quarter="13" month="3" season="3" cadenceType="LONG" cadenceStart="55639" cadenceEnd="56971" mjdStart="56078.32662814" mjdEnd="56105.5646231" targetTableId="56"/>
+  <observation quarter="14" month="1" season="0" cadenceType="LONG" cadenceStart="57024" cadenceEnd="58534" mjdStart="56106.62714044" mjdEnd="56137.5023055" targetTableId="59"/>
+  <observation quarter="14" month="2" season="0" cadenceType="LONG" cadenceStart="58591" cadenceEnd="60066" mjdStart="56138.64658734" mjdEnd="56168.8065871" targetTableId="59"/>
+  <observation quarter="14" month="3" season="0" cadenceType="LONG" cadenceStart="60109" cadenceEnd="61780" mjdStart="56169.66479854" mjdEnd="56203.829784" targetTableId="59"/>
+  <observation quarter="15" month="1" season="1" cadenceType="LONG" cadenceStart="61886" cadenceEnd="63394" mjdStart="56205.97528244" mjdEnd="56236.809591" targetTableId="62"/>
+  <observation quarter="15" month="2" season="1" cadenceType="LONG" cadenceStart="63442" cadenceEnd="64915" mjdStart="56237.76997044" mjdEnd="56267.8890896" targetTableId="62"/>
+  <observation quarter="15" month="3" season="1" cadenceType="LONG" cadenceStart="64957" cadenceEnd="66665" mjdStart="56268.72686734" mjdEnd="56303.6478986" targetTableId="62"/>
+  <observation quarter="0" month="1" season="3" cadenceType="SHORT" cadenceStart="5500" cadenceEnd="19779" mjdStart="54953.02793548" mjdEnd="54962.754328" targetTableId="14"/>
+  <observation quarter="1" month="1" season="3" cadenceType="SHORT" cadenceStart="21610" cadenceEnd="70779" mjdStart="54964.00077708" mjdEnd="54997.49076058" targetTableId="20"/>
+  <observation quarter="2" month="1" season="0" cadenceType="SHORT" cadenceStart="77410" cadenceEnd="122619" mjdStart="55002.25246178" mjdEnd="55032.80000758" targetTableId="23"/>
+  <observation quarter="2" month="2" season="0" cadenceType="SHORT" cadenceStart="122650" cadenceEnd="166659" mjdStart="55032.82112228" mjdEnd="55062.79652668" targetTableId="24"/>
+  <observation quarter="2" month="3" season="0" cadenceType="SHORT" cadenceStart="168220" cadenceEnd="208029" mjdStart="55063.85975488" mjdEnd="55090.9751373" targetTableId="25"/>
+  <observation quarter="3" month="1" season="1" cadenceType="SHORT" cadenceStart="210580" cadenceEnd="255129" mjdStart="55092.71199298" mjdEnd="55123.0558836" targetTableId="26"/>
+  <observation quarter="3" month="2" season="1" cadenceType="SHORT" cadenceStart="256390" cadenceEnd="300489" mjdStart="55123.91409468" mjdEnd="55153.9514828" targetTableId="27"/>
+  <observation quarter="3" month="3" season="1" cadenceType="SHORT" cadenceStart="303520" cadenceEnd="341679" mjdStart="55156.01527898" mjdEnd="55182.006815" targetTableId="28"/>
+  <observation quarter="4" month="1" season="2" cadenceType="SHORT" cadenceStart="345880" cadenceEnd="391479" mjdStart="55184.86751878" mjdEnd="55215.9265884" targetTableId="29"/>
+  <observation quarter="4" month="2" season="2" cadenceType="SHORT" cadenceStart="392770" cadenceEnd="435249" mjdStart="55216.80523308" mjdEnd="55245.7392111" targetTableId="30"/>
+  <observation quarter="4" month="3" season="2" cadenceType="SHORT" cadenceStart="435340" cadenceEnd="477789" mjdStart="55245.80051198" mjdEnd="55274.7140549" targetTableId="31"/>
+  <observation quarter="5" month="1" season="3" cadenceType="SHORT" cadenceStart="479650" cadenceEnd="525939" mjdStart="55275.98093808" mjdEnd="55307.5099832" targetTableId="32"/>
+  <observation quarter="5" month="2" season="3" cadenceType="SHORT" cadenceStart="527800" cadenceEnd="568359" mjdStart="55308.77686288" mjdEnd="55336.403094" targetTableId="33"/>
+  <observation quarter="5" month="3" season="3" cadenceType="SHORT" cadenceStart="569380" cadenceEnd="618669" mjdStart="55337.09783658" mjdEnd="55370.6702468" targetTableId="34"/>
+  <observation quarter="6" month="1" season="0" cadenceType="SHORT" cadenceStart="620530" cadenceEnd="660309" mjdStart="55371.93711108" mjdEnd="55399.0320696" targetTableId="35"/>
+  <observation quarter="6" month="2" season="0" cadenceType="SHORT" cadenceStart="661540" cadenceEnd="706929" mjdStart="55399.86984728" mjdEnd="55430.7858891" targetTableId="36"/>
+  <observation quarter="6" month="3" season="0" cadenceType="SHORT" cadenceStart="708250" cadenceEnd="752469" mjdStart="55431.68494608" mjdEnd="55461.8040773" targetTableId="37"/>
+  <observation quarter="7" month="1" season="1" cadenceType="SHORT" cadenceStart="753730" cadenceEnd="797949" mjdStart="55462.66228868" mjdEnd="55492.781421" targetTableId="38"/>
+  <observation quarter="7" month="2" season="1" cadenceType="SHORT" cadenceStart="799060" cadenceEnd="841929" mjdStart="55493.53746428" mjdEnd="55522.7370852" targetTableId="39"/>
+  <observation quarter="7" month="3" season="1" cadenceType="SHORT" cadenceStart="843220" cadenceEnd="884979" mjdStart="55523.61573028" mjdEnd="55552.0593083" targetTableId="40"/>
+  <observation quarter="8" month="1" season="2" cadenceType="SHORT" cadenceStart="908170" cadenceEnd="934149" mjdStart="55567.85446558" mjdEnd="55585.5499676" targetTableId="41"/>
+  <observation quarter="8" month="2" season="2" cadenceType="SHORT" cadenceStart="934240" cadenceEnd="976959" mjdStart="55585.61126838" mjdEnd="55614.7087061" targetTableId="42"/>
+  <observation quarter="8" month="3" season="2" cadenceType="SHORT" cadenceStart="977050" cadenceEnd="1006539" mjdStart="55614.77000688" mjdEnd="55634.8562409" targetTableId="43"/>
+  <observation quarter="9" month="1" season="3" cadenceType="SHORT" cadenceStart="1015570" cadenceEnd="1069029" mjdStart="55641.00674" mjdEnd="55677.4194262" targetTableId="44"/>
+  <observation quarter="9" month="2" season="3" cadenceType="SHORT" cadenceStart="1070050" cadenceEnd="1111899" mjdStart="55678.11416878" mjdEnd="55706.6190478" targetTableId="45"/>
+  <observation quarter="9" month="3" season="3" cadenceType="SHORT" cadenceStart="1112830" cadenceEnd="1158609" mjdStart="55707.25248968" mjdEnd="55738.43417" targetTableId="46"/>
+  <observation quarter="10" month="1" season="0" cadenceType="SHORT" cadenceStart="1159930" cadenceEnd="1204149" mjdStart="55739.33321608" mjdEnd="55769.4523489" targetTableId="47"/>
+  <observation quarter="10" month="2" season="0" cadenceType="SHORT" cadenceStart="1205380" cadenceEnd="1251549" mjdStart="55770.29012678" mjdEnd="55801.7374432" targetTableId="48"/>
+  <observation quarter="10" month="3" season="0" cadenceType="SHORT" cadenceStart="1252780" cadenceEnd="1297119" mjdStart="55802.57522098" mjdEnd="55832.7760872" targetTableId="49"/>
+  <observation quarter="11" month="1" season="1" cadenceType="SHORT" cadenceStart="1298470" cadenceEnd="1344099" mjdStart="55833.69556938" mjdEnd="55864.7750815" targetTableId="50"/>
+  <observation quarter="11" month="2" season="1" cadenceType="SHORT" cadenceStart="1345210" cadenceEnd="1389549" mjdStart="55865.53112498" mjdEnd="55895.731993" targetTableId="51"/>
+  <observation quarter="11" month="3" season="1" cadenceType="SHORT" cadenceStart="1390840" cadenceEnd="1441089" mjdStart="55896.61063798" mjdEnd="55930.83622138" targetTableId="52"/>
+  <observation quarter="12" month="1" season="2" cadenceType="SHORT" cadenceStart="1442650" cadenceEnd="1481559" mjdStart="55931.89944278" mjdEnd="55958.401829" targetTableId="53"/>
+  <observation quarter="12" month="2" season="2" cadenceType="SHORT" cadenceStart="1482610" cadenceEnd="1522809" mjdStart="55959.11700518" mjdEnd="55986.4980371" targetTableId="54"/>
+  <observation quarter="12" month="3" season="2" cadenceType="SHORT" cadenceStart="1524130" cadenceEnd="1563969" mjdStart="55987.39711578" mjdEnd="56014.532944" targetTableId="55"/>
+  <observation quarter="13" month="1" season="3" cadenceType="SHORT" cadenceStart="1564990" cadenceEnd="1612359" mjdStart="56015.22765418" mjdEnd="56047.4923173" targetTableId="56"/>
+  <observation quarter="13" month="2" season="3" cadenceType="SHORT" cadenceStart="1613380" cadenceEnd="1656309" mjdStart="56048.18705998" mjdEnd="56077.4275494" targetTableId="57"/>
+  <observation quarter="13" month="3" season="3" cadenceType="SHORT" cadenceStart="1657630" cadenceEnd="1697619" mjdStart="56078.32662798" mjdEnd="56105.5646231" targetTableId="58"/>
+  <observation quarter="14" month="1" season="0" cadenceType="SHORT" cadenceStart="1699180" cadenceEnd="1744509" mjdStart="56106.62714048" mjdEnd="56137.5023055" targetTableId="59"/>
+  <observation quarter="14" month="2" season="0" cadenceType="SHORT" cadenceStart="1746190" cadenceEnd="1790469" mjdStart="56138.64658728" mjdEnd="56168.8065871" targetTableId="60"/>
+  <observation quarter="14" month="3" season="0" cadenceType="SHORT" cadenceStart="1791730" cadenceEnd="1841889" mjdStart="56169.66479848" mjdEnd="56203.829784" targetTableId="61"/>
+  <observation quarter="15" month="1" season="1" cadenceType="SHORT" cadenceStart="1845040" cadenceEnd="1890309" mjdStart="56205.97528238" mjdEnd="56236.809591" targetTableId="62"/>
+  <observation quarter="15" month="2" season="1" cadenceType="SHORT" cadenceStart="1891720" cadenceEnd="1935939" mjdStart="56237.76997038" mjdEnd="56267.8890896" targetTableId="63"/>
+  <observation quarter="15" month="3" season="1" cadenceType="SHORT" cadenceStart="1937170" cadenceEnd="1988439" mjdStart="56268.72686728" mjdEnd="56303.6478986" targetTableId="64"/>
+</obs:observing-log>

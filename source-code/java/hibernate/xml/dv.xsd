@@ -1,0 +1,540 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<!--
+  Copyright 2017 United States Government as represented by the
+  Administrator of the National Aeronautics and Space Administration.
+  All Rights Reserved.
+  
+  This file is available under the terms of the NASA Open Source Agreement
+  (NOSA). You should have received a copy of this agreement with the
+  Kepler source code; see the file NASA-OPEN-SOURCE-AGREEMENT.doc.
+  
+  No Warranty: THE SUBJECT SOFTWARE IS PROVIDED "AS IS" WITHOUT ANY
+  WARRANTY OF ANY KIND, EITHER EXPRESSED, IMPLIED, OR STATUTORY,
+  INCLUDING, BUT NOT LIMITED TO, ANY WARRANTY THAT THE SUBJECT SOFTWARE
+  WILL CONFORM TO SPECIFICATIONS, ANY IMPLIED WARRANTIES OF
+  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, OR FREEDOM FROM
+  INFRINGEMENT, ANY WARRANTY THAT THE SUBJECT SOFTWARE WILL BE ERROR
+  FREE, OR ANY WARRANTY THAT DOCUMENTATION, IF PROVIDED, WILL CONFORM
+  TO THE SUBJECT SOFTWARE. THIS AGREEMENT DOES NOT, IN ANY MANNER,
+  CONSTITUTE AN ENDORSEMENT BY GOVERNMENT AGENCY OR ANY PRIOR RECIPIENT
+  OF ANY RESULTS, RESULTING DESIGNS, HARDWARE, SOFTWARE PRODUCTS OR ANY
+  OTHER APPLICATIONS RESULTING FROM USE OF THE SUBJECT SOFTWARE.
+  FURTHER, GOVERNMENT AGENCY DISCLAIMS ALL WARRANTIES AND LIABILITIES
+  REGARDING THIRD-PARTY SOFTWARE, IF PRESENT IN THE ORIGINAL SOFTWARE,
+  AND DISTRIBUTES IT "AS IS."
+
+  Waiver and Indemnity: RECIPIENT AGREES TO WAIVE ANY AND ALL CLAIMS
+  AGAINST THE UNITED STATES GOVERNMENT, ITS CONTRACTORS AND
+  SUBCONTRACTORS, AS WELL AS ANY PRIOR RECIPIENT. IF RECIPIENT'S USE OF
+  THE SUBJECT SOFTWARE RESULTS IN ANY LIABILITIES, DEMANDS, DAMAGES,
+  EXPENSES OR LOSSES ARISING FROM SUCH USE, INCLUDING ANY DAMAGES FROM
+  PRODUCTS BASED ON, OR RESULTING FROM, RECIPIENT'S USE OF THE SUBJECT
+  SOFTWARE, RECIPIENT SHALL INDEMNIFY AND HOLD HARMLESS THE UNITED
+  STATES GOVERNMENT, ITS CONTRACTORS AND SUBCONTRACTORS, AS WELL AS ANY
+  PRIOR RECIPIENT, TO THE EXTENT PERMITTED BY LAW. RECIPIENT'S SOLE
+  REMEDY FOR ANY SUCH MATTER SHALL BE THE IMMEDIATE, UNILATERAL
+  TERMINATION OF THIS AGREEMENT.
+-->
+
+<xs:schema version="1.0" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+
+  <xs:element name="dvResultsSequence" type="dvResultsSequence"/>
+
+  <xs:complexType name="dvAbstractTargetTableData" abstract="true">
+    <xs:sequence/>
+    <xs:attribute name="targetTableId" type="xs:int" use="required"/>
+    <xs:attribute name="ccdModule" type="xs:int" use="required"/>
+    <xs:attribute name="ccdOutput" type="xs:int" use="required"/>
+    <xs:attribute name="quarter" type="xs:int" use="required"/>
+    <xs:attribute name="startCadence" type="xs:int" use="required"/>
+    <xs:attribute name="endCadence" type="xs:int" use="required"/>
+  </xs:complexType>
+
+  <xs:complexType name="dvBinaryDiscriminationResults">
+    <xs:sequence>
+      <xs:element name="shorterPeriodComparisonStatistic" type="dvPlanetStatistic" minOccurs="0"/>
+      <xs:element name="longerPeriodComparisonStatistic" type="dvPlanetStatistic" minOccurs="0"/>
+      <xs:element name="oddEvenTransitEpochComparisonStatistic" type="dvStatistic" minOccurs="0"/>
+      <xs:element name="oddEvenTransitDepthComparisonStatistic" type="dvStatistic" minOccurs="0"/>
+      <xs:element name="singleTransitDepthComparisonStatistic" type="dvStatistic" minOccurs="0"/>
+      <xs:element name="singleTransitDurationComparisonStatistic" type="dvStatistic" minOccurs="0"/>
+      <xs:element name="singleTransitEpochComparisonStatistic" type="dvStatistic" minOccurs="0"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="dvPlanetStatistic">
+    <xs:complexContent>
+      <xs:extension base="dvStatistic">
+        <xs:sequence/>
+        <xs:attribute name="planetNumber" type="xs:int" use="required"/>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="dvStatistic">
+    <xs:sequence/>
+    <xs:attribute name="value" type="xs:float" use="required"/>
+    <xs:attribute name="significance" type="xs:float" use="required"/>
+  </xs:complexType>
+
+  <xs:complexType name="dvBootstrapHistogram">
+    <xs:sequence>
+      <xs:element name="statistics" minOccurs="0">
+        <xs:simpleType>
+          <xs:list itemType="xs:float"/>
+        </xs:simpleType>
+      </xs:element>
+      <xs:element name="probabilities" minOccurs="0">
+        <xs:simpleType>
+          <xs:list itemType="xs:float"/>
+        </xs:simpleType>
+      </xs:element>
+    </xs:sequence>
+    <xs:attribute name="finalSkipCount" type="xs:int" use="required"/>
+  </xs:complexType>
+
+  <xs:complexType name="dvCentroidMotionResults">
+    <xs:sequence>
+      <xs:element name="sourceRaHours" type="dvDoubleQuantity" minOccurs="0"/>
+      <xs:element name="sourceDecDegrees" type="dvDoubleQuantity" minOccurs="0"/>
+      <xs:element name="outOfTransitCentroidRaHours" type="dvDoubleQuantity" minOccurs="0"/>
+      <xs:element name="outOfTransitCentroidDecDegrees" type="dvDoubleQuantity" minOccurs="0"/>
+      <xs:element name="sourceRaOffset" type="dvQuantity" minOccurs="0"/>
+      <xs:element name="sourceDecOffset" type="dvQuantity" minOccurs="0"/>
+      <xs:element name="sourceOffsetArcSec" type="dvQuantity" minOccurs="0"/>
+      <xs:element name="peakRaOffset" type="dvQuantity" minOccurs="0"/>
+      <xs:element name="peakDecOffset" type="dvQuantity" minOccurs="0"/>
+      <xs:element name="peakOffsetArcSec" type="dvQuantity" minOccurs="0"/>
+      <xs:element name="motionDetectionStatistic" type="dvStatistic" minOccurs="0"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="dvDoubleQuantity">
+    <xs:sequence/>
+    <xs:attribute name="value" type="xs:double" use="required"/>
+    <xs:attribute name="uncertainty" type="xs:float" use="required"/>
+  </xs:complexType>
+
+  <xs:complexType name="dvQuantity">
+    <xs:sequence/>
+    <xs:attribute name="value" type="xs:float" use="required"/>
+    <xs:attribute name="uncertainty" type="xs:float" use="required"/>
+  </xs:complexType>
+
+  <xs:complexType name="dvCentroidOffsets">
+    <xs:sequence>
+      <xs:element name="columnOffset" type="dvQuantity" minOccurs="0"/>
+      <xs:element name="decOffset" type="dvQuantity" minOccurs="0"/>
+      <xs:element name="focalPlaneOffset" type="dvQuantity" minOccurs="0"/>
+      <xs:element name="raOffset" type="dvQuantity" minOccurs="0"/>
+      <xs:element name="rowOffset" type="dvQuantity" minOccurs="0"/>
+      <xs:element name="skyOffset" type="dvQuantity" minOccurs="0"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="dvCentroidResults">
+    <xs:sequence>
+      <xs:element name="fluxWeightedMotionResults" type="dvCentroidMotionResults" minOccurs="0"/>
+      <xs:element name="prfMotionResults" type="dvCentroidMotionResults" minOccurs="0"/>
+      <xs:element name="differenceImageMotionResults" type="dvDifferenceImageMotionResults" minOccurs="0"/>
+      <xs:element name="pixelCorrelationMotionResults" type="dvPixelCorrelationMotionResults" minOccurs="0"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="dvDifferenceImageMotionResults">
+    <xs:sequence>
+      <xs:element name="mqControlCentroidOffsets" type="dvMqCentroidOffsets" minOccurs="0"/>
+      <xs:element name="mqKicCentroidOffsets" type="dvMqCentroidOffsets" minOccurs="0"/>
+      <xs:element name="mqControlImageCentroid" type="dvMqImageCentroid" minOccurs="0"/>
+      <xs:element name="mqDifferenceImageCentroid" type="dvMqImageCentroid" minOccurs="0"/>
+      <xs:element name="summaryQualityMetric" type="dvSummaryQualityMetric" minOccurs="0"/>
+      <xs:element name="summaryOverlapMetric" type="dvSummaryOverlapMetric" minOccurs="0"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="dvMqCentroidOffsets">
+    <xs:sequence>
+      <xs:element name="meanDecOffset" type="dvQuantity" minOccurs="0"/>
+      <xs:element name="meanRaOffset" type="dvQuantity" minOccurs="0"/>
+      <xs:element name="meanSkyOffset" type="dvQuantity" minOccurs="0"/>
+      <xs:element name="singleFitDecOffset" type="dvQuantity" minOccurs="0"/>
+      <xs:element name="singleFitRaOffset" type="dvQuantity" minOccurs="0"/>
+      <xs:element name="singleFitSkyOffset" type="dvQuantity" minOccurs="0"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="dvMqImageCentroid">
+    <xs:sequence>
+      <xs:element name="decDegrees" type="dvDoubleQuantity" minOccurs="0"/>
+      <xs:element name="raHours" type="dvDoubleQuantity" minOccurs="0"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="dvSummaryQualityMetric">
+    <xs:sequence/>
+    <xs:attribute name="fractionOfGoodMetrics" type="xs:float" use="required"/>
+    <xs:attribute name="numberOfAttempts" type="xs:int" use="required"/>
+    <xs:attribute name="numberOfGoodMetrics" type="xs:int" use="required"/>
+    <xs:attribute name="numberOfMetrics" type="xs:int" use="required"/>
+    <xs:attribute name="qualityThreshold" type="xs:float" use="required"/>
+  </xs:complexType>
+
+  <xs:complexType name="dvSummaryOverlapMetric">
+    <xs:sequence/>
+    <xs:attribute name="imageCount" type="xs:int" use="required"/>
+    <xs:attribute name="imageCountNoOverlap" type="xs:int" use="required"/>
+    <xs:attribute name="imageCountFractionNoOverlap" type="xs:float" use="required"/>
+  </xs:complexType>
+
+  <xs:complexType name="dvPixelCorrelationMotionResults">
+    <xs:sequence>
+      <xs:element name="mqControlCentroidOffsets" type="dvMqCentroidOffsets" minOccurs="0"/>
+      <xs:element name="mqKicCentroidOffsets" type="dvMqCentroidOffsets" minOccurs="0"/>
+      <xs:element name="mqControlImageCentroid" type="dvMqImageCentroid" minOccurs="0"/>
+      <xs:element name="mqCorrelationImageCentroid" type="dvMqImageCentroid" minOccurs="0"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="dvComparisonTests">
+    <xs:sequence>
+      <xs:element name="albedoComparisonStatistic" type="dvStatistic" minOccurs="0"/>
+      <xs:element name="tempComparisonStatistic" type="dvStatistic" minOccurs="0"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="dvDifferenceImagePixelData">
+    <xs:sequence>
+      <xs:element name="meanFluxInTransit" type="dvQuantity" minOccurs="0"/>
+      <xs:element name="meanFluxOutOfTransit" type="dvQuantity" minOccurs="0"/>
+      <xs:element name="meanFluxDifference" type="dvQuantity" minOccurs="0"/>
+      <xs:element name="meanFluxForTargetTable" type="dvQuantity" minOccurs="0"/>
+    </xs:sequence>
+    <xs:attribute name="ccdRow" type="xs:int" use="required"/>
+    <xs:attribute name="ccdColumn" type="xs:int" use="required"/>
+  </xs:complexType>
+
+  <xs:complexType name="dvDifferenceImageResults">
+    <xs:complexContent>
+      <xs:extension base="dvAbstractTargetTableData">
+        <xs:sequence>
+          <xs:element name="controlCentroidOffsets" type="dvCentroidOffsets" minOccurs="0"/>
+          <xs:element name="controlImageCentroid" type="dvImageCentroid" minOccurs="0"/>
+          <xs:element name="differenceImageCentroid" type="dvImageCentroid" minOccurs="0"/>
+          <xs:element name="kicCentroidOffsets" type="dvCentroidOffsets" minOccurs="0"/>
+          <xs:element name="kicReferenceCentroid" type="dvImageCentroid" minOccurs="0"/>
+          <xs:element name="numberOfTransits" type="xs:int"/>
+          <xs:element name="numberOfCadencesInTransit" type="xs:int"/>
+          <xs:element name="numberOfCadenceGapsInTransit" type="xs:int"/>
+          <xs:element name="numberOfCadencesOutOfTransit" type="xs:int"/>
+          <xs:element name="numberOfCadenceGapsOutOfTransit" type="xs:int"/>
+          <xs:element name="qualityMetric" type="dvQualityMetric" minOccurs="0"/>
+          <xs:element name="overlappedTransits" type="xs:boolean"/>
+          <xs:element name="differenceImagePixelData" type="dvDifferenceImagePixelData" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="dvImageCentroid">
+    <xs:sequence>
+      <xs:element name="column" type="dvQuantity" minOccurs="0"/>
+      <xs:element name="decDegrees" type="dvDoubleQuantity" minOccurs="0"/>
+      <xs:element name="raHours" type="dvDoubleQuantity" minOccurs="0"/>
+      <xs:element name="row" type="dvQuantity" minOccurs="0"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="dvQualityMetric">
+    <xs:sequence/>
+    <xs:attribute name="attempted" type="xs:boolean" use="required"/>
+    <xs:attribute name="valid" type="xs:boolean" use="required"/>
+    <xs:attribute name="value" type="xs:float" use="required"/>
+  </xs:complexType>
+
+  <xs:complexType name="dvDoubleQuantityWithProvenance">
+    <xs:complexContent>
+      <xs:extension base="dvDoubleQuantity">
+        <xs:sequence/>
+        <xs:attribute name="provenance" type="xs:string"/>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="dvExternalTceModelDescription">
+    <xs:sequence/>
+    <xs:attribute name="modelDescription" type="xs:string"/>
+    <xs:attribute name="pipelineTaskId" type="xs:long" use="required"/>
+  </xs:complexType>
+
+  <xs:complexType name="dvGhostDiagnosticResults">
+    <xs:sequence>
+      <xs:element name="coreApertureCorrelationStatistic" type="dvStatistic" minOccurs="0"/>
+      <xs:element name="haloApertureCorrelationStatistic" type="dvStatistic" minOccurs="0"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="dvImageArtifactResults">
+    <xs:sequence>
+      <xs:element name="rollingBandContaminationHistogram" type="dvRollingBandContaminationHistogram" minOccurs="0"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="dvRollingBandContaminationHistogram">
+    <xs:sequence>
+      <xs:element name="severityLevels" minOccurs="0">
+        <xs:simpleType>
+          <xs:list itemType="xs:float"/>
+        </xs:simpleType>
+      </xs:element>
+      <xs:element name="transitCounts" minOccurs="0">
+        <xs:simpleType>
+          <xs:list itemType="xs:int"/>
+        </xs:simpleType>
+      </xs:element>
+      <xs:element name="transitFractions" minOccurs="0">
+        <xs:simpleType>
+          <xs:list itemType="xs:float"/>
+        </xs:simpleType>
+      </xs:element>
+    </xs:sequence>
+    <xs:attribute name="testPulseDurationLc" type="xs:int" use="required"/>
+  </xs:complexType>
+
+  <xs:complexType name="dvLimbDarkeningModel">
+    <xs:complexContent>
+      <xs:extension base="dvAbstractTargetTableData">
+        <xs:sequence/>
+        <xs:attribute name="keplerId" type="xs:int" use="required"/>
+        <xs:attribute name="modelName" type="xs:string" use="required"/>
+        <xs:attribute name="coefficient1" type="xs:float" use="required"/>
+        <xs:attribute name="coefficient2" type="xs:float" use="required"/>
+        <xs:attribute name="coefficient3" type="xs:float" use="required"/>
+        <xs:attribute name="coefficient4" type="xs:float" use="required"/>
+        <xs:attribute name="fluxType" type="fluxType" use="required"/>
+        <xs:attribute name="pipelineTaskId" type="xs:long" use="required"/>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="dvModelParameter">
+    <xs:sequence/>
+    <xs:attribute name="name" type="xs:string" use="required"/>
+    <xs:attribute name="value" type="xs:double" use="required"/>
+    <xs:attribute name="uncertainty" type="xs:float" use="required"/>
+    <xs:attribute name="fitted" type="xs:boolean" use="required"/>
+  </xs:complexType>
+
+  <xs:complexType name="dvPixelCorrelationResults">
+    <xs:complexContent>
+      <xs:extension base="dvAbstractTargetTableData">
+        <xs:sequence>
+          <xs:element name="controlCentroidOffsets" type="dvCentroidOffsets" minOccurs="0"/>
+          <xs:element name="controlImageCentroid" type="dvImageCentroid" minOccurs="0"/>
+          <xs:element name="correlationImageCentroid" type="dvImageCentroid" minOccurs="0"/>
+          <xs:element name="kicCentroidOffsets" type="dvCentroidOffsets" minOccurs="0"/>
+          <xs:element name="kicReferenceCentroid" type="dvImageCentroid" minOccurs="0"/>
+          <xs:element name="pixelCorrelationStatistics" type="dvPixelStatistic" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="dvPixelStatistic">
+    <xs:complexContent>
+      <xs:extension base="dvStatistic">
+        <xs:sequence/>
+        <xs:attribute name="ccdRow" type="xs:int" use="required"/>
+        <xs:attribute name="ccdColumn" type="xs:int" use="required"/>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="dvPlanetCandidate">
+    <xs:complexContent>
+      <xs:extension base="dvThresholdCrossingEvent">
+        <xs:sequence>
+          <xs:element name="bootstrapHistogram" type="dvBootstrapHistogram" minOccurs="0"/>
+        </xs:sequence>
+        <xs:attribute name="planetNumber" type="xs:int" use="required"/>
+        <xs:attribute name="expectedTransitCount" type="xs:int" use="required"/>
+        <xs:attribute name="observedTransitCount" type="xs:int" use="required"/>
+        <xs:attribute name="suspectedEclipsingBinary" type="xs:boolean" use="required"/>
+        <xs:attribute name="significance" type="xs:double" use="required"/>
+        <xs:attribute name="bootstrapThresholdForDesiredPfa" type="xs:float" use="required"/>
+        <xs:attribute name="statisticRatioBelowThreshold" type="xs:boolean" use="required"/>
+        <xs:attribute name="modelChiSquare2" type="xs:float" use="required"/>
+        <xs:attribute name="modelChiSquareDof2" type="xs:int" use="required"/>
+        <xs:attribute name="modelChiSquareGof" type="xs:float" use="required"/>
+        <xs:attribute name="modelChiSquareGofDof" type="xs:int" use="required"/>
+        <xs:attribute name="bootstrapMesMean" type="xs:float" use="required"/>
+        <xs:attribute name="bootstrapMesStd" type="xs:float" use="required"/>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="dvThresholdCrossingEvent">
+    <xs:sequence>
+      <xs:element name="weakSecondary" type="dvWeakSecondary" minOccurs="0"/>
+    </xs:sequence>
+    <xs:attribute name="keplerId" type="xs:int" use="required"/>
+    <xs:attribute name="chiSquare1" type="xs:float" use="required"/>
+    <xs:attribute name="chiSquare2" type="xs:float" use="required"/>
+    <xs:attribute name="chiSquareDof1" type="xs:int" use="required"/>
+    <xs:attribute name="chiSquareDof2" type="xs:float" use="required"/>
+    <xs:attribute name="chiSquareGof" type="xs:float" use="required"/>
+    <xs:attribute name="chiSquareGofDof" type="xs:int" use="required"/>
+    <xs:attribute name="robustStatistic" type="xs:float" use="required"/>
+    <xs:attribute name="epochMjd" type="xs:double" use="required"/>
+    <xs:attribute name="orbitalPeriodInDays" type="xs:double" use="required"/>
+    <xs:attribute name="trialTransitPulseDurationInHours" type="xs:float" use="required"/>
+    <xs:attribute name="maxMultipleEventSigma" type="xs:float" use="required"/>
+    <xs:attribute name="maxSingleEventSigma" type="xs:float" use="required"/>
+    <xs:attribute name="pipelineTaskId" type="xs:long" use="required"/>
+    <xs:attribute name="thresholdForDesiredPfa" type="xs:float" use="required"/>
+    <xs:attribute name="maxSesInMes" type="xs:float" use="required"/>
+  </xs:complexType>
+
+  <xs:complexType name="dvWeakSecondary">
+    <xs:sequence>
+      <xs:element name="depthPpm" type="dvQuantity" minOccurs="0"/>
+    </xs:sequence>
+    <xs:attribute name="maxMesPhaseInDays" type="xs:float" use="required"/>
+    <xs:attribute name="maxMes" type="xs:float" use="required"/>
+    <xs:attribute name="minMesPhaseInDays" type="xs:float" use="required"/>
+    <xs:attribute name="minMes" type="xs:float" use="required"/>
+    <xs:attribute name="mesMad" type="xs:float" use="required"/>
+    <xs:attribute name="medianMes" type="xs:float" use="required"/>
+    <xs:attribute name="validPhaseCount" type="xs:int" use="required"/>
+    <xs:attribute name="robustStatistic" type="xs:float" use="required"/>
+  </xs:complexType>
+
+  <xs:complexType name="dvPlanetModelFit">
+    <xs:sequence>
+      <xs:element name="modelParameters" type="dvModelParameter" minOccurs="0" maxOccurs="unbounded"/>
+      <xs:element name="modelParameterCovariance" type="xs:float" minOccurs="0" maxOccurs="unbounded"/>
+    </xs:sequence>
+    <xs:attribute name="keplerId" type="xs:int" use="required"/>
+    <xs:attribute name="planetNumber" type="xs:int" use="required"/>
+    <xs:attribute name="type" type="planetModelFitType"/>
+    <xs:attribute name="modelChiSquare" type="xs:float" use="required"/>
+    <xs:attribute name="modelDegreesOfFreedom" type="xs:float" use="required"/>
+    <xs:attribute name="modelFitSnr" type="xs:float" use="required"/>
+    <xs:attribute name="transitModelName" type="xs:string"/>
+    <xs:attribute name="limbDarkeningModelName" type="xs:string" use="required"/>
+    <xs:attribute name="fullConvergence" type="xs:boolean" use="required"/>
+    <xs:attribute name="seededWithPriorFit" type="xs:boolean" use="required"/>
+    <xs:attribute name="pipelineTaskId" type="xs:long" use="required"/>
+  </xs:complexType>
+
+  <xs:complexType name="dvPlanetParameters">
+    <xs:sequence>
+      <xs:element name="geometricAlbedo" type="dvQuantity" minOccurs="0"/>
+      <xs:element name="planetEffectiveTemp" type="dvQuantity" minOccurs="0"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="dvPlanetResults">
+    <xs:sequence>
+      <xs:element name="planetCandidate" type="dvPlanetCandidate" minOccurs="0"/>
+      <xs:element name="centroidResults" type="dvCentroidResults" minOccurs="0"/>
+      <xs:element name="binaryDiscriminationResults" type="dvBinaryDiscriminationResults" minOccurs="0"/>
+      <xs:element name="allTransitsFit" type="dvPlanetModelFit" minOccurs="0"/>
+      <xs:element name="evenTransitsFit" type="dvPlanetModelFit" minOccurs="0"/>
+      <xs:element name="oddTransitsFit" type="dvPlanetModelFit" minOccurs="0"/>
+      <xs:element name="trapezoidalFit" type="dvPlanetModelFit" minOccurs="0"/>
+      <xs:element name="secondaryEventResults" type="dvSecondaryEventResults" minOccurs="0"/>
+      <xs:element name="singleTransitFits" type="dvPlanetModelFit" minOccurs="0" maxOccurs="unbounded"/>
+      <xs:element name="reducedParameterFits" type="dvPlanetModelFit" minOccurs="0" maxOccurs="unbounded"/>
+      <xs:element name="ghostDiagnosticResults" type="dvGhostDiagnosticResults" minOccurs="0"/>
+      <xs:element name="pixelCorrelationResults" type="dvPixelCorrelationResults" minOccurs="0" maxOccurs="unbounded"/>
+      <xs:element name="differenceImageResults" type="dvDifferenceImageResults" minOccurs="0" maxOccurs="unbounded"/>
+      <xs:element name="imageArtifactResults" type="dvImageArtifactResults" minOccurs="0"/>
+    </xs:sequence>
+    <xs:attribute name="startCadence" type="xs:int" use="required"/>
+    <xs:attribute name="endCadence" type="xs:int" use="required"/>
+    <xs:attribute name="keplerId" type="xs:int" use="required"/>
+    <xs:attribute name="planetNumber" type="xs:int" use="required"/>
+    <xs:attribute name="keplerName" type="xs:string"/>
+    <xs:attribute name="koiId" type="xs:string"/>
+    <xs:attribute name="koiCorrelation" type="xs:float" use="required"/>
+    <xs:attribute name="detrendFilterLength" type="xs:int" use="required"/>
+    <xs:attribute name="fluxType" type="fluxType" use="required"/>
+    <xs:attribute name="pipelineTaskId" type="xs:long" use="required"/>
+  </xs:complexType>
+
+  <xs:complexType name="dvSecondaryEventResults">
+    <xs:sequence>
+      <xs:element name="planetParameters" type="dvPlanetParameters" minOccurs="0"/>
+      <xs:element name="comparisonTests" type="dvComparisonTests" minOccurs="0"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="dvQuantityWithProvenance">
+    <xs:complexContent>
+      <xs:extension base="dvQuantity">
+        <xs:sequence/>
+        <xs:attribute name="provenance" type="xs:string"/>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="dvResultsSequence">
+    <xs:sequence>
+      <xs:element name="externalTceModelDescription" type="dvExternalTceModelDescription" minOccurs="0"/>
+      <xs:element name="limbDarkeningModels" type="dvLimbDarkeningModel" nillable="true" minOccurs="0" maxOccurs="unbounded"/>
+      <xs:element name="planetResults" type="dvPlanetResults" nillable="true" minOccurs="0" maxOccurs="unbounded"/>
+      <xs:element name="targetResults" type="dvTargetResults" nillable="true" minOccurs="0" maxOccurs="unbounded"/>
+      <xs:element name="transitModelDescriptions" type="dvTransitModelDescriptions" minOccurs="0"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="dvTargetResults">
+    <xs:sequence>
+      <xs:element name="matchedKoiIds" type="xs:string" minOccurs="0" maxOccurs="unbounded"/>
+      <xs:element name="unmatchedKoiIds" type="xs:string" minOccurs="0" maxOccurs="unbounded"/>
+      <xs:element name="decDegrees" type="dvDoubleQuantityWithProvenance" minOccurs="0"/>
+      <xs:element name="effectiveTemp" type="dvQuantityWithProvenance" minOccurs="0"/>
+      <xs:element name="keplerMag" type="dvQuantityWithProvenance" minOccurs="0"/>
+      <xs:element name="log10SurfaceGravity" type="dvQuantityWithProvenance" minOccurs="0"/>
+      <xs:element name="log10Metallicity" type="dvQuantityWithProvenance" minOccurs="0"/>
+      <xs:element name="radius" type="dvQuantityWithProvenance" minOccurs="0"/>
+      <xs:element name="raHours" type="dvDoubleQuantityWithProvenance" minOccurs="0"/>
+    </xs:sequence>
+    <xs:attribute name="startCadence" type="xs:int" use="required"/>
+    <xs:attribute name="endCadence" type="xs:int" use="required"/>
+    <xs:attribute name="keplerId" type="xs:int" use="required"/>
+    <xs:attribute name="koiId" type="xs:string"/>
+    <xs:attribute name="keplerName" type="xs:string"/>
+    <xs:attribute name="fluxType" type="fluxType" use="required"/>
+    <xs:attribute name="pipelineTaskId" type="xs:long" use="required"/>
+    <xs:attribute name="planetCandidateCount" type="xs:int" use="required"/>
+    <xs:attribute name="quartersObserved" type="xs:string"/>
+  </xs:complexType>
+
+  <xs:complexType name="dvTransitModelDescriptions">
+    <xs:sequence/>
+    <xs:attribute name="nameModelDescription" type="xs:string"/>
+    <xs:attribute name="parameterModelDescription" type="xs:string"/>
+    <xs:attribute name="pipelineTaskId" type="xs:long" use="required"/>
+  </xs:complexType>
+
+  <xs:simpleType name="fluxType">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="SAP"/>
+      <xs:enumeration value="OAP"/>
+      <xs:enumeration value="DIA"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="planetModelFitType">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="ALL"/>
+      <xs:enumeration value="ODD"/>
+      <xs:enumeration value="EVEN"/>
+      <xs:enumeration value="SINGLE"/>
+      <xs:enumeration value="REDUCED_PARAMETER"/>
+      <xs:enumeration value="TRAPEZOIDAL"/>
+    </xs:restriction>
+  </xs:simpleType>
+</xs:schema>
+

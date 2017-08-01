@@ -1,0 +1,21 @@
+Index: com/openedit/page/manage/PageManager.java
+===================================================================
+RCS file: /src/openedit/src/java/com/openedit/page/manage/PageManager.java,v
+retrieving revision 1.53
+retrieving revision 1.54
+diff -u -r1.53 -r1.54
+--- com/openedit/page/manage/PageManager.java	2007/02/01 04:44:39	1.53
++++ com/openedit/page/manage/PageManager.java	2007/03/27 18:55:20	1.54
+@@ -293,8 +293,10 @@
+ 				boolean ver = Boolean.parseBoolean(makeversion);
+ 				inDestinationPage.getContentItem().setMakeVersion(ver);
+ 			}
+-
+-			getRepository().copy( inSourcePage.getContentItem(), inDestinationPage.getContentItem() );
++			ContentItem item = inDestinationPage.getContentItem();
++			item.setPath(inDestinationPage.getPath());
++			
++			getRepository().copy( inSourcePage.getContentItem(),  item);
+ 		}
+ 		else
+ 		{

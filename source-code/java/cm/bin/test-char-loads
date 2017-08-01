@@ -1,0 +1,131 @@
+#! /bin/sh
+# 
+# Copyright 2017 United States Government as represented by the
+# Administrator of the National Aeronautics and Space Administration.
+# All Rights Reserved.
+# 
+# This file is available under the terms of the NASA Open Source Agreement
+# (NOSA). You should have received a copy of this agreement with the
+# Kepler source code; see the file NASA-OPEN-SOURCE-AGREEMENT.doc.
+# 
+# No Warranty: THE SUBJECT SOFTWARE IS PROVIDED "AS IS" WITHOUT ANY
+# WARRANTY OF ANY KIND, EITHER EXPRESSED, IMPLIED, OR STATUTORY,
+# INCLUDING, BUT NOT LIMITED TO, ANY WARRANTY THAT THE SUBJECT SOFTWARE
+# WILL CONFORM TO SPECIFICATIONS, ANY IMPLIED WARRANTIES OF
+# MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, OR FREEDOM FROM
+# INFRINGEMENT, ANY WARRANTY THAT THE SUBJECT SOFTWARE WILL BE ERROR
+# FREE, OR ANY WARRANTY THAT DOCUMENTATION, IF PROVIDED, WILL CONFORM
+# TO THE SUBJECT SOFTWARE. THIS AGREEMENT DOES NOT, IN ANY MANNER,
+# CONSTITUTE AN ENDORSEMENT BY GOVERNMENT AGENCY OR ANY PRIOR RECIPIENT
+# OF ANY RESULTS, RESULTING DESIGNS, HARDWARE, SOFTWARE PRODUCTS OR ANY
+# OTHER APPLICATIONS RESULTING FROM USE OF THE SUBJECT SOFTWARE.
+# FURTHER, GOVERNMENT AGENCY DISCLAIMS ALL WARRANTIES AND LIABILITIES
+# REGARDING THIRD-PARTY SOFTWARE, IF PRESENT IN THE ORIGINAL SOFTWARE,
+# AND DISTRIBUTES IT "AS IS."
+#
+# Waiver and Indemnity: RECIPIENT AGREES TO WAIVE ANY AND ALL CLAIMS
+# AGAINST THE UNITED STATES GOVERNMENT, ITS CONTRACTORS AND
+# SUBCONTRACTORS, AS WELL AS ANY PRIOR RECIPIENT. IF RECIPIENT'S USE OF
+# THE SUBJECT SOFTWARE RESULTS IN ANY LIABILITIES, DEMANDS, DAMAGES,
+# EXPENSES OR LOSSES ARISING FROM SUCH USE, INCLUDING ANY DAMAGES FROM
+# PRODUCTS BASED ON, OR RESULTING FROM, RECIPIENT'S USE OF THE SUBJECT
+# SOFTWARE, RECIPIENT SHALL INDEMNIFY AND HOLD HARMLESS THE UNITED
+# STATES GOVERNMENT, ITS CONTRACTORS AND SUBCONTRACTORS, AS WELL AS ANY
+# PRIOR RECIPIENT, TO THE EXTENT PERMITTED BY LAW. RECIPIENT'S SOLE
+# REMEDY FOR ANY SUCH MATTER SHALL BE THE IMMEDIATE, UNILATERAL
+# TERMINATION OF THIS AGREEMENT.
+#
+
+# Tests the load times for characteristics. This test clears and
+# populates the CM_CHAR_TYPE and CM_CHAR tables for the data base user
+# $USER/USER. Five data points are taken using varying percentages of
+# the original data set, which should be in
+# /path/to/$USER/char-load-test. The trimmed data sets are saved in
+# the current directory, so you should run this in a file system that
+# has at least 300 MB free.
+
+cleanup=1
+tmp=/tmp/test-char-loads$$.sql
+tmpDir=test-char-loads$$
+dataDir=/path/to/$USER/char-load-test
+percentages="1 2 3 4 5"
+dbUser=$USER
+dbPassword=$USER
+dbName=$ORACLE_SID
+mkdir $tmpDir
+
+cleanup() {
+    if [ $cleanup = 1 ]; then
+        rm -f $tmp
+        rm -rf $tmpDir
+    fi
+}
+
+abort() {
+    set +x
+    echo "$0: aborting ..." >&2
+    if [ -f $tmp -o -d $tmpDir ]; then
+        echo "Temporary files left in $tmp and/or $tmpDir" >&2
+        echo "Please inspect and remove" >&2
+    fi
+    cleanup=0
+    exit 1
+}
+
+checkEnvironment() {
+    if [ "$USER" = "" ]; then
+        echo USER not defined
+        exit 1
+    fi
+
+    if [ "$ORACLE_SID" = "" ]; then
+        echo ORACLE_SID not defined
+        exit 1
+    fi
+    if [ ! -d $dataDir ]; then
+        echo Directory $dataDir with characteristics input files does not exist
+        exit 1
+    fi
+}
+
+okToClear() {
+    echo -n "Delete all rows in CM_CHAR_TYPE and CM_CHAR? "
+    read ans
+    if [ "$ans" != y ]; then
+        exit
+    fi
+}
+
+clearTables() {
+    cat > $tmp <<EOF
+    delete from CM_CHAR_TYPE;
+    delete from CM_CHAR;
+    exit;
+EOF
+
+    echo sqlplus -silent $dbUser/$dbPassword@$dbName @$tmp 
+    sqlplus -silent $dbUser/$dbPassword@$dbName @$tmp 
+}
+
+trap 'cleanup; exit 0' 0
+trap 'abort' 1 2 3 15
+
+checkEnvironment
+
+for percent in $percentages; do
+    okToClear
+    clearTables
+
+    # Create ingest file.
+    echo Creating $percent% data set
+    for path in $dataDir/r*.mrg; do
+        file=`basename $path`
+        lines=`wc -l $path | awk '{printf("%d", $1 * '$percent' / 100)}'`
+        echo "head -$lines $path > $tmpDir/$file"
+        head -$lines $path > $tmpDir/$file
+    done
+
+    # Ingest file.
+    ingest -t CM_CHAR_TYPE -y $dataDir
+    time ingest -t CM_CHAR -y $tmpDir
+done

@@ -1,0 +1,215 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Copyright 2017 United States Government as represented by the
+  Administrator of the National Aeronautics and Space Administration.
+  All Rights Reserved.
+  
+  This file is available under the terms of the NASA Open Source Agreement
+  (NOSA). You should have received a copy of this agreement with the
+  Kepler source code; see the file NASA-OPEN-SOURCE-AGREEMENT.doc.
+  
+  No Warranty: THE SUBJECT SOFTWARE IS PROVIDED "AS IS" WITHOUT ANY
+  WARRANTY OF ANY KIND, EITHER EXPRESSED, IMPLIED, OR STATUTORY,
+  INCLUDING, BUT NOT LIMITED TO, ANY WARRANTY THAT THE SUBJECT SOFTWARE
+  WILL CONFORM TO SPECIFICATIONS, ANY IMPLIED WARRANTIES OF
+  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, OR FREEDOM FROM
+  INFRINGEMENT, ANY WARRANTY THAT THE SUBJECT SOFTWARE WILL BE ERROR
+  FREE, OR ANY WARRANTY THAT DOCUMENTATION, IF PROVIDED, WILL CONFORM
+  TO THE SUBJECT SOFTWARE. THIS AGREEMENT DOES NOT, IN ANY MANNER,
+  CONSTITUTE AN ENDORSEMENT BY GOVERNMENT AGENCY OR ANY PRIOR RECIPIENT
+  OF ANY RESULTS, RESULTING DESIGNS, HARDWARE, SOFTWARE PRODUCTS OR ANY
+  OTHER APPLICATIONS RESULTING FROM USE OF THE SUBJECT SOFTWARE.
+  FURTHER, GOVERNMENT AGENCY DISCLAIMS ALL WARRANTIES AND LIABILITIES
+  REGARDING THIRD-PARTY SOFTWARE, IF PRESENT IN THE ORIGINAL SOFTWARE,
+  AND DISTRIBUTES IT "AS IS."
+  
+  Waiver and Indemnity: RECIPIENT AGREES TO WAIVE ANY AND ALL CLAIMS
+  AGAINST THE UNITED STATES GOVERNMENT, ITS CONTRACTORS AND
+  SUBCONTRACTORS, AS WELL AS ANY PRIOR RECIPIENT. IF RECIPIENT'S USE OF
+  THE SUBJECT SOFTWARE RESULTS IN ANY LIABILITIES, DEMANDS, DAMAGES,
+  EXPENSES OR LOSSES ARISING FROM SUCH USE, INCLUDING ANY DAMAGES FROM
+  PRODUCTS BASED ON, OR RESULTING FROM, RECIPIENT'S USE OF THE SUBJECT
+  SOFTWARE, RECIPIENT SHALL INDEMNIFY AND HOLD HARMLESS THE UNITED
+  STATES GOVERNMENT, ITS CONTRACTORS AND SUBCONTRACTORS, AS WELL AS ANY
+  PRIOR RECIPIENT, TO THE EXTENT PERMITTED BY LAW. RECIPIENT'S SOLE
+  REMEDY FOR ANY SUCH MATTER SHALL BE THE IMMEDIATE, UNILATERAL
+  TERMINATION OF THIS AGREEMENT.
+-->
+
+<project name="basic">
+
+  <!-- Include contributed tasks, such as if. -->
+  <taskdef resource="net/sf/antcontrib/antlib.xml"
+           classpath="${build.top.java}/jars/dev/ant-contrib/ant-contrib-1.0b2.jar" />
+
+  <!-- Issue svn commands from ant -->
+  <taskdef resource="org/tigris/subversion/svnant/svnantlib.xml">
+    <classpath>
+      <fileset dir="${build.top.java}/jars/dev/svnant" includes="**/*.jar" />
+    </classpath>
+  </taskdef>
+
+  <property name="build.bin" value="${build}/${bin}" />
+  <property name="build.classes" value="${build}/classes" />
+  <property name="build.doc" value="${build}/${doc}" />
+  <property name="build.etc" value="${build}/${etc}" />
+  <property name="build.images" value="${build}/${images}" />
+  <property name="build.lib" value="${build}/${lib}" />
+  <property name="build.tmp" value="${build}/${tmp}" />
+  <property name="getEclipseClasspath.suppress" value="false" />
+
+  <!-- log4j configuration used by the build process -->
+  <property name="log4j.configuration" value="file:${targets}/log4j.xml" />
+
+  <!-- The .class files from src and test are kept separately so that test -->
+  <!-- code is not packaged for install and so that test code is not -->
+  <!-- instrumented for coverage by JaCoCo. -->
+  <property name="classes.src.dir" value="${build.classes}/src" />
+  <property name="classes.test.dir" value="${build.classes}/test" />
+
+  <available file=".project" property="project.context" />
+
+  <condition property="getEclipseClasspath.enabled" value="true" >
+    <and>
+      <isset property="project.context" />
+      <not>
+        <istrue value="${getEclipseClasspath.suppress}" />
+      </not>
+    </and>
+  </condition>
+
+  <!-- The following block contains code that should only be run in -->
+  <!-- the context of a project directory. -->
+  <if>
+    <istrue value="${getEclipseClasspath.enabled}" />
+    <then>
+      <if>
+        <not>
+          <isset property="getEclipseClasspath.performed" />
+        </not>
+        <then>
+          <property name="matlab.dir"
+                    value="${build.top.matlab}/${ant.project.name}" />
+
+          <!-- Set build-time and run-time classpaths. -->
+          <taskdef name="getEclipseClasspath"
+                   classpath="${build.top.java}/jars/dev/ant4eclipse/ant4eclipse-0.4.1.jar"
+                   classname="net.sf.ant4eclipse.ant.task.project.GetEclipseClassPathTask" />
+
+          <echo>Generating classpath...</echo>
+          <getEclipseClasspath pathId="classpath.buildtime"
+                               project="."
+                               runtime="false" />
+          <getEclipseClasspath pathId="classpath.runtime"
+                               project="."
+                               runtime="true" />
+          <property name="getEclipseClasspath.performed" value="true" />
+        </then>
+      </if>
+    </then>
+    <else>
+      <path id="classpath.buildtime" >
+        <pathelement location="${build.classes}" />
+        <fileset dir="${build.top.java}/jars">
+          <include name="**/*.jar"/>
+        </fileset>
+      </path>
+    </else>
+  </if>
+
+  <patternset id="generated.sources">
+    <include name="**/build/generated/**" />
+  </patternset>
+
+  <!-- Rotate the ${file} parameter. -->
+  <target name="rotate">
+    <!-- Ensure that the files exist. -->
+    <touch file="${file}.3"/>
+    <touch file="${file}.2"/>
+    <touch file="${file}.1"/>
+    <touch file="${file}"/>
+
+    <move file="${file}.2" tofile="${file}.3" failonerror="false" />
+    <move file="${file}.1" tofile="${file}.2" failonerror="false" />
+    <move file="${file}" tofile="${file}.1" failonerror="false" />
+  </target>
+
+  <target name="clean" description="Remove all compilation artifacts">
+    <delete dir="${reports}" />
+    <!-- If symlink is not deleted explicitly then ant follows the link. -->
+    <available filepath="${build}/test" file="etem" property="etemExists" />
+    <if>
+      <equals arg1="${etemExists}" arg2="true" />
+      <then>
+        <symlink action="delete" failonerror="false"
+          link="${build}/test/etem" />
+      </then>
+    </if>
+    <delete dir="${build}" />
+    <delete quiet="true">
+      <fileset dir="${matlab.dir}">
+        <patternset refid="generated.sources" />
+      </fileset>
+    </delete>
+  </target>
+
+  <target name="init">
+    <mkdir dir="${classes.src.dir}" />
+    <mkdir dir="${classes.test.dir}" />
+    <mkdir dir="${build.lib}" />
+    <mkdir dir="${build.tmp}" />
+
+    <copy todir="${classes.src.dir}">
+      <fileset dir="${src}">
+        <include name="**/*.classes" />
+        <include name="**/*.properties" />
+        <include name="**/*.jpg" />
+        <include name="**/*.png" />
+      </fileset>
+    </copy>
+  </target>
+
+  <target name="compile" depends="init" description="Compile project">
+    <javac debug="true"
+           debuglevel="${debuglevel}"
+           includeantruntime="false"
+           destdir="${classes.src.dir}"
+           source="${source}"
+           target="${target}">
+      <src path="${src}" />
+      <classpath refid="classpath.buildtime" />
+      <compilerarg value="${build.compiler.arg}" />
+    </javac>
+    <javac debug="true"
+           debuglevel="${debuglevel}"
+           includeantruntime="false"
+           destdir="${classes.test.dir}"
+           source="${source}"
+           target="${target}">
+      <src path="${test}" />
+      <classpath refid="classpath.buildtime" />
+      <compilerarg value="${build.compiler.arg}" />
+    </javac>
+  </target>
+
+  <!-- The target compile-pre is designed to be overridden so do not -->
+  <!-- add any dependencies or content. -->
+  <target name="compile-pre"
+          description="Override to perform actions before compile target">
+  </target>
+
+  <!-- The target compile-post is designed to be overridden so do not -->
+  <!-- add any dependencies or content. -->
+  <target name="compile-post"
+          description="Override to perform actions after compile target">
+  </target>
+
+  <!-- Do not override the build target. Dependencies or tasks may be -->
+  <!-- added here at any time. Override compile-pre or compile-post as -->
+  <!-- appropriate instead. -->
+  <target name="build"
+          depends="init,compile-pre,compile,compile-post"
+          description="Build project">
+  </target>
+
+</project>

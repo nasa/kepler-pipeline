@@ -1,0 +1,279 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Copyright 2017 United States Government as represented by the
+  Administrator of the National Aeronautics and Space Administration.
+  All Rights Reserved.
+  
+  This file is available under the terms of the NASA Open Source Agreement
+  (NOSA). You should have received a copy of this agreement with the
+  Kepler source code; see the file NASA-OPEN-SOURCE-AGREEMENT.doc.
+  
+  No Warranty: THE SUBJECT SOFTWARE IS PROVIDED "AS IS" WITHOUT ANY
+  WARRANTY OF ANY KIND, EITHER EXPRESSED, IMPLIED, OR STATUTORY,
+  INCLUDING, BUT NOT LIMITED TO, ANY WARRANTY THAT THE SUBJECT SOFTWARE
+  WILL CONFORM TO SPECIFICATIONS, ANY IMPLIED WARRANTIES OF
+  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, OR FREEDOM FROM
+  INFRINGEMENT, ANY WARRANTY THAT THE SUBJECT SOFTWARE WILL BE ERROR
+  FREE, OR ANY WARRANTY THAT DOCUMENTATION, IF PROVIDED, WILL CONFORM
+  TO THE SUBJECT SOFTWARE. THIS AGREEMENT DOES NOT, IN ANY MANNER,
+  CONSTITUTE AN ENDORSEMENT BY GOVERNMENT AGENCY OR ANY PRIOR RECIPIENT
+  OF ANY RESULTS, RESULTING DESIGNS, HARDWARE, SOFTWARE PRODUCTS OR ANY
+  OTHER APPLICATIONS RESULTING FROM USE OF THE SUBJECT SOFTWARE.
+  FURTHER, GOVERNMENT AGENCY DISCLAIMS ALL WARRANTIES AND LIABILITIES
+  REGARDING THIRD-PARTY SOFTWARE, IF PRESENT IN THE ORIGINAL SOFTWARE,
+  AND DISTRIBUTES IT "AS IS."
+
+  Waiver and Indemnity: RECIPIENT AGREES TO WAIVE ANY AND ALL CLAIMS
+  AGAINST THE UNITED STATES GOVERNMENT, ITS CONTRACTORS AND
+  SUBCONTRACTORS, AS WELL AS ANY PRIOR RECIPIENT. IF RECIPIENT'S USE OF
+  THE SUBJECT SOFTWARE RESULTS IN ANY LIABILITIES, DEMANDS, DAMAGES,
+  EXPENSES OR LOSSES ARISING FROM SUCH USE, INCLUDING ANY DAMAGES FROM
+  PRODUCTS BASED ON, OR RESULTING FROM, RECIPIENT'S USE OF THE SUBJECT
+  SOFTWARE, RECIPIENT SHALL INDEMNIFY AND HOLD HARMLESS THE UNITED
+  STATES GOVERNMENT, ITS CONTRACTORS AND SUBCONTRACTORS, AS WELL AS ANY
+  PRIOR RECIPIENT, TO THE EXTENT PERMITTED BY LAW. RECIPIENT'S SOLE
+  REMEDY FOR ANY SUCH MATTER SHALL BE THE IMMEDIATE, UNILATERAL
+  TERMINATION OF THIS AGREEMENT.
+-->
+
+<project basedir="." default="build" name="mr">
+
+  <import file="../include/ant/standard.xml" />
+
+  <property name="dist.mr" value="${dist}/mr"/>
+  <property name="report.compiled" value="${build}/compiled-report"/>
+
+  <property name="tomcat.dir" value="vendor/tomcat"/>
+  <property name="dist.tomcat" value="${dist.mr}/tomcat"/>
+
+  <property name="openedit.dir" value="vendor/openedit"/>
+  <property name="webapp.dir" value="build/ROOT"/>
+
+  <property name="ireport.dir" value="vendor/ireport"/>
+  <property name="dist.ireport" value="${build}/ireport" />
+
+  <target name="compile-post" depends="compile-reports" />
+
+  <target name="dist-post" depends="unpack-openedit,compile-patch-classes,unpack-tomcat">
+    <!-- Create a set of CATALINA_BASE dirs for mr's Tomcat tree. -->
+    <mkdir dir="${dist.mr}/lib"/>
+    <mkdir dir="${dist.mr}/conf/Catalina/localhost"/>
+    <mkdir dir="${dist.mr}/temp"/>
+    <mkdir dir="${dist.mr}/webapps/ROOT"/>
+    <mkdir dir="${dist.mr}/work"/>
+    <mkdir dir="${dist.mr}/logs"/>
+
+    <!-- Copy the webapp dir into the dist tree. -->
+    <copy todir="${dist.mr}/webapps/ROOT">
+      <fileset dir="${webapp.dir}" includes="**"/>
+    </copy>
+
+    <!-- Overlay our modified webapp files. -->
+    <copy todir="${dist.mr}/webapps/ROOT" overwrite="true">
+      <fileset dir="webroot" includes="**"/>
+    </copy>
+
+    <!-- Copy the compiled reports into the webapp. -->
+    <copy todir="${dist.mr}/webapps/ROOT/compiled-report">
+      <fileset dir="${report.compiled}" includes="**"/>
+    </copy>
+
+    <!-- Copy config files that the webapp needs into WEB-INF. -->
+    <copy todir="${dist.mr}/webapps/ROOT/WEB-INF">
+      <fileset dir="${basedir}/etc" includes="kepler.properties"/>
+    </copy>
+    
+    <!-- Copy the mr classes into the webapp. -->
+    <copy todir="${dist.mr}/webapps/ROOT/WEB-INF/classes">
+      <fileset dir="${build}/classes/src" includes="**/*"/>
+    </copy>
+
+    <!-- Copy the lib files into the webapp's lib dir. -->
+    <copy todir="${dist.mr}/webapps/ROOT/WEB-INF/lib" flatten="true">
+      <fileset dir="${basedir}/../jars/runtime"
+               includes="antlr/*.jar,
+                         commons/commons-beanutils*.jar,
+                         commons/commons-compress*.jar,
+                         commons/commons-configuration*.jar,
+                         commons/commons-dbcp*.jar,
+                         commons/commons-digester*.jar,
+                         commons/commons-io*.jar,
+                         commons/commons-lang*.jar,
+                         commons/commons-pool*.jar,
+                         guava/*.jar,
+                         hibernate/*.jar,
+                         hsqldb/hsqldb.jar,
+                         itext/iText*.jar,
+                         jasperreports/*.jar,
+                         jbosstransactions/jbossjta.jar,
+                         jfree/*.jar,
+                         log4j/log4j*.jar,
+                         oracle/ojdbc6.jar" />
+      <fileset dir="${dist.lib}"
+	      includes="common-spiffy.jar,
+                         common.jar,
+                         services.jar,
+                         hibernate.jar,
+                         pi.jar,
+                         fs.jar,
+                         mc.jar" />
+    </copy>
+
+    <!-- Copy the webapp's custom Tomcat configs into the conf dir. -->
+    <copy todir="${dist.mr}/conf">
+      <fileset dir="${basedir}/etc"
+               includes="server.xml,tomcat-users.xml,web.xml,
+                         catalina.properties,logging.properties"/>
+    </copy>
+
+    <!-- Copy the context.xml file into the component's host dir. -->
+    <copy file="${basedir}/webroot/META-INF/context.xml"
+          tofile="${dist.mr}/conf/Catalina/localhost/ROOT.xml">
+    </copy>
+
+  </target>
+
+
+  <!-- Custom targets below this line. -->
+
+  <target name="unpack-openedit">
+    <ant dir="." antfile="${openedit.dir}/build.xml"
+         target="unpack" inheritAll="true"/>
+  </target>
+
+  <target name="unpack-tomcat">
+    <ant dir="." antfile="${tomcat.dir}/build.xml"
+         target="unpack" inheritAll="true">
+    </ant>
+  </target>
+
+  <target name="unpack-ireport">
+    <ant dir="." antfile="${ireport.dir}/build.xml"
+         target="unpack" inheritAll="true"/>
+  </target>
+
+  <target name="edit-reports" depends="unpack-ireport"
+          description="Edit XML report designs with iReport">
+    <property name="classpath" refid="classpath.runtime" />
+    <exec dir="${dist.ireport}/bin" executable="./ireport">
+      <env key="CLASSPATH" path="${classpath}" />
+    </exec>
+  </target>
+
+  <target name="compile-reports" depends="compile">
+    <mkdir dir="${report.compiled}"/> 
+    <taskdef name="jrc" classname="net.sf.jasperreports.ant.JRAntCompileTask"> 
+      <classpath refid="classpath.runtime"/>
+    </taskdef>
+    <!-- Add keepjava="true" to see Java source. -->
+    <jrc destdir="${report.compiled}">
+      <src>
+        <fileset dir="design">
+          <include name="**/*.jrxml"/>
+        </fileset>
+      </src>
+      <classpath refid="classpath.runtime"/>
+    </jrc> 
+  </target>
+
+  <!-- Apply patches to the released source. -->
+  <target name="compile-patch-classes">
+
+    <property name="patch.src" value="${build}/patched-src"/>
+    <property name="patch.oe" value="patch/openedit"/>
+
+    <!-- Remove any patched source files from previous builds. -->
+    <delete dir="${patch.src}"/>
+
+    <mkdir dir="${patch.src}"/>
+    <copy todir="${patch.src}">
+      <fileset dir="${patch.oe}" includes="**/*" excludes="*.patch"/>
+    </copy>
+
+    <patch patchfile="${patch.oe}/FileManagerModule-recursive-copy.patch"
+           dir="${patch.src}" strip="0"/>
+    <patch patchfile="${patch.oe}/FileManagerModule-check-perms1.patch"
+           dir="${patch.src}" strip="0"/>
+    <patch patchfile="${patch.oe}/PageManager-copy-page.patch"
+           dir="${patch.src}" strip="0"/>
+    <patch patchfile="${patch.oe}/BaseOpenEditEngine-logging.patch"
+           dir="${patch.src}" strip="0"/>
+
+    <patch patchfile="${patch.oe}/toolbarfooter.patch"
+           dir="${webapp.dir}" strip="0"/>
+
+    <!-- Build the patched source, and incorporate the resulting classes. -->
+    <path id="classpath.openedit">
+      <fileset dir="${webapp.dir}/WEB-INF/lib"
+               includes="openedit*.jar, openedit-editor*.jar,
+                         commons-collections.jar, commons-logging*.jar,
+                         spring-beans*.jar, spring-core*.jar"/>
+      <fileset dir="../jars/runtime/servlet" includes="servlet-api.jar"/>
+    </path>
+    <mkdir dir="${webapp.dir}/WEB-INF/classes"/>
+    <javac debug="true" debuglevel="${debuglevel}"
+           includeantruntime="false"
+           destdir="${webapp.dir}/WEB-INF/classes"
+           source="${source}" target="${target}"
+           classpathref="classpath.openedit">
+      <src path="${patch.src}"/>
+      <compilerarg value="${build.compiler.arg}"/>
+    </javac>
+  </target>
+
+  <target name="fill" depends="compile-reports">
+    <path id="fill.path">
+      <path refid="classpath.runtime"/>
+      <path refid="classpath.buildtime"/>
+    </path>
+    <java classname="gov.nasa.kepler.mr.JasperReportGenerator" fork="true">
+      <arg value="-Tfill"/>
+      <arg value="-F${report.compiled}/${report}.jasper"/>
+      <sysproperty key="params" value="${params}"/>
+      <classpath refid="fill.path"/>
+    </java>
+  </target>
+
+  <target name="pdf" depends="fill"
+          description="Generate a PDF report">
+    <java classname="gov.nasa.kepler.mr.JasperReportGenerator" fork="true">
+      <arg value="-Tpdf"/>
+      <arg value="-F${report.compiled}/${report}.jrprint"/>
+      <classpath refid="classpath.runtime"/>
+    </java>
+  </target>
+
+  <target name="html" depends="fill"
+          description="Generate an HTML report">
+    <java classname="gov.nasa.kepler.mr.JasperReportGenerator" fork="true">
+      <arg value="-Thtml"/>
+      <arg value="-F${report.compiled}/${report}.jrprint"/>
+      <classpath refid="classpath.runtime"/>
+    </java>
+  </target>
+
+  <target name="view" depends="fill"
+          description="View report">
+    <java classname="net.sf.jasperreports.view.JasperViewer" fork="true">
+      <arg value="-F${report.compiled}/${report}.jrprint"/>
+      <classpath refid="classpath.runtime"/>
+    </java>
+  </target>
+
+  <target name="seed-db" depends="build" description="Seed database">
+    <java classname="gov.nasa.kepler.mr.users.pi.ProductionUserDbSeed"
+          failonerror="true" fork="yes">
+      <classpath refid="classpath.runtime"/>
+      <sysproperty key="log4j.configuration" value="file:etc/log4j.xml" />
+    </java>
+  </target>
+
+  <target name="seed-testdb" depends="build" description="Seed test database">
+    <java classname="gov.nasa.kepler.mr.MrSeedTestData"
+          failonerror="true" fork="yes">
+      <classpath refid="classpath.runtime"/>
+      <sysproperty key="log4j.configuration" value="file:etc/log4j.xml" />
+    </java>
+  </target>
+
+</project>

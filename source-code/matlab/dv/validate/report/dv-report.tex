@@ -1,0 +1,147 @@
+%
+% Copyright 2017 United States Government as represented by the
+% Administrator of the National Aeronautics and Space Administration.
+% All Rights Reserved.
+% 
+% This file is available under the terms of the NASA Open Source Agreement
+% (NOSA). You should have received a copy of this agreement with the
+% Kepler source code; see the file NASA-OPEN-SOURCE-AGREEMENT.doc.
+% 
+% No Warranty: THE SUBJECT SOFTWARE IS PROVIDED "AS IS" WITHOUT ANY
+% WARRANTY OF ANY KIND, EITHER EXPRESSED, IMPLIED, OR STATUTORY,
+% INCLUDING, BUT NOT LIMITED TO, ANY WARRANTY THAT THE SUBJECT SOFTWARE
+% WILL CONFORM TO SPECIFICATIONS, ANY IMPLIED WARRANTIES OF
+% MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, OR FREEDOM FROM
+% INFRINGEMENT, ANY WARRANTY THAT THE SUBJECT SOFTWARE WILL BE ERROR
+% FREE, OR ANY WARRANTY THAT DOCUMENTATION, IF PROVIDED, WILL CONFORM
+% TO THE SUBJECT SOFTWARE. THIS AGREEMENT DOES NOT, IN ANY MANNER,
+% CONSTITUTE AN ENDORSEMENT BY GOVERNMENT AGENCY OR ANY PRIOR RECIPIENT
+% OF ANY RESULTS, RESULTING DESIGNS, HARDWARE, SOFTWARE PRODUCTS OR ANY
+% OTHER APPLICATIONS RESULTING FROM USE OF THE SUBJECT SOFTWARE.
+% FURTHER, GOVERNMENT AGENCY DISCLAIMS ALL WARRANTIES AND LIABILITIES
+% REGARDING THIRD-PARTY SOFTWARE, IF PRESENT IN THE ORIGINAL SOFTWARE,
+% AND DISTRIBUTES IT "AS IS."
+%
+% Waiver and Indemnity: RECIPIENT AGREES TO WAIVE ANY AND ALL CLAIMS
+% AGAINST THE UNITED STATES GOVERNMENT, ITS CONTRACTORS AND
+% SUBCONTRACTORS, AS WELL AS ANY PRIOR RECIPIENT. IF RECIPIENT'S USE OF
+% THE SUBJECT SOFTWARE RESULTS IN ANY LIABILITIES, DEMANDS, DAMAGES,
+% EXPENSES OR LOSSES ARISING FROM SUCH USE, INCLUDING ANY DAMAGES FROM
+% PRODUCTS BASED ON, OR RESULTING FROM, RECIPIENT'S USE OF THE SUBJECT
+% SOFTWARE, RECIPIENT SHALL INDEMNIFY AND HOLD HARMLESS THE UNITED
+% STATES GOVERNMENT, ITS CONTRACTORS AND SUBCONTRACTORS, AS WELL AS ANY
+% PRIOR RECIPIENT, TO THE EXTENT PERMITTED BY LAW. RECIPIENT'S SOLE
+% REMEDY FOR ANY SUCH MATTER SHALL BE THE IMMEDIATE, UNILATERAL
+% TERMINATION OF THIS AGREEMENT.
+%
+\documentclass[letterpaper,landscape]{article}
+
+\usepackage[toc,title,header]{appendix}
+\usepackage{booktabs}
+\usepackage{hhline}
+\usepackage{fancyhdr}
+\usepackage[colorlinks=true,linkcolor=black,urlcolor=black]{hyperref}
+\usepackage{multirow}
+\usepackage{parskip}
+\usepackage{supertabular}
+\usepackage{tabularx}
+\usepackage[table]{xcolor}
+\usepackage{substr}
+\usepackage{hyphenat}
+\usepackage{needspace}
+\usepackage{hyperref}
+\usepackage{array}
+\usepackage{ragged2e}
+\usepackage{ifthen}
+
+\usepackage{mission-reports}
+\usepackage{report-values}
+
+\providecommand{\e}[1]{\ensuremath{10^{#1}}}
+
+\hypersetup{
+    pdfauthor={Kepler Science Operations Center Pipeline at NASA Ames Research Center},
+    pdfsubject={Data Validation (DV) Report},
+    pdftitle={Data Validation (DV) Report for Kepler ID \keplerId - Quarters \firstQuarter\ - \lastQuarter},
+    pdfkeywords={Kepler Mission, Kepler Science Operations Center, NASA Ames Research Center, transit detection, transit photometry, planet candidate, exoplanets}
+}
+
+\begin{document}
+\begin{titlepage}
+
+  \input{report-title-header}
+
+  \begin{center}
+    {\Huge \textbf{Data Validation (DV) Report}}\\[1ex]
+    {\huge \textbf{for Kepler ID \keplerId}}\\[1ex]
+    {\huge \textbf{Quarters \firstQuarter\ - \lastQuarter}}
+  \end{center}
+
+  \input{dv-report-title-footer}
+
+\end{titlepage}
+
+\pagenumbering{roman}
+\setcounter{page}{2}
+\include{team-page}
+\clearpage
+\tableofcontents
+
+\clearpage
+\pagenumbering{arabic}
+\setcounter{page}{1}
+
+\newcommand{\headerColor}{white}
+\newcommand{\darkRowColor}{blue!5!white}
+\newcommand{\lightRowColor}{white}
+
+% Turn on fancyhdr and customize.
+\setlength{\headheight}{24pt} % make header as small as possible
+\setlength{\footskip}{8.4pt} % avoid warnings
+\pagestyle{fancy}
+\fancyhead[L]{\leftmark}
+\fancyhead[R]{Target \keplerId}
+
+\include{summary}
+\include{ukirt-image}
+\include{flux-time-series}
+\include{dashboards}
+\include{centroid-cloud-plot}
+\include{image-artifacts}
+\include{pixel-level-diagnostics}
+\include{phased-light-curves}
+
+\ForEachX
+    {,}
+    {%
+      \edef\planet{\csname planet\thislevelitem \endcsname}
+      \section{Planet Candidate \planet}
+      \fancyhead[R]{Target \keplerId{} / Planet Candidate \planet}
+      \input{model-fitter-all}
+      \input{reduced-parameter-fit-results}
+      \input{trapezoidal-fit-results}
+      \input{validation}
+    }%
+    {\planets}
+
+\begin{appendices}
+
+\renewcommand{\sectionmark}[1]{\markboth{\MakeUppercase{\sectionname\ \thesection:\ #1}}{}}
+\ForEachX
+    {,}
+    {%
+      \edef\planet{\csname planet\thislevelitem \endcsname}
+      \section{Planet Candidate \planet}
+      \fancyhead[R]{Target \keplerId{} / Planet Candidate \planet}
+      \input{model-fitter-all-app}
+      \input{model-fitter-oddeven-app}
+      \input{eclipsing-binary-discrimination-test-app}
+    }%
+    {\planets}
+
+\input{single-event-statistics-app}
+\input{alerts-app}
+
+\end{appendices}
+
+\end{document}

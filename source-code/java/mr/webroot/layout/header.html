@@ -1,0 +1,244 @@
+<!--
+  Copyright 2017 United States Government as represented by the
+  Administrator of the National Aeronautics and Space Administration.
+  All Rights Reserved.
+  
+  This file is available under the terms of the NASA Open Source Agreement
+  (NOSA). You should have received a copy of this agreement with the
+  Kepler source code; see the file NASA-OPEN-SOURCE-AGREEMENT.doc.
+  
+  No Warranty: THE SUBJECT SOFTWARE IS PROVIDED "AS IS" WITHOUT ANY
+  WARRANTY OF ANY KIND, EITHER EXPRESSED, IMPLIED, OR STATUTORY,
+  INCLUDING, BUT NOT LIMITED TO, ANY WARRANTY THAT THE SUBJECT SOFTWARE
+  WILL CONFORM TO SPECIFICATIONS, ANY IMPLIED WARRANTIES OF
+  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, OR FREEDOM FROM
+  INFRINGEMENT, ANY WARRANTY THAT THE SUBJECT SOFTWARE WILL BE ERROR
+  FREE, OR ANY WARRANTY THAT DOCUMENTATION, IF PROVIDED, WILL CONFORM
+  TO THE SUBJECT SOFTWARE. THIS AGREEMENT DOES NOT, IN ANY MANNER,
+  CONSTITUTE AN ENDORSEMENT BY GOVERNMENT AGENCY OR ANY PRIOR RECIPIENT
+  OF ANY RESULTS, RESULTING DESIGNS, HARDWARE, SOFTWARE PRODUCTS OR ANY
+  OTHER APPLICATIONS RESULTING FROM USE OF THE SUBJECT SOFTWARE.
+  FURTHER, GOVERNMENT AGENCY DISCLAIMS ALL WARRANTIES AND LIABILITIES
+  REGARDING THIRD-PARTY SOFTWARE, IF PRESENT IN THE ORIGINAL SOFTWARE,
+  AND DISTRIBUTES IT "AS IS."
+
+  Waiver and Indemnity: RECIPIENT AGREES TO WAIVE ANY AND ALL CLAIMS
+  AGAINST THE UNITED STATES GOVERNMENT, ITS CONTRACTORS AND
+  SUBCONTRACTORS, AS WELL AS ANY PRIOR RECIPIENT. IF RECIPIENT'S USE OF
+  THE SUBJECT SOFTWARE RESULTS IN ANY LIABILITIES, DEMANDS, DAMAGES,
+  EXPENSES OR LOSSES ARISING FROM SUCH USE, INCLUDING ANY DAMAGES FROM
+  PRODUCTS BASED ON, OR RESULTING FROM, RECIPIENT'S USE OF THE SUBJECT
+  SOFTWARE, RECIPIENT SHALL INDEMNIFY AND HOLD HARMLESS THE UNITED
+  STATES GOVERNMENT, ITS CONTRACTORS AND SUBCONTRACTORS, AS WELL AS ANY
+  PRIOR RECIPIENT, TO THE EXTENT PERMITTED BY LAW. RECIPIENT'S SOLE
+  REMEDY FOR ANY SUCH MATTER SHALL BE THE IMMEDIATE, UNILATERAL
+  TERMINATION OF THIS AGREEMENT.
+-->
+
+<script type="text/javascript">
+        
+    var timeInitialized;
+    var launchUTC;
+    var now;
+
+    function writit(text,id) {
+        if (document.getElementById) {
+            x = document.getElementById(id);
+            x.innerHTML = '';
+            x.innerHTML = text;
+        }
+        else if (document.all) {
+            x = document.all[id];
+            x.innerHTML = text;
+        }
+        else if (document.layers) {
+            x = document.layers[id];
+            x.document.open();
+            x.document.write(text);
+            x.document.close();
+        }
+    }
+
+    function countdown() {
+
+        var Lplus = "";
+        var UTC = "";
+        var Local = "";
+
+        if (timeInitialized) {
+            // Add a second to the current time.
+            now = new Date(now.getTime() + 1000);
+        } else {
+            // TODO Get launch date from server. I guess if we do that, we
+            // can get the current date from the server, which is more likely
+            // to be synchronized with NTP. In either case, cache the
+            // values in a file variable and add 1000 milliseconds to the
+            // local time each second.
+            launchUTC = new Date(Date.UTC(2009,2,7,03,49,57));
+            now = new Date();
+            timeInitialized = true;
+        }
+
+        var Lplus = getLaunch();
+        var UTC = getUTC();
+        var Local = getLocal();
+
+        // Create the string for the clock div to be updated each second.
+        var printString = "\
+            <table style=\"background-color: black; color: white; font-size: 90%; padding: 0px 3em;\">"
+            + "<tr><td \
+            style=\"padding: 0px; padding-right: 1em; text-align: right\">\
+            <b>UTC:</b></td>\
+            <td style=\"padding: 0px; text-align: right;\"><b>" 
+            + UTC 
+            + "</b></td></tr>\
+            <tr><td \
+            style=\"padding: 0px; padding-right: 1em; text-align: right\">\
+            Local:</td>\
+            <td style=\"padding: 0px; text-align: right;\">" 
+            + Local 
+            + "</td></tr>\
+            <tr><td \
+            style=\"padding: 0px; padding-right: 1em; text-align: right\">\
+            MET:</td>\
+            <td style=\"padding: 0px; text-align: right;\">"
+            + Lplus
+            + "</td></tr></table>";
+
+        writit(printString, 'clock');
+    }
+
+    function getLaunch() {
+        // Count down time.
+        var countdown = now.getTime() - launchUTC.getTime();
+
+        // The seconds = Math.floor(d/1000) statement below is only
+        // accurate when d is positive. If d is negative, then you have
+        // to add (subtract) a second.
+        if (countdown < 0) {
+            countdown -= 1000;
+        }
+        
+        // Split up difference into separate values for dd:hh:mm:ss.
+        var d = Math.abs(countdown);
+        var days = Math.floor(d/1000/60/60/24);
+        d -= days*1000*60*60*24
+        var hours = Math.floor(d/1000/60/60);
+        d -= hours*1000*60*60
+        var minutes = Math.floor(d/1000/60);
+        d -= minutes*1000*60
+        var seconds = Math.floor(d/1000);
+        
+        // Add leading 0.
+        if (hours < 10) {
+            hours   = "0" + hours;
+        }
+        if (minutes < 10) {
+            minutes = "0" + minutes;
+        }
+        if (seconds < 10) {
+            seconds = "0" + seconds;
+        }
+        
+        return "L " + ((countdown < 0) ? "- " : "+ ") 
+            + days + ":" + hours + ":" + minutes + ":" + seconds;
+    }
+
+    function getUTC() {
+        // UTC time.
+        var nowUTCYear = now.getUTCFullYear();
+        var nowUTCMonth = now.getUTCMonth()+1;
+        nowUTCMonth = (nowUTCMonth < 10) ? "0" + nowUTCMonth : nowUTCMonth;
+        var nowUTCDay = now.getUTCDate();
+        nowUTCDay = (nowUTCDay < 10) ? "0" + nowUTCDay : nowUTCDay;
+
+        var nowUTCHours = now.getUTCHours();
+        nowUTCHours = (nowUTCHours < 10) ? "0" + nowUTCHours : nowUTCHours;
+        var nowUTCMinutes = now.getUTCMinutes();
+        nowUTCMinutes = (nowUTCMinutes < 10) ? "0" + nowUTCMinutes 
+            : nowUTCMinutes;
+        var nowUTCSeconds = now.getUTCSeconds();
+        nowUTCSeconds = (nowUTCSeconds < 10) ? "0" + nowUTCSeconds 
+            : nowUTCSeconds;
+
+        var UTC = nowUTCYear + "-" + nowUTCMonth + "-" + nowUTCDay;
+
+        UTC += " (" + getDoy(now, 1) + ")";
+        UTC += " " + nowUTCHours + ":" + nowUTCMinutes + ":" + nowUTCSeconds;
+
+        return UTC;
+    }
+
+    function getLocal() {
+        // Local time.
+        var nowLocalYear = now.getFullYear();
+        var nowLocalMonth = now.getMonth()+1;
+        nowLocalMonth = (nowLocalMonth < 10) ? "0" + nowLocalMonth 
+            : nowLocalMonth;
+        var nowLocalDay = now.getDate();
+        nowLocalDay = (nowLocalDay < 10) ? "0" + nowLocalDay : nowLocalDay;
+
+        var nowLocalHours = now.getHours();
+        nowLocalHours = (nowLocalHours < 10) ? "0" + nowLocalHours 
+            : nowLocalHours;
+        var nowLocalMinutes = now.getMinutes();
+        nowLocalMinutes = (nowLocalMinutes < 10) ? "0" + nowLocalMinutes 
+            : nowLocalMinutes;
+        var nowLocalSeconds = now.getSeconds();
+        nowLocalSeconds = (nowLocalSeconds < 10) ? "0" + nowLocalSeconds 
+            : nowLocalSeconds;
+        
+        var Local = nowLocalYear + "-" + nowLocalMonth + "-" + nowLocalDay;
+        Local += " &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ";
+        Local += " " + nowLocalHours + ":" + nowLocalMinutes 
+            + ":" + nowLocalSeconds;
+
+        return Local;
+    }
+        
+    function getDoy(date, utc) {
+        var doyDate = date;
+        var janOne = new Date(doyDate.getFullYear(), 0, 1);
+        if (utc) {
+            janOne = new Date(Date.UTC(date.getUTCFullYear(), 0, 1));
+            doyDate = new Date(Date.UTC(date.getUTCFullYear(),
+                date.getUTCMonth(), date.getUTCDate(),
+                date.getUTCHours(), date.getUTCMinutes(),
+                date.getUTCSeconds()));
+        }
+     
+        // The day of year.
+        var janOne = new Date(Date.UTC(doyDate.getFullYear(), 0, 1));
+        var doy = Math.floor((doyDate - janOne) / (24 * 60 * 60 * 1000)) + 1;
+
+        if (doy < 10) {
+            doy = "00" + doy;
+        } else if (doy < 100) {
+            doy = "0" + doy;
+        }
+
+        return doy;
+    } 
+
+    window.setInterval("countdown()", 1000);
+    //window.onload = countdown;
+</script>
+
+<table width="100%"
+       style="background-color:#000000; 
+              border-collapse: collapse; border-spacing: 0; 
+              border-style: solid; border-width: 1px">
+  <tr align="center" style="padding: 0;">
+    <td style="background-image: url(/images/kepler-mr-banner.jpg);
+               background-repeat: no-repeat;
+               width: 408px; height: 60px">
+    </td>
+    <td id="clock"
+        align="right"
+        style="font-family: monospace;
+               background-image: url(/images/kepler-mr-banner-1px.jpg);
+               background-repeat: repeat-x;
+               padding-right: 0px">
+    </td>
+  </tr>
+</table>

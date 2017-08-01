@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Copyright 2017 United States Government as represented by the
+  Administrator of the National Aeronautics and Space Administration.
+  All Rights Reserved.
+  
+  This file is available under the terms of the NASA Open Source Agreement
+  (NOSA). You should have received a copy of this agreement with the
+  Kepler source code; see the file NASA-OPEN-SOURCE-AGREEMENT.doc.
+  
+  No Warranty: THE SUBJECT SOFTWARE IS PROVIDED "AS IS" WITHOUT ANY
+  WARRANTY OF ANY KIND, EITHER EXPRESSED, IMPLIED, OR STATUTORY,
+  INCLUDING, BUT NOT LIMITED TO, ANY WARRANTY THAT THE SUBJECT SOFTWARE
+  WILL CONFORM TO SPECIFICATIONS, ANY IMPLIED WARRANTIES OF
+  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, OR FREEDOM FROM
+  INFRINGEMENT, ANY WARRANTY THAT THE SUBJECT SOFTWARE WILL BE ERROR
+  FREE, OR ANY WARRANTY THAT DOCUMENTATION, IF PROVIDED, WILL CONFORM
+  TO THE SUBJECT SOFTWARE. THIS AGREEMENT DOES NOT, IN ANY MANNER,
+  CONSTITUTE AN ENDORSEMENT BY GOVERNMENT AGENCY OR ANY PRIOR RECIPIENT
+  OF ANY RESULTS, RESULTING DESIGNS, HARDWARE, SOFTWARE PRODUCTS OR ANY
+  OTHER APPLICATIONS RESULTING FROM USE OF THE SUBJECT SOFTWARE.
+  FURTHER, GOVERNMENT AGENCY DISCLAIMS ALL WARRANTIES AND LIABILITIES
+  REGARDING THIRD-PARTY SOFTWARE, IF PRESENT IN THE ORIGINAL SOFTWARE,
+  AND DISTRIBUTES IT "AS IS."
+
+  Waiver and Indemnity: RECIPIENT AGREES TO WAIVE ANY AND ALL CLAIMS
+  AGAINST THE UNITED STATES GOVERNMENT, ITS CONTRACTORS AND
+  SUBCONTRACTORS, AS WELL AS ANY PRIOR RECIPIENT. IF RECIPIENT'S USE OF
+  THE SUBJECT SOFTWARE RESULTS IN ANY LIABILITIES, DEMANDS, DAMAGES,
+  EXPENSES OR LOSSES ARISING FROM SUCH USE, INCLUDING ANY DAMAGES FROM
+  PRODUCTS BASED ON, OR RESULTING FROM, RECIPIENT'S USE OF THE SUBJECT
+  SOFTWARE, RECIPIENT SHALL INDEMNIFY AND HOLD HARMLESS THE UNITED
+  STATES GOVERNMENT, ITS CONTRACTORS AND SUBCONTRACTORS, AS WELL AS ANY
+  PRIOR RECIPIENT, TO THE EXTENT PERMITTED BY LAW. RECIPIENT'S SOLE
+  REMEDY FOR ANY SUCH MATTER SHALL BE THE IMMEDIATE, UNILATERAL
+  TERMINATION OF THIS AGREEMENT.
+-->
+
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" 
+    targetNamespace="http://kepler.nasa.gov/pi/configuration" 
+    xmlns="http://kepler.nasa.gov/pi/configuration">
+    
+    <xs:element name="pipelineConfiguration" type="PipelineConfigurationXB"/>
+    
+    <xs:complexType name="PipelineConfigurationXB">
+        <xs:sequence minOccurs="1" maxOccurs="1">
+            <xs:element name="triggers" type="TriggerListXB"/>
+            <xs:element name="pipelines" type="PipelineListXB"/>
+            <xs:element name="modules" type="ModuleListXB"/>
+        </xs:sequence>
+        <xs:attribute name="databaseUrl" type="xs:anyURI" use="required"></xs:attribute>
+        <xs:attribute name="databaseUser" type="xs:string" use="required"></xs:attribute>
+    </xs:complexType>
+
+    <xs:complexType name="TriggerListXB">
+        <xs:sequence minOccurs="0" maxOccurs="unbounded">
+            <xs:element name="trigger" type="TriggerXB"/>
+        </xs:sequence>
+    </xs:complexType>
+    
+    <xs:complexType name="PipelineListXB">
+        <xs:sequence minOccurs="0" maxOccurs="unbounded">
+            <xs:element name="pipeline" type="PipelineXB"/>
+        </xs:sequence>
+    </xs:complexType>
+    
+    <xs:complexType name="ModuleListXB">
+        <xs:sequence minOccurs="0" maxOccurs="unbounded">
+            <xs:element name="module" type="ModuleXB"/>
+        </xs:sequence>
+    </xs:complexType>
+    
+    <xs:complexType name="TriggerXB">
+        <xs:sequence minOccurs="1" maxOccurs="1">
+            <xs:sequence minOccurs="0" maxOccurs="unbounded">
+                <xs:element name="pipelineParameter" type="ParameterReferenceXB"/>
+            </xs:sequence>
+            <xs:sequence minOccurs="0" maxOccurs="unbounded">
+                <xs:element name="node" type="TriggerNodeXB"/>
+            </xs:sequence>
+        </xs:sequence>
+        <xs:attribute name="name" type="xs:string" use="required"/>
+        <xs:attribute name="instancePriority" type="xs:int" use="required"/>
+        <xs:attribute name="pipelineName" type="xs:string" use="required"/>
+    </xs:complexType>
+    
+    <xs:complexType name="TriggerNodeXB">
+        <xs:sequence minOccurs="0" maxOccurs="unbounded">
+            <xs:element name="moduleParameter" type="ParameterReferenceXB"/>
+        </xs:sequence>
+        <xs:attribute name="moduleName" type="xs:string" use="required"/>
+        <xs:attribute name="nodePath" type="xs:string" use="required"/>
+    </xs:complexType>
+    
+    <xs:complexType name="PipelineXB">
+        <xs:sequence minOccurs="0" maxOccurs="unbounded">
+            <xs:element name="node" type="PipelineNodeXB"/>
+        </xs:sequence>
+        <xs:attribute name="name" type="xs:string" use="required"/>
+        <xs:attribute name="description" type="xs:string" use="required"/>
+        <xs:attribute name="rootNodeIds" type="xs:string" use="required"/>
+    </xs:complexType>
+    
+    <xs:complexType name="PipelineNodeXB">
+        <xs:attribute name="nodeId" type="xs:int" use="required"/>
+        <xs:attribute name="moduleName" type="xs:string" use="required"/>
+        <xs:attribute name="uowGeneratorClass" type="xs:string" use="optional"/>
+        <xs:attribute name="startNewUow" type="xs:boolean" use="required"/>
+        <xs:attribute name="childNodeIds" type="xs:string" use="required"/>
+    </xs:complexType>
+    
+    <xs:complexType name="ModuleXB">
+        <xs:attribute name="name" type="xs:string" use="required"/>
+        <xs:attribute name="description" type="xs:string" use="required"/>
+        <xs:attribute name="implementingClass" type="xs:string" use="required"/>
+        <xs:attribute name="exeName" type="xs:string" use="required"/>
+        <xs:attribute name="exeTimeoutSecs" type="xs:int" use="required"/>
+        <xs:attribute name="minMemoryMegaBytes" type="xs:int" use="required"/>
+    </xs:complexType>
+    
+    <xs:complexType name="ParameterReferenceXB">
+        <xs:attribute name="name" type="xs:string" use="required"/>
+        <xs:attribute name="classname" type="xs:string" use="required"/>
+    </xs:complexType>
+</xs:schema>

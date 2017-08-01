@@ -1,0 +1,152 @@
+#!/bin/sh
+#
+# Convert a real file store to a disk file store.
+#
+# In particular, only content relevant to DV is exported and then
+# imported into a disk file store client.
+#
+# NOTE: The dev pipeline services must be running.
+# 
+# Copyright 2017 United States Government as represented by the
+# Administrator of the National Aeronautics and Space Administration.
+# All Rights Reserved.
+# 
+# This file is available under the terms of the NASA Open Source Agreement
+# (NOSA). You should have received a copy of this agreement with the
+# Kepler source code; see the file NASA-OPEN-SOURCE-AGREEMENT.doc.
+# 
+# No Warranty: THE SUBJECT SOFTWARE IS PROVIDED "AS IS" WITHOUT ANY
+# WARRANTY OF ANY KIND, EITHER EXPRESSED, IMPLIED, OR STATUTORY,
+# INCLUDING, BUT NOT LIMITED TO, ANY WARRANTY THAT THE SUBJECT SOFTWARE
+# WILL CONFORM TO SPECIFICATIONS, ANY IMPLIED WARRANTIES OF
+# MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, OR FREEDOM FROM
+# INFRINGEMENT, ANY WARRANTY THAT THE SUBJECT SOFTWARE WILL BE ERROR
+# FREE, OR ANY WARRANTY THAT DOCUMENTATION, IF PROVIDED, WILL CONFORM
+# TO THE SUBJECT SOFTWARE. THIS AGREEMENT DOES NOT, IN ANY MANNER,
+# CONSTITUTE AN ENDORSEMENT BY GOVERNMENT AGENCY OR ANY PRIOR RECIPIENT
+# OF ANY RESULTS, RESULTING DESIGNS, HARDWARE, SOFTWARE PRODUCTS OR ANY
+# OTHER APPLICATIONS RESULTING FROM USE OF THE SUBJECT SOFTWARE.
+# FURTHER, GOVERNMENT AGENCY DISCLAIMS ALL WARRANTIES AND LIABILITIES
+# REGARDING THIRD-PARTY SOFTWARE, IF PRESENT IN THE ORIGINAL SOFTWARE,
+# AND DISTRIBUTES IT "AS IS."
+#
+# Waiver and Indemnity: RECIPIENT AGREES TO WAIVE ANY AND ALL CLAIMS
+# AGAINST THE UNITED STATES GOVERNMENT, ITS CONTRACTORS AND
+# SUBCONTRACTORS, AS WELL AS ANY PRIOR RECIPIENT. IF RECIPIENT'S USE OF
+# THE SUBJECT SOFTWARE RESULTS IN ANY LIABILITIES, DEMANDS, DAMAGES,
+# EXPENSES OR LOSSES ARISING FROM SUCH USE, INCLUDING ANY DAMAGES FROM
+# PRODUCTS BASED ON, OR RESULTING FROM, RECIPIENT'S USE OF THE SUBJECT
+# SOFTWARE, RECIPIENT SHALL INDEMNIFY AND HOLD HARMLESS THE UNITED
+# STATES GOVERNMENT, ITS CONTRACTORS AND SUBCONTRACTORS, AS WELL AS ANY
+# PRIOR RECIPIENT, TO THE EXTENT PERMITTED BY LAW. RECIPIENT'S SOLE
+# REMEDY FOR ANY SUCH MATTER SHALL BE THE IMMEDIATE, UNILATERAL
+# TERMINATION OF THIS AGREEMENT.
+#
+
+cleanup() {
+    if [ $cleanup = 1 -a -d $tmpDir ]; then
+	rm -rf $tmpDir
+    fi
+}
+
+abort() {
+    set +x
+    echo "$0: aborting ..." >&2
+    if [ -d $tmpDir ]; then
+	echo "Temporary files left in $tmpDir" >&2
+	echo "Please inspect and remove" >&2
+    fi
+    cleanup=0
+    exit 1
+}
+
+
+trap 'cleanup; exit 0' 0
+trap 'abort' 1 2 3 15
+
+# Customize data range for default dev pipeline.
+startCadence=0
+endCadence=349
+startMjd=54951.0
+endMjd=54958.15175937593
+
+cleanup=1
+tmpDir=/tmp/dvdevfscp$$
+originalDir=$PWD
+
+if [ ! -w . ]; then
+    echo "Can't write to current directory" >&2
+    exit 1
+elif [ -d fs ]; then
+    echo "Output directory fs already exists"  >&2
+    exit 1
+fi
+if [ "$SOC_CODE_ROOT" = "" ]; then
+    echo Please set SOC_CODE_ROOT to the root of your soc/code directory >&2
+    exit 1
+fi
+
+mkdir -p $tmpDir
+cd $tmpDir
+
+# Customize log4j.
+sed -e 's#<appender-ref ref="console"/>##' \
+    $SOC_CODE_ROOT/dist/etc/log4j.xml > log4j.xml
+log4jProp=-Dlog4j.configuration=file:log4j.xml
+
+# Turn on display of commands.
+set -x
+
+# Export blobs.
+runjava $log4jProp fscli get-blob -q '/pa/*'
+
+for i in ConfigMap History LeapSeconds BackgroundPmrf \
+    LongCadenceCollateralPmrf LongCadenceTargetPmrf MaskTable \
+    PlanetaryEphemeris Sclk SpacecraftEphemeris; do
+
+    runjava $log4jProp fscli get-blob -q "/dr/$i/*"
+done
+
+# Export mts.
+for i in anc pdc; do
+    runjava $log4jProp fscli get-mts -q $startMjd $endMjd - "/$i/*" >> mts.out
+done
+
+# Export ts.
+runjava $log4jProp fscli get-ts -q -f $startCadence $endCadence - \
+    '/cal/pixels/SocCal/lct/*' >> ts.out
+runjava $log4jProp fscli get-ts -q -f $startCadence $endCadence - \
+    '/cal/pixels/SocCalUncertainties/lct/*' >> ts.out
+runjava $log4jProp fscli get-ts -q -f $startCadence $endCadence - \
+    '/pa/targets/Sap/FluxWeighted/*' >> ts.out
+runjava $log4jProp fscli get-ts -q -f $startCadence $endCadence - \
+    '/pa/targets/Sap/Prf/*' >> ts.out
+
+runjava $log4jProp fscli get-ts -q -f $startCadence $endCadence - \
+    '/pdc/SapCorrectedFlux/*' >> ts.out
+runjava $log4jProp fscli get-ts -q -f $startCadence $endCadence - \
+    '/pdc/SapCorrectedFluxUncertainties/*' >> ts.out
+runjava $log4jProp fscli get-ts -q -i $startCadence $endCadence - \
+    '/pdc/Sap/FilledIndices/*' >> ts.out
+
+runjava $log4jProp fscli get-ts -q -f $startCadence $endCadence - \
+    '/ppa/*' >> ts.out
+
+runjava $log4jProp fscli get-ts -q -f $startCadence $endCadence - \
+    '/tps/*' >> ts.out
+
+# Properties for disk file store.
+fsProps="-Dfs.driver.name=disk -Dfs.disk-fs.write-root=$tmpDir/fs"
+
+# Import blobs.
+find $tmpDir/dr $tmpDir/pa -type f \
+    | xargs runjava $log4jProp $fsProps fscli add-blob -c $tmpDir
+
+# Import mts.
+runjava $log4jProp $fsProps fscli add-mts mts.out
+
+# Import ts.
+runjava $log4jProp $fsProps fscli add-ts ts.out
+
+# Move new fs to current directory.
+mv $tmpDir/fs $originalDir

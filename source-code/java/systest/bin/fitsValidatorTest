@@ -1,0 +1,181 @@
+#! /bin/sh
+# 
+# Copyright 2017 United States Government as represented by the
+# Administrator of the National Aeronautics and Space Administration.
+# All Rights Reserved.
+# 
+# This file is available under the terms of the NASA Open Source Agreement
+# (NOSA). You should have received a copy of this agreement with the
+# Kepler source code; see the file NASA-OPEN-SOURCE-AGREEMENT.doc.
+# 
+# No Warranty: THE SUBJECT SOFTWARE IS PROVIDED "AS IS" WITHOUT ANY
+# WARRANTY OF ANY KIND, EITHER EXPRESSED, IMPLIED, OR STATUTORY,
+# INCLUDING, BUT NOT LIMITED TO, ANY WARRANTY THAT THE SUBJECT SOFTWARE
+# WILL CONFORM TO SPECIFICATIONS, ANY IMPLIED WARRANTIES OF
+# MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, OR FREEDOM FROM
+# INFRINGEMENT, ANY WARRANTY THAT THE SUBJECT SOFTWARE WILL BE ERROR
+# FREE, OR ANY WARRANTY THAT DOCUMENTATION, IF PROVIDED, WILL CONFORM
+# TO THE SUBJECT SOFTWARE. THIS AGREEMENT DOES NOT, IN ANY MANNER,
+# CONSTITUTE AN ENDORSEMENT BY GOVERNMENT AGENCY OR ANY PRIOR RECIPIENT
+# OF ANY RESULTS, RESULTING DESIGNS, HARDWARE, SOFTWARE PRODUCTS OR ANY
+# OTHER APPLICATIONS RESULTING FROM USE OF THE SUBJECT SOFTWARE.
+# FURTHER, GOVERNMENT AGENCY DISCLAIMS ALL WARRANTIES AND LIABILITIES
+# REGARDING THIRD-PARTY SOFTWARE, IF PRESENT IN THE ORIGINAL SOFTWARE,
+# AND DISTRIBUTES IT "AS IS."
+#
+# Waiver and Indemnity: RECIPIENT AGREES TO WAIVE ANY AND ALL CLAIMS
+# AGAINST THE UNITED STATES GOVERNMENT, ITS CONTRACTORS AND
+# SUBCONTRACTORS, AS WELL AS ANY PRIOR RECIPIENT. IF RECIPIENT'S USE OF
+# THE SUBJECT SOFTWARE RESULTS IN ANY LIABILITIES, DEMANDS, DAMAGES,
+# EXPENSES OR LOSSES ARISING FROM SUCH USE, INCLUDING ANY DAMAGES FROM
+# PRODUCTS BASED ON, OR RESULTING FROM, RECIPIENT'S USE OF THE SUBJECT
+# SOFTWARE, RECIPIENT SHALL INDEMNIFY AND HOLD HARMLESS THE UNITED
+# STATES GOVERNMENT, ITS CONTRACTORS AND SUBCONTRACTORS, AS WELL AS ANY
+# PRIOR RECIPIENT, TO THE EXTENT PERMITTED BY LAW. RECIPIENT'S SOLE
+# REMEDY FOR ANY SUCH MATTER SHALL BE THE IMMEDIATE, UNILATERAL
+# TERMINATION OF THIS AGREEMENT.
+#
+
+cadenceType=${1:-long}
+
+# The following instance ids are based on the LC/SC dev pipeline run.
+if [ "$cadenceType" = "long" ]
+then
+    calPipelineInstanceId=6
+    paPipelineInstanceId=6
+    pdcPipelineInstanceId=6
+    arPipelineInstanceId=9
+    tpsPipelineInstanceId=7
+    dvPipelineInstanceId=7
+
+    someCadences=22047-22196
+    allCadences=22047-22196
+    singleCadence=22101-22101
+else
+    calPipelineInstanceId=10
+    paPipelineInstanceId=10
+    pdcPipelineInstanceId=10
+    arPipelineInstanceId=14
+
+    someCadences=661415-661714
+    allCadences=661415-661714
+    singleCadence=661550-661550
+fi
+
+skipCount=25
+datasetDir=/path/to/dev/etem/Q6
+tpsDvExportDir=/path/to/dev/etem
+tasksDir=/path/to/dev/task-data
+
+cadenceTypeBrief=`echo $cadenceType|cut -c 1`
+
+args="--pa-id $paPipelineInstanceId
+--pdc-id $pdcPipelineInstanceId
+--cal-id $calPipelineInstanceId
+--ccd-module 7
+--ccd-output 3
+--pmrf-directory $datasetDir/$cadenceType/pmrf/206_${cadenceTypeBrief}cm
+--tasks-root-directory $tasksDir"
+#--debug"
+
+fluxArgs="--flux-directory $datasetDir/target-pixel-export"
+
+tpsArgs="--tps-id $tpsPipelineInstanceId
+--tps-cdpp-directory $tpsDvExportDir/cdpp-export
+--tasks-root-directory $tasksDir"
+
+dvArgs="--dv-id $dvPipelineInstanceId
+--dv-fits-directory $tpsDvExportDir/dv-time-series-export
+--dv-xml-directory $tpsDvExportDir/dv-export
+--tasks-root-directory $tasksDir"
+
+fitsInDir="--pixels-input-directory $datasetDir/$cadenceType/fits"
+
+fitsOutDir="--pixels-output-directory $datasetDir/cal-export/$cadenceType/$allCadences"
+
+targetPixelsOutDir="--target-pixels-directory $datasetDir/target-pixel-export"
+
+backgroundPixelsOutDir="--background-pixels-directory $datasetDir/target-pixel-export"
+
+collateralPixelsOutDir="--collateral-pixels-directory $datasetDir/target-pixel-export"
+
+arpPixelsOutDir="--arp-pixels-directory $datasetDir/target-pixel-export"
+
+gapArgs="--cadence-range $allCadences
+--cadence-type $cadenceType
+$fitsInDir $fitsOutDir"
+
+targetPixelsArgs="--ar-id $arPipelineInstanceId \
+    --cadence-range $allCadences $fitsInDir $targetPixelsOutDir"
+
+backgroundPixelsArgs="--ar-id $arPipelineInstanceId \
+    --cadence-range $allCadences $fitsInDir $backgroundPixelsOutDir"
+
+collateralPixelsArgs="--ar-id $arPipelineInstanceId \
+    --cadence-range $allCadences $fitsInDir $collateralPixelsOutDir"
+
+arpPixelsArgs="\
+    --cadence-range $allCadences $fitsInDir $arpPixelsOutDir"
+
+set -x
+errorCount=0
+runjava fits-validator $args --cadence-range $allCadences $fluxArgs \
+    --ar-id $arPipelineInstanceId --cache-enabled validate-flux
+[ $? != 0 ] && errorCount=`expr $errorCount + 1`
+
+runjava fits-validator $args --cadence-range $someCadences \
+    $fitsInDir validate-pixels-in
+[ $? != 0 ] && errorCount=`expr $errorCount + 1`
+
+runjava fits-validator $args --cadence-range $someCadences \
+    $fitsInDir $fitsOutDir validate-pixels-out
+[ $? != 0 ] && errorCount=`expr $errorCount + 1`
+
+runjava fits-validator $args --cadence-range $allCadences \
+    $fitsInDir --skip-count $skipCount validate-pixels-in
+[ $? != 0 ] && errorCount=`expr $errorCount + 1`
+
+runjava fits-validator $args --cadence-range $allCadences \
+    $fitsInDir $fitsOutDir --skip-count $skipCount validate-pixels-out
+[ $? != 0 ] && errorCount=`expr $errorCount + 1`
+
+if [ "$cadenceType" = "long" ]
+then
+    runjava fits-validator $tpsArgs validate-tps
+    [ $? != 0 ] && errorCount=`expr $errorCount + 1`
+
+    runjava fits-validator $dvArgs validate-dv
+    [ $? != 0 ] && errorCount=`expr $errorCount + 1`
+fi
+
+runjava fits-validator $gapArgs validate-gaps
+[ $? != 0 ] && errorCount=`expr $errorCount + 1`
+
+runjava fits-validator $args $targetPixelsArgs \
+    --cache-enabled validate-target-pixels
+[ $? != 0 ] && errorCount=`expr $errorCount + 1`
+
+if [ "$cadenceType" = "long" ]
+then
+    runjava fits-validator $args $backgroundPixelsArgs \
+        --cache-enabled validate-background-pixels
+    [ $? != 0 ] && errorCount=`expr $errorCount + 1`
+fi
+
+runjava fits-validator $args $collateralPixelsArgs \
+    --cache-enabled validate-collateral-pixels
+[ $? != 0 ] && errorCount=`expr $errorCount + 1`
+
+if [ "$cadenceType" = "long" ]
+then
+    runjava fits-validator $args $arpPixelsArgs \
+        --cache-enabled validate-arp-pixels
+    [ $? != 0 ] && errorCount=`expr $errorCount + 1`
+fi
+
+set +x
+if [ $errorCount != 0 ]; then
+    echo "$errorCount test(s) failed" > /dev/stderr
+    exit 1
+fi
+exit 0

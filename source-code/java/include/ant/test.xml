@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Copyright 2017 United States Government as represented by the
+  Administrator of the National Aeronautics and Space Administration.
+  All Rights Reserved.
+  
+  This file is available under the terms of the NASA Open Source Agreement
+  (NOSA). You should have received a copy of this agreement with the
+  Kepler source code; see the file NASA-OPEN-SOURCE-AGREEMENT.doc.
+  
+  No Warranty: THE SUBJECT SOFTWARE IS PROVIDED "AS IS" WITHOUT ANY
+  WARRANTY OF ANY KIND, EITHER EXPRESSED, IMPLIED, OR STATUTORY,
+  INCLUDING, BUT NOT LIMITED TO, ANY WARRANTY THAT THE SUBJECT SOFTWARE
+  WILL CONFORM TO SPECIFICATIONS, ANY IMPLIED WARRANTIES OF
+  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, OR FREEDOM FROM
+  INFRINGEMENT, ANY WARRANTY THAT THE SUBJECT SOFTWARE WILL BE ERROR
+  FREE, OR ANY WARRANTY THAT DOCUMENTATION, IF PROVIDED, WILL CONFORM
+  TO THE SUBJECT SOFTWARE. THIS AGREEMENT DOES NOT, IN ANY MANNER,
+  CONSTITUTE AN ENDORSEMENT BY GOVERNMENT AGENCY OR ANY PRIOR RECIPIENT
+  OF ANY RESULTS, RESULTING DESIGNS, HARDWARE, SOFTWARE PRODUCTS OR ANY
+  OTHER APPLICATIONS RESULTING FROM USE OF THE SUBJECT SOFTWARE.
+  FURTHER, GOVERNMENT AGENCY DISCLAIMS ALL WARRANTIES AND LIABILITIES
+  REGARDING THIRD-PARTY SOFTWARE, IF PRESENT IN THE ORIGINAL SOFTWARE,
+  AND DISTRIBUTES IT "AS IS."
+  
+  Waiver and Indemnity: RECIPIENT AGREES TO WAIVE ANY AND ALL CLAIMS
+  AGAINST THE UNITED STATES GOVERNMENT, ITS CONTRACTORS AND
+  SUBCONTRACTORS, AS WELL AS ANY PRIOR RECIPIENT. IF RECIPIENT'S USE OF
+  THE SUBJECT SOFTWARE RESULTS IN ANY LIABILITIES, DEMANDS, DAMAGES,
+  EXPENSES OR LOSSES ARISING FROM SUCH USE, INCLUDING ANY DAMAGES FROM
+  PRODUCTS BASED ON, OR RESULTING FROM, RECIPIENT'S USE OF THE SUBJECT
+  SOFTWARE, RECIPIENT SHALL INDEMNIFY AND HOLD HARMLESS THE UNITED
+  STATES GOVERNMENT, ITS CONTRACTORS AND SUBCONTRACTORS, AS WELL AS ANY
+  PRIOR RECIPIENT, TO THE EXTENT PERMITTED BY LAW. RECIPIENT'S SOLE
+  REMEDY FOR ANY SUCH MATTER SHALL BE THE IMMEDIATE, UNILATERAL
+  TERMINATION OF THIS AGREEMENT.
+-->
+
+<project name="test" xmlns:jacoco="antlib:org.jacoco.ant">
+
+  <import file="basic.xml" />
+  <import file="jacoco.xml" />
+  
+  <property name="reports.junit" value="${reports}/junit"/>
+
+  <!-- The following block contains code that should only be run in -->
+  <!-- the context of a project directory. -->
+  <if><isset property="project.context" />
+    <then>
+      <property name="test.suite.name"
+                value="gov.nasa.kepler.${ant.project.name}.AutoTestSuite" />
+      <property name="test-integration.suite.name"
+                value="gov.nasa.kepler.${ant.project.name}.AutoIntegrationTestSuite" />
+    </then>
+  </if>
+
+  <target name="init">
+    <!-- Make sure the output directory exists and is empty. -->
+    <mkdir dir="${reports}" />
+    <delete dir="${reports.junit}" /> 
+    <mkdir dir="${reports.junit}"/>
+  </target>
+
+  <!-- The target test-pre is designed to be overridden so do not -->
+  <!-- add any dependencies or content. -->
+  <target name="test-pre"
+          description="Override to perform actions before test target"/>
+
+  <target name="test" depends="dist,test-pre,test.init" description="Run unit tests">
+
+    <!--
+    <copy includeemptydirs="false" todir="${classes.test.dir}">
+      <fileset dir="${test}" excludes="**/*.launch, **/*.java" />
+    </copy>
+    -->
+
+    <jacoco:coverage enabled="${jacoco.enabled}" destfile="${jacoco.coverage.dir}/jacoco.exec">
+      <junit dir="${basedir}" printsummary="yes" fork="true" forkmode="once"
+             haltonfailure="no" failureproperty="test.failed">
+        <classpath>
+          <pathelement location="${classes.test.dir}" />
+          <path refid="classpath.runtime" />
+          <path refid="jacoco.lib" />
+        </classpath> 
+        <classpath refid="classpath.runtime" />
+        <jvmarg value="-ea:gov.nasa.kepler..." />
+        <jvmarg value="-XX:+UseMembar" />
+        <jvmarg value="-Xmx1500M"/>
+        <jvmarg value="-XX:MaxPermSize=128M"/>
+        <jvmarg value="-Dlog4j.configuration=${log4j.configuration}" />
+        <jvmarg value="-Djava.awt.headless=${java.awt.headless}" />
+        <formatter type="xml" /> <test name="${test.suite.name}" todir="${reports.junit}" />
+        <sysproperty key="soc.test.data.dir" value="${data}" />
+      </junit>
+    </jacoco:coverage>
+
+    <junitreport todir="${reports.junit}">
+      <fileset dir="${reports.junit}">
+        <include name="TEST-*.xml" />
+      </fileset>
+      <report todir="${reports.junit}" />
+    </junitreport>
+
+    <if><equals arg1="${jacoco.enabled}" arg2="true" />
+    <then>
+      <jacoco:report>
+        <executiondata>
+          <file file="${jacoco.coverage.dir}/jacoco.exec"/>
+        </executiondata>
+        <structure name="${ant.project.name} project">
+          <classfiles>
+	    <fileset dir="${classes.src.dir}">
+              <include name="**/*.class"/>
+            </fileset>
+          </classfiles>
+          <sourcefiles encoding="UTF-8">
+            <fileset dir="${src}">
+              <include name="**/*.java"/>
+            </fileset>
+          </sourcefiles>
+        </structure>
+        <html destdir="${jacoco.reports.dir}"/>
+      </jacoco:report>
+    </then>
+    </if>
+
+    <copy todir="${build.top.java}/${reports.junit}">
+      <fileset dir="${reports.junit}" includes="**/TEST-*.xml" />
+    </copy>
+
+    <if><isset property="test.failed" />
+      <then>
+        <fail unless="build.top.level" message="Errors in unit tests" />
+        <touch file="${test.failed.file}"/>
+      </then>
+    </if>
+
+  </target>
+
+  <target name="test-integration" depends="test"
+          description="Run integration tests">
+    <antcall target="test" inheritRefs="true">
+      <param name="test.suite.name"
+             value="${test-integration.suite.name}" />
+    </antcall>
+  </target>
+
+</project>

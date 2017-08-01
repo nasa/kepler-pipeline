@@ -1,0 +1,276 @@
+function verify_cal_flat_field_calibration(dataLocationStr)
+% function verify_cal_flat_field_calibration(dataLocationStr)
+%
+% function to validate the CAL CSCI flat field correction using ETEM2
+% output data
+%
+%  ex: verify_cal_flat_field_calibration('/path/to/matlab/cal/')
+%
+%   dataLocationStr = '/path/to/matlab/cal/'
+%
+%
+%--------------------------------------------------------------------------
+%
+%   Requirement:        SOC1004.CAL.1
+%                                   CAL shall be capable of correcting
+%                                   target and background pixel data for
+%                                   flat field variations
+%
+%  Test Data Sets:  
+%                       ETEM2 runs with all motion and noise sources turned off, and 
+%                       (1) 2Dblack, stars, and flat field on  (non-requantized data)
+%                       (2) 2Dblack, stars, and flat field off (non-requantized data)
+%
+%
+%
+%  Test Data Sets ID:      calOutputs_calETEM_2D_ST_sm_dc_nl_lu_ff_rn_qn_sn_rq_cr.mat
+%                          calOutputs_calETEM_2D_ST_sm_dc_nl_lu_FF_rn_qn_sn_rq_cr.mat
+%                                    
+%
+%  Verification Method: Manual Inspection
+%
+%
+%  Verification Process: 
+%                   Run verify_flat_field_correction.m:
+%
+%                   (1) Plot the target pixel outputs for runs with and without FF
+%
+%
+%       Output:     dataLocationStr/CAL_verification_figures/cal_flat_field_validation_I.fig
+%
+%
+%--------------------------------------------------------------------------
+%
+% Additional validation (sanity checks) 
+%
+%       Validate:                   Inputs for above data set with flat
+%                                   field are different from data inputs without
+%
+%       Test Data Description:      ETEM2 data with 2Dblack and stars ON, and  
+%                                   all motion/noise sources OFF:
+%                                     (a) with flat field
+%                                     (b) without flat field
+%       Test Data:
+%                                   calInputs_calETEM_2D_ST_sm_dc_nl_lu_ff_rn_qn_sn_rq_cr.mat
+%                                   calInputs_calETEM_2D_ST_sm_dc_nl_lu_FF_rn_qn_sn_rq_cr.mat
+%                                    (non-requantized data)
+%
+%       Output:                     dataLocationStr/CAL_verification_figures/cal_flat_field_validation_II.fig
+%
+%
+%       -------------------------------------------------------------------
+%
+%       Validate:                   CAL flat field model is consistent with
+%                                   ETEM2 flat field
+%
+%       Test Data Description:      (a) ETEM2 data with 2Dblack, stars, and flat field ON,   
+%                                       and all motion/noise sources OFF.
+%                                   (b) Flat field model retrieved from FC for CAL
+%                                       using the ETEM2 run start date
+%       Test Data:
+%                                   ccdObject_calETEM_2D_ST_sm_dc_nl_lu_FF_rn_qn_sn.mat
+%                                   calInputs_calETEM_2D_ST_sm_dc_nl_lu_FF_rn_qn_sn_rq_cr.mat
+%                                    (non-requantized data)
+%                                   runParamsObject_calETEM_2D_ST_sm_dc_nl_lu_FF_rn_qn_sn.mat
+%
+%
+%       Test Plan:                  Compare flat field used by ETEM2 to the
+%                                   model retrieved for CAL inputs
+%
+%
+%       Output:                     text display
+%                                   dataLocationStr/CAL_verification_figures/cal_flat_field_validation_III.fig
+%
+%--------------------------------------------------------------------------
+% 
+% Copyright 2017 United States Government as represented by the
+% Administrator of the National Aeronautics and Space Administration.
+% All Rights Reserved.
+% 
+% NASA acknowledges the SETI Institute's primary role in authoring and
+% producing the Kepler Data Processing Pipeline under Cooperative
+% Agreement Nos. NNA04CC63A, NNX07AD96A, NNX07AD98A, NNX11AI13A,
+% NNX11AI14A, NNX13AD01A & NNX13AD16A.
+% 
+% This file is available under the terms of the NASA Open Source Agreement
+% (NOSA). You should have received a copy of this agreement with the
+% Kepler source code; see the file NASA-OPEN-SOURCE-AGREEMENT.doc.
+% 
+% No Warranty: THE SUBJECT SOFTWARE IS PROVIDED "AS IS" WITHOUT ANY
+% WARRANTY OF ANY KIND, EITHER EXPRESSED, IMPLIED, OR STATUTORY,
+% INCLUDING, BUT NOT LIMITED TO, ANY WARRANTY THAT THE SUBJECT SOFTWARE
+% WILL CONFORM TO SPECIFICATIONS, ANY IMPLIED WARRANTIES OF
+% MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, OR FREEDOM FROM
+% INFRINGEMENT, ANY WARRANTY THAT THE SUBJECT SOFTWARE WILL BE ERROR
+% FREE, OR ANY WARRANTY THAT DOCUMENTATION, IF PROVIDED, WILL CONFORM
+% TO THE SUBJECT SOFTWARE. THIS AGREEMENT DOES NOT, IN ANY MANNER,
+% CONSTITUTE AN ENDORSEMENT BY GOVERNMENT AGENCY OR ANY PRIOR RECIPIENT
+% OF ANY RESULTS, RESULTING DESIGNS, HARDWARE, SOFTWARE PRODUCTS OR ANY
+% OTHER APPLICATIONS RESULTING FROM USE OF THE SUBJECT SOFTWARE.
+% FURTHER, GOVERNMENT AGENCY DISCLAIMS ALL WARRANTIES AND LIABILITIES
+% REGARDING THIRD-PARTY SOFTWARE, IF PRESENT IN THE ORIGINAL SOFTWARE,
+% AND DISTRIBUTES IT "AS IS."
+% 
+% Waiver and Indemnity: RECIPIENT AGREES TO WAIVE ANY AND ALL CLAIMS
+% AGAINST THE UNITED STATES GOVERNMENT, ITS CONTRACTORS AND
+% SUBCONTRACTORS, AS WELL AS ANY PRIOR RECIPIENT. IF RECIPIENT'S USE OF
+% THE SUBJECT SOFTWARE RESULTS IN ANY LIABILITIES, DEMANDS, DAMAGES,
+% EXPENSES OR LOSSES ARISING FROM SUCH USE, INCLUDING ANY DAMAGES FROM
+% PRODUCTS BASED ON, OR RESULTING FROM, RECIPIENT'S USE OF THE SUBJECT
+% SOFTWARE, RECIPIENT SHALL INDEMNIFY AND HOLD HARMLESS THE UNITED
+% STATES GOVERNMENT, ITS CONTRACTORS AND SUBCONTRACTORS, AS WELL AS ANY
+% PRIOR RECIPIENT, TO THE EXTENT PERMITTED BY LAW. RECIPIENT'S SOLE
+% REMEDY FOR ANY SUCH MATTER SHALL BE THE IMMEDIATE, UNILATERAL
+% TERMINATION OF THIS AGREEMENT.
+%
+
+%close all;
+
+nRowsImaging    = 1024;
+nColsImaging    = 1100;
+nLeadingBlack   = 12;
+nMaskedSmear    = 20;
+
+%--------------------------------------------------------------------------
+% Test I: Flat field-corrected pixels from ETEM2 run with 2Dblack, stars, 
+% and flat field should be consistent with output from ETEM2 run with 2Dblack 
+% and stars only
+%--------------------------------------------------------------------------
+cd(dataLocationStr);
+
+% read in outputs from CAL run with flat field
+load calOutputs_calETEM_2D_ST_sm_dc_nl_lu_FF_rn_qn_sn_rq_cr.mat
+
+% rename pixel structs
+calPhotometricOutputs_2D_ST_FF = calPhotometricOutputs;
+clear calCollateralOutputs calPhotometricOutputs
+
+calibratedTargetPix_2D_ST_FF  = [calPhotometricOutputs_2D_ST_FF.targetAndBackgroundPixels.values]';      % nPixels x nCadences
+
+% read in outputs from CAL run without flat field 
+load calOutputs_calETEM_2D_ST_sm_dc_nl_lu_ff_rn_qn_sn_rq_cr.mat
+
+% rename pixel structs
+calPhotometricOutputs_2D_ST = calPhotometricOutputs;
+clear calCollateralOutputs calPhotometricOutputs
+
+calibratedTargetPix_2D_ST = [calPhotometricOutputs_2D_ST.targetAndBackgroundPixels.values]';      % nPixels x nCadences
+
+
+%--------------------------------------------------------------------------
+% plot the target pixel outputs for runs with and without FF
+%--------------------------------------------------------------------------
+figure;
+subplot(2, 1, 1)
+plot(calibratedTargetPix_2D_ST, 'r.')
+hold on
+plot(calibratedTargetPix_2D_ST_FF, 'b.')
+xlabel('Photometric pixel linear idx');
+ylabel('Flux (e-)');
+title('Calibrated target pixels for run with FF (blue) and without (red)   (ETEM2:  2Dblack/stars ON)');
+
+subplot(2, 1, 2)
+plot(calibratedTargetPix_2D_ST, ...
+    (calibratedTargetPix_2D_ST_FF - calibratedTargetPix_2D_ST)./calibratedTargetPix_2D_ST, 'r.')
+xlabel('Photometric pixels (run without FF)');
+ylabel('Difference (FFon - FFoff) /FFoff   (e-)');
+
+fileNameStr = [dataLocationStr 'CAL_verification_figures/cal_flat_field_validation_I'];
+paperOrientationFlag = false;
+includeTimeFlag      = false;
+printJpgFlag         = false;
+
+plot_to_file(fileNameStr, paperOrientationFlag, includeTimeFlag, printJpgFlag);
+
+
+%--------------------------------------------------------------------------
+% Test II: Compare the inputs from above data sets (sanity check)
+%--------------------------------------------------------------------------
+load calInputs_calETEM_2D_ST_sm_dc_nl_lu_FF_rn_qn_sn_rq_cr.mat
+
+% rename pixel structs
+calPhotometricInputs_2D_ST_FF = calPhotometricInputs;
+clear calCollateralInputs calPhotometricInputs
+
+inputTargetPix_2D_ST_FF  = [calPhotometricInputs_2D_ST_FF.targetAndBkgPixels.values]';      % nPixels x nCadences
+
+
+% read in inputs from CAL run without flat field
+load calInputs_calETEM_2D_ST_sm_dc_nl_lu_ff_rn_qn_sn_rq_cr.mat
+
+% rename pixel structs
+calPhotometricInputs_2D_ST = calPhotometricInputs;
+clear calCollateralInputs calPhotometricInputs
+
+inputTargetPix_2D_ST = [calPhotometricInputs_2D_ST.targetAndBkgPixels.values]';      % nPixels x nCadences
+
+%--------------------------------------------------------------------------
+% plot the pixel inputs for runs with and without FF
+%--------------------------------------------------------------------------
+figure;
+plot(inputTargetPix_2D_ST_FF - inputTargetPix_2D_ST, 'r.')
+xlabel('Photometric pixel idx');
+ylabel('Difference (FFon - FFoff)  (e-)');
+title('Difference of photometric input pixels for run with/without FF  (ETEM2:  2Dblack/stars)');
+
+fileNameStr = [dataLocationStr 'CAL_verification_figures/cal_flat_field_validation_II'];
+paperOrientationFlag = false;
+includeTimeFlag      = false;
+printJpgFlag         = false;
+
+plot_to_file(fileNameStr, paperOrientationFlag, includeTimeFlag, printJpgFlag);
+
+
+%--------------------------------------------------------------------------
+% Test III: Validate flat field model used in ETEM2 run and retrieved for
+% CAL are consistent
+%--------------------------------------------------------------------------
+
+% load flat field model that was injected into etem2 run
+load ccdObject_calETEM_2D_ST_sm_dc_nl_lu_FF_rn_qn_sn.mat
+
+etem2_flatFieldArray = dataUsedByEtemStruct.etem2_flatField;  % 1024 x 1100
+
+% load flat field model that was retrieved for and used by CAL
+load calInputs_calETEM_2D_ST_sm_dc_nl_lu_FF_rn_qn_sn_rq_cr.mat
+
+warning off all
+load runParamsObject_calETEM_2D_ST_sm_dc_nl_lu_FF_rn_qn_sn.mat
+warning on all
+
+cal_flatFieldArray = calCollateralInputs.flatFieldModel;
+
+% create the flat field object
+cal_flatFieldObject = flatFieldClass(cal_flatFieldArray);
+
+cal_flatField = get_flat_field(cal_flatFieldObject, runParamsObject.simulationData.runStartTime); %, photometricRows, photometricCols);
+
+photometricRows = nMaskedSmear  + 1 : nMaskedSmear + nRowsImaging;
+photometricCols = nLeadingBlack + 1 : nLeadingBlack + nColsImaging;
+
+cal_flatField_visible = cal_flatField(photometricRows, photometricCols);
+
+if ~isequal(etem2_flatFieldArray, cal_flatField_visible)
+    display('The flat field used for calibration is not equal to the ETEM2 injected flat!')
+else
+    display('The flat field used for calibration is consistent with the ETEM2 injected flat.')
+end
+
+figure;
+imagesc(etem2_flatFieldArray - cal_flatField_visible)
+
+meanDelta = mean(mean(etem2_flatFieldArray - cal_flatField_visible));
+
+title(['CAL flat field model minus ETEM2 injected model, mean diff = ' num2str(meanDelta)]);
+xlabel('CCD column');
+ylabel('CCD row');
+colorbar
+fileNameStr = [dataLocationStr 'CAL_verification_figures/cal_flat_field_validation_III'];
+paperOrientationFlag = false;
+includeTimeFlag      = false;
+printJpgFlag         = false;
+
+plot_to_file(fileNameStr, paperOrientationFlag, includeTimeFlag, printJpgFlag);
+
+
+return;

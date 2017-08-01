@@ -1,0 +1,1092 @@
+1
+crval1,282.896,[deg] right ascension at reference pixel
+crval2,44.3366,[deg] declination at reference pixel
+crpix1,884.082,[pixel] reference pixel along image axis 1
+crpix2,79.1487,[pixel] reference pixel along image axis 2
+cd1_1,0.00068368851,[deg] linear transformation element cos{th}
+cd1_2,-0.00086839109,[deg] linear transformation element -sin{th}
+cd2_1,-0.00086787412,[deg] linear transformation element sin{th}
+cd2_2,-0.00068743445,[deg] linear transformation element cos{th}
+ctype1,RA---TAN,right ascension coordinate type
+ctype2,DEC--TAN,declination coordinate type
+CUNIT1,deg,physical unit in column dimension
+CUNIT2,deg,physical unit in row dimension
+2
+crval1,283.111,[deg] right ascension at reference pixel
+crval2,42.9252,[deg] declination at reference pixel
+crpix1,251.116,[pixel] reference pixel along image axis 1
+crpix2,760.306,[pixel] reference pixel along image axis 2
+cd1_1,-0.00068392724,[deg] linear transformation element cos{th}
+cd1_2,-0.00086791294,[deg] linear transformation element -sin{th}
+cd2_1,0.00086786731,[deg] linear transformation element sin{th}
+cd2_2,-0.00068389598,[deg] linear transformation element cos{th}
+ctype1,RA---TAN,right ascension coordinate type
+ctype2,DEC--TAN,declination coordinate type
+CUNIT1,deg,physical unit in column dimension
+CUNIT2,deg,physical unit in row dimension
+3
+crval1,281.923,[deg] right ascension at reference pixel
+crval2,42.0829,[deg] declination at reference pixel
+crpix1,150.393,[pixel] reference pixel along image axis 1
+crpix2,311.690,[pixel] reference pixel along image axis 2
+cd1_1,-0.00069587527,[deg] linear transformation element cos{th}
+cd1_2,0.00085832508,[deg] linear transformation element -sin{th}
+cd2_1,0.00085774799,[deg] linear transformation element sin{th}
+cd2_2,0.00069518642,[deg] linear transformation element cos{th}
+ctype1,RA---TAN,right ascension coordinate type
+ctype2,DEC--TAN,declination coordinate type
+CUNIT1,deg,physical unit in column dimension
+CUNIT2,deg,physical unit in row dimension
+4
+crval1,280.723,[deg] right ascension at reference pixel
+crval2,43.0655,[deg] declination at reference pixel
+crpix1,879.409,[pixel] reference pixel along image axis 1
+crpix2,258.972,[pixel] reference pixel along image axis 2
+cd1_1,0.00070777433,[deg] linear transformation element cos{th}
+cd1_2,0.00084808184,[deg] linear transformation element -sin{th}
+cd2_1,-0.00084813391,[deg] linear transformation element sin{th}
+cd2_2,0.00070825789,[deg] linear transformation element cos{th}
+ctype1,RA---TAN,right ascension coordinate type
+ctype2,DEC--TAN,declination coordinate type
+CUNIT1,deg,physical unit in column dimension
+CUNIT2,deg,physical unit in row dimension
+5
+crval1,284.405,[deg] right ascension at reference pixel
+crval2,41.6442,[deg] declination at reference pixel
+crpix1,845.070,[pixel] reference pixel along image axis 1
+crpix2,779.884,[pixel] reference pixel along image axis 2
+cd1_1,0.00066880089,[deg] linear transformation element cos{th}
+cd1_2,-0.00087963070,[deg] linear transformation element -sin{th}
+cd2_1,-0.00087948907,[deg] linear transformation element sin{th}
+cd2_2,-0.00066871314,[deg] linear transformation element cos{th}
+ctype1,RA---TAN,right ascension coordinate type
+ctype2,DEC--TAN,declination coordinate type
+CUNIT1,deg,physical unit in column dimension
+CUNIT2,deg,physical unit in row dimension
+6
+crval1,286.118,[deg] right ascension at reference pixel
+crval2,41.0807,[deg] declination at reference pixel
+crpix1,276.014,[pixel] reference pixel along image axis 1
+crpix2,151.484,[pixel] reference pixel along image axis 2
+cd1_1,-0.00065067508,[deg] linear transformation element cos{th}
+cd1_2,-0.00089276281,[deg] linear transformation element -sin{th}
+cd2_1,0.00089258257,[deg] linear transformation element sin{th}
+cd2_2,-0.00065127017,[deg] linear transformation element cos{th}
+ctype1,RA---TAN,right ascension coordinate type
+ctype2,DEC--TAN,declination coordinate type
+CUNIT1,deg,physical unit in column dimension
+CUNIT2,deg,physical unit in row dimension
+7
+crval1,284.096,[deg] right ascension at reference pixel
+crval2,39.6547,[deg] declination at reference pixel
+crpix1,78.2782,[pixel] reference pixel along image axis 1
+crpix2,122.425,[pixel] reference pixel along image axis 2
+cd1_1,-0.00067216024,[deg] linear transformation element cos{th}
+cd1_2,0.00087720862,[deg] linear transformation element -sin{th}
+cd2_1,0.00087653148,[deg] linear transformation element sin{th}
+cd2_2,0.00067137969,[deg] linear transformation element cos{th}
+ctype1,RA---TAN,right ascension coordinate type
+ctype2,DEC--TAN,declination coordinate type
+CUNIT1,deg,physical unit in column dimension
+CUNIT2,deg,physical unit in row dimension
+8
+crval1,283.149,[deg] right ascension at reference pixel
+crval2,40.6980,[deg] declination at reference pixel
+crpix1,999.094,[pixel] reference pixel along image axis 1
+crpix2,183.640,[pixel] reference pixel along image axis 2
+cd1_1,0.00068157795,[deg] linear transformation element cos{th}
+cd1_2,0.00086981932,[deg] linear transformation element -sin{th}
+cd2_1,-0.00086989294,[deg] linear transformation element sin{th}
+cd2_2,0.00068150255,[deg] linear transformation element cos{th}
+ctype1,RA---TAN,right ascension coordinate type
+ctype2,DEC--TAN,declination coordinate type
+CUNIT1,deg,physical unit in column dimension
+CUNIT2,deg,physical unit in row dimension
+9
+crval1,286.823,[deg] right ascension at reference pixel
+crval2,39.1980,[deg] declination at reference pixel
+crpix1,1039.16,[pixel] reference pixel along image axis 1
+crpix2,756.956,[pixel] reference pixel along image axis 2
+cd1_1,0.00064356580,[deg] linear transformation element cos{th}
+cd1_2,-0.00089850452,[deg] linear transformation element -sin{th}
+cd2_1,-0.00089851470,[deg] linear transformation element sin{th}
+cd2_2,-0.00064341742,[deg] linear transformation element cos{th}
+ctype1,RA---TAN,right ascension coordinate type
+ctype2,DEC--TAN,declination coordinate type
+CUNIT1,deg,physical unit in column dimension
+CUNIT2,deg,physical unit in row dimension
+10
+crval1,288.172,[deg] right ascension at reference pixel
+crval2,38.6431,[deg] declination at reference pixel
+crpix1,227.841,[pixel] reference pixel along image axis 1
+crpix2,269.536,[pixel] reference pixel along image axis 2
+cd1_1,-0.00062977353,[deg] linear transformation element cos{th}
+cd1_2,-0.00090769357,[deg] linear transformation element -sin{th}
+cd2_1,0.00090775624,[deg] linear transformation element sin{th}
+cd2_2,-0.00063005826,[deg] linear transformation element cos{th}
+ctype1,RA---TAN,right ascension coordinate type
+ctype2,DEC--TAN,declination coordinate type
+CUNIT1,deg,physical unit in column dimension
+CUNIT2,deg,physical unit in row dimension
+11
+crval1,286.252,[deg] right ascension at reference pixel
+crval2,37.3618,[deg] declination at reference pixel
+crpix1,73.6418,[pixel] reference pixel along image axis 1
+crpix2,108.462,[pixel] reference pixel along image axis 2
+cd1_1,-0.00064836618,[deg] linear transformation element cos{th}
+cd1_2,0.00089477131,[deg] linear transformation element -sin{th}
+cd2_1,0.00089397207,[deg] linear transformation element sin{th}
+cd2_2,0.00064754399,[deg] linear transformation element cos{th}
+ctype1,RA---TAN,right ascension coordinate type
+ctype2,DEC--TAN,declination coordinate type
+CUNIT1,deg,physical unit in column dimension
+CUNIT2,deg,physical unit in row dimension
+12
+crval1,286.120,[deg] right ascension at reference pixel
+crval2,38.8117,[deg] declination at reference pixel
+crpix1,1033.41,[pixel] reference pixel along image axis 1
+crpix2,803.256,[pixel] reference pixel along image axis 2
+cd1_1,0.00064950933,[deg] linear transformation element cos{th}
+cd1_2,0.00089327677,[deg] linear transformation element -sin{th}
+cd2_1,-0.00089396002,[deg] linear transformation element sin{th}
+cd2_2,0.00064988790,[deg] linear transformation element cos{th}
+ctype1,RA---TAN,right ascension coordinate type
+ctype2,DEC--TAN,declination coordinate type
+CUNIT1,deg,physical unit in column dimension
+CUNIT2,deg,physical unit in row dimension
+13
+crval1,283.790,[deg] right ascension at reference pixel
+crval2,47.2875,[deg] declination at reference pixel
+crpix1,602.190,[pixel] reference pixel along image axis 1
+crpix2,472.823,[pixel] reference pixel along image axis 2
+cd1_1,-0.00087158523,[deg] linear transformation element cos{th}
+cd1_2,-0.00067918375,[deg] linear transformation element -sin{th}
+cd2_1,-0.00067890080,[deg] linear transformation element sin{th}
+cd2_2,0.00087170930,[deg] linear transformation element cos{th}
+ctype1,RA---TAN,right ascension coordinate type
+ctype2,DEC--TAN,declination coordinate type
+CUNIT1,deg,physical unit in column dimension
+CUNIT2,deg,physical unit in row dimension
+14
+crval1,282.519,[deg] right ascension at reference pixel
+crval2,47.2096,[deg] declination at reference pixel
+crpix1,966.932,[pixel] reference pixel along image axis 1
+crpix2,902.425,[pixel] reference pixel along image axis 2
+cd1_1,0.00086053817,[deg] linear transformation element cos{th}
+cd1_2,-0.00069313091,[deg] linear transformation element -sin{th}
+cd2_1,0.00069329923,[deg] linear transformation element sin{th}
+cd2_2,0.00086046081,[deg] linear transformation element cos{th}
+ctype1,RA---TAN,right ascension coordinate type
+ctype2,DEC--TAN,declination coordinate type
+CUNIT1,deg,physical unit in column dimension
+CUNIT2,deg,physical unit in row dimension
+15
+crval1,281.848,[deg] right ascension at reference pixel
+crval2,47.4425,[deg] declination at reference pixel
+crpix1,780.965,[pixel] reference pixel along image axis 1
+crpix2,840.536,[pixel] reference pixel along image axis 2
+cd1_1,0.00085091842,[deg] linear transformation element cos{th}
+cd1_2,0.00070246467,[deg] linear transformation element -sin{th}
+cd2_1,0.00070145273,[deg] linear transformation element sin{th}
+cd2_2,-0.00085525901,[deg] linear transformation element cos{th}
+ctype1,RA---TAN,right ascension coordinate type
+ctype2,DEC--TAN,declination coordinate type
+CUNIT1,deg,physical unit in column dimension
+CUNIT2,deg,physical unit in row dimension
+16
+crval1,282.603,[deg] right ascension at reference pixel
+crval2,47.7493,[deg] declination at reference pixel
+crpix1,911.515,[pixel] reference pixel along image axis 1
+crpix2,915.184,[pixel] reference pixel along image axis 2
+cd1_1,-0.00086141931,[deg] linear transformation element cos{th}
+cd1_2,0.00069215594,[deg] linear transformation element -sin{th}
+cd2_1,-0.00069203942,[deg] linear transformation element sin{th}
+cd2_2,-0.00086131100,[deg] linear transformation element cos{th}
+ctype1,RA---TAN,right ascension coordinate type
+ctype2,DEC--TAN,declination coordinate type
+CUNIT1,deg,physical unit in column dimension
+CUNIT2,deg,physical unit in row dimension
+17
+crval1,285.205,[deg] right ascension at reference pixel
+crval2,45.4715,[deg] declination at reference pixel
+crpix1,979.401,[pixel] reference pixel along image axis 1
+crpix2,862.787,[pixel] reference pixel along image axis 2
+cd1_1,0.00066339524,[deg] linear transformation element cos{th}
+cd1_2,-0.00088382175,[deg] linear transformation element -sin{th}
+cd2_1,-0.00088373919,[deg] linear transformation element sin{th}
+cd2_2,-0.00066335009,[deg] linear transformation element cos{th}
+ctype1,RA---TAN,right ascension coordinate type
+ctype2,DEC--TAN,declination coordinate type
+CUNIT1,deg,physical unit in column dimension
+CUNIT2,deg,physical unit in row dimension
+18
+crval1,286.188,[deg] right ascension at reference pixel
+crval2,44.5566,[deg] declination at reference pixel
+crpix1,205.872,[pixel] reference pixel along image axis 1
+crpix2,850.406,[pixel] reference pixel along image axis 2
+cd1_1,-0.00065148020,[deg] linear transformation element cos{th}
+cd1_2,-0.00089109934,[deg] linear transformation element -sin{th}
+cd2_1,0.00089144704,[deg] linear transformation element sin{th}
+cd2_2,-0.00065257608,[deg] linear transformation element cos{th}
+ctype1,RA---TAN,right ascension coordinate type
+ctype2,DEC--TAN,declination coordinate type
+CUNIT1,deg,physical unit in column dimension
+CUNIT2,deg,physical unit in row dimension
+19
+crval1,284.861,[deg] right ascension at reference pixel
+crval2,43.9026,[deg] declination at reference pixel
+crpix1,245.233,[pixel] reference pixel along image axis 1
+crpix2,270.819,[pixel] reference pixel along image axis 2
+cd1_1,-0.00066629665,[deg] linear transformation element cos{th}
+cd1_2,0.00088158552,[deg] linear transformation element -sin{th}
+cd2_1,0.00088080830,[deg] linear transformation element sin{th}
+cd2_2,0.00066577974,[deg] linear transformation element cos{th}
+ctype1,RA---TAN,right ascension coordinate type
+ctype2,DEC--TAN,declination coordinate type
+CUNIT1,deg,physical unit in column dimension
+CUNIT2,deg,physical unit in row dimension
+20
+crval1,283.911,[deg] right ascension at reference pixel
+crval2,44.7428,[deg] declination at reference pixel
+crpix1,1002.06,[pixel] reference pixel along image axis 1
+crpix2,244.473,[pixel] reference pixel along image axis 2
+cd1_1,0.00067612365,[deg] linear transformation element cos{th}
+cd1_2,0.00087283440,[deg] linear transformation element -sin{th}
+cd2_1,-0.00087367737,[deg] linear transformation element sin{th}
+cd2_2,0.00067651989,[deg] linear transformation element cos{th}
+ctype1,RA---TAN,right ascension coordinate type
+ctype2,DEC--TAN,declination coordinate type
+CUNIT1,deg,physical unit in column dimension
+CUNIT2,deg,physical unit in row dimension
+21
+crval1,287.318,[deg] right ascension at reference pixel
+crval2,43.2191,[deg] declination at reference pixel
+crpix1,847.502,[pixel] reference pixel along image axis 1
+crpix2,954.965,[pixel] reference pixel along image axis 2
+cd1_1,0.00063868834,[deg] linear transformation element cos{th}
+cd1_2,-0.00090172937,[deg] linear transformation element -sin{th}
+cd2_1,-0.00090140959,[deg] linear transformation element sin{th}
+cd2_2,-0.00063883808,[deg] linear transformation element cos{th}
+ctype1,RA---TAN,right ascension coordinate type
+ctype2,DEC--TAN,declination coordinate type
+CUNIT1,deg,physical unit in column dimension
+CUNIT2,deg,physical unit in row dimension
+22
+crval1,288.467,[deg] right ascension at reference pixel
+crval2,42.1049,[deg] declination at reference pixel
+crpix1,112.920,[pixel] reference pixel along image axis 1
+crpix2,905.133,[pixel] reference pixel along image axis 2
+cd1_1,-0.00062635163,[deg] linear transformation element cos{th}
+cd1_2,-0.00090983107,[deg] linear transformation element -sin{th}
+cd2_1,0.00091014301,[deg] linear transformation element sin{th}
+cd2_2,-0.00062638135,[deg] linear transformation element cos{th}
+ctype1,RA---TAN,right ascension coordinate type
+ctype2,DEC--TAN,declination coordinate type
+CUNIT1,deg,physical unit in column dimension
+CUNIT2,deg,physical unit in row dimension
+23
+crval1,286.906,[deg] right ascension at reference pixel
+crval2,41.5287,[deg] declination at reference pixel
+crpix1,291.031,[pixel] reference pixel along image axis 1
+crpix2,98.0117,[pixel] reference pixel along image axis 2
+cd1_1,-0.00064277322,[deg] linear transformation element cos{th}
+cd1_2,0.00089871453,[deg] linear transformation element -sin{th}
+cd2_1,0.00089826589,[deg] linear transformation element sin{th}
+cd2_2,0.00064185628,[deg] linear transformation element cos{th}
+ctype1,RA---TAN,right ascension coordinate type
+ctype2,DEC--TAN,declination coordinate type
+CUNIT1,deg,physical unit in column dimension
+CUNIT2,deg,physical unit in row dimension
+24
+crval1,286.147,[deg] right ascension at reference pixel
+crval2,42.6121,[deg] declination at reference pixel
+crpix1,840.560,[pixel] reference pixel along image axis 1
+crpix2,259.142,[pixel] reference pixel along image axis 2
+cd1_1,0.00065080132,[deg] linear transformation element cos{th}
+cd1_2,0.00089289884,[deg] linear transformation element -sin{th}
+cd2_1,-0.00089306580,[deg] linear transformation element sin{th}
+cd2_2,0.00065071428,[deg] linear transformation element cos{th}
+ctype1,RA---TAN,right ascension coordinate type
+ctype2,DEC--TAN,declination coordinate type
+CUNIT1,deg,physical unit in column dimension
+CUNIT2,deg,physical unit in row dimension
+25
+crval1,288.275,[deg] right ascension at reference pixel
+crval2,40.0577,[deg] declination at reference pixel
+crpix1,130.012,[pixel] reference pixel along image axis 1
+crpix2,949.698,[pixel] reference pixel along image axis 2
+cd1_1,0.00091037634,[deg] linear transformation element cos{th}
+cd1_2,0.00062616999,[deg] linear transformation element -sin{th}
+cd2_1,0.00062620959,[deg] linear transformation element sin{th}
+cd2_2,-0.00091055191,[deg] linear transformation element cos{th}
+ctype1,RA---TAN,right ascension coordinate type
+ctype2,DEC--TAN,declination coordinate type
+CUNIT1,deg,physical unit in column dimension
+CUNIT2,deg,physical unit in row dimension
+26
+crval1,289.869,[deg] right ascension at reference pixel
+crval2,40.8434,[deg] declination at reference pixel
+crpix1,787.746,[pixel] reference pixel along image axis 1
+crpix2,973.804,[pixel] reference pixel along image axis 2
+cd1_1,-0.00092148395,[deg] linear transformation element cos{th}
+cd1_2,0.00060981428,[deg] linear transformation element -sin{th}
+cd2_1,-0.00060949618,[deg] linear transformation element sin{th}
+cd2_2,-0.00092161036,[deg] linear transformation element cos{th}
+ctype1,RA---TAN,right ascension coordinate type
+ctype2,DEC--TAN,declination coordinate type
+CUNIT1,deg,physical unit in column dimension
+CUNIT2,deg,physical unit in row dimension
+27
+crval1,290.379,[deg] right ascension at reference pixel
+crval2,39.6940,[deg] declination at reference pixel
+crpix1,1066.21,[pixel] reference pixel along image axis 1
+crpix2,128.214,[pixel] reference pixel along image axis 2
+cd1_1,-0.00092412252,[deg] linear transformation element cos{th}
+cd1_2,-0.00060524676,[deg] linear transformation element -sin{th}
+cd2_1,-0.00060530504,[deg] linear transformation element sin{th}
+cd2_2,0.00092437124,[deg] linear transformation element cos{th}
+ctype1,RA---TAN,right ascension coordinate type
+ctype2,DEC--TAN,declination coordinate type
+CUNIT1,deg,physical unit in column dimension
+CUNIT2,deg,physical unit in row dimension
+28
+crval1,289.249,[deg] right ascension at reference pixel
+crval2,39.1065,[deg] declination at reference pixel
+crpix1,205.976,[pixel] reference pixel along image axis 1
+crpix2,122.130,[pixel] reference pixel along image axis 2
+cd1_1,0.00091653216,[deg] linear transformation element cos{th}
+cd1_2,-0.00061710335,[deg] linear transformation element -sin{th}
+cd2_1,0.00061616379,[deg] linear transformation element sin{th}
+cd2_2,0.00091591223,[deg] linear transformation element cos{th}
+ctype1,RA---TAN,right ascension coordinate type
+ctype2,DEC--TAN,declination coordinate type
+CUNIT1,deg,physical unit in column dimension
+CUNIT2,deg,physical unit in row dimension
+29
+crval1,290.421,[deg] right ascension at reference pixel
+crval2,37.8518,[deg] declination at reference pixel
+crpix1,267.752,[pixel] reference pixel along image axis 1
+crpix2,866.461,[pixel] reference pixel along image axis 2
+cd1_1,0.00092574950,[deg] linear transformation element cos{th}
+cd1_2,0.00060229440,[deg] linear transformation element -sin{th}
+cd2_1,0.00060299688,[deg] linear transformation element sin{th}
+cd2_2,-0.00092606179,[deg] linear transformation element cos{th}
+ctype1,RA---TAN,right ascension coordinate type
+ctype2,DEC--TAN,declination coordinate type
+CUNIT1,deg,physical unit in column dimension
+CUNIT2,deg,physical unit in row dimension
+30
+crval1,292.504,[deg] right ascension at reference pixel
+crval2,38.8460,[deg] declination at reference pixel
+crpix1,227.008,[pixel] reference pixel along image axis 1
+crpix2,899.431,[pixel] reference pixel along image axis 2
+cd1_1,-0.00093960790,[deg] linear transformation element cos{th}
+cd1_2,0.00058177277,[deg] linear transformation element -sin{th}
+cd2_1,-0.00058120004,[deg] linear transformation element sin{th}
+cd2_2,-0.00093905250,[deg] linear transformation element cos{th}
+ctype1,RA---TAN,right ascension coordinate type
+ctype2,DEC--TAN,declination coordinate type
+CUNIT1,deg,physical unit in column dimension
+CUNIT2,deg,physical unit in row dimension
+31
+crval1,292.541,[deg] right ascension at reference pixel
+crval2,37.6308,[deg] declination at reference pixel
+crpix1,784.566,[pixel] reference pixel along image axis 1
+crpix2,315.614,[pixel] reference pixel along image axis 2
+cd1_1,-0.00093875359,[deg] linear transformation element cos{th}
+cd1_2,-0.00058190394,[deg] linear transformation element -sin{th}
+cd2_1,-0.00058167625,[deg] linear transformation element sin{th}
+cd2_2,0.00093977466,[deg] linear transformation element cos{th}
+ctype1,RA---TAN,right ascension coordinate type
+ctype2,DEC--TAN,declination coordinate type
+CUNIT1,deg,physical unit in column dimension
+CUNIT2,deg,physical unit in row dimension
+32
+crval1,291.270,[deg] right ascension at reference pixel
+crval2,36.7285,[deg] declination at reference pixel
+crpix1,229.604,[pixel] reference pixel along image axis 1
+crpix2,111.463,[pixel] reference pixel along image axis 2
+cd1_1,0.00093162113,[deg] linear transformation element cos{th}
+cd1_2,-0.00059429933,[deg] linear transformation element -sin{th}
+cd2_1,0.00059360506,[deg] linear transformation element sin{th}
+cd2_2,0.00093086877,[deg] linear transformation element cos{th}
+ctype1,RA---TAN,right ascension coordinate type
+ctype2,DEC--TAN,declination coordinate type
+CUNIT1,deg,physical unit in column dimension
+CUNIT2,deg,physical unit in row dimension
+33
+crval1,287.310,[deg] right ascension at reference pixel
+crval2,48.4947,[deg] declination at reference pixel
+crpix1,812.411,[pixel] reference pixel along image axis 1
+crpix2,71.3954,[pixel] reference pixel along image axis 2
+cd1_1,-0.00090006462,[deg] linear transformation element cos{th}
+cd1_2,-0.00063951366,[deg] linear transformation element -sin{th}
+cd2_1,-0.00064008189,[deg] linear transformation element sin{th}
+cd2_2,0.00090033839,[deg] linear transformation element cos{th}
+ctype1,RA---TAN,right ascension coordinate type
+ctype2,DEC--TAN,declination coordinate type
+CUNIT1,deg,physical unit in column dimension
+CUNIT2,deg,physical unit in row dimension
+34
+crval1,285.716,[deg] right ascension at reference pixel
+crval2,47.8383,[deg] declination at reference pixel
+crpix1,284.795,[pixel] reference pixel along image axis 1
+crpix2,156.404,[pixel] reference pixel along image axis 2
+cd1_1,0.00088688550,[deg] linear transformation element cos{th}
+cd1_2,-0.00065894489,[deg] linear transformation element -sin{th}
+cd2_1,0.00065831425,[deg] linear transformation element sin{th}
+cd2_2,0.00088636628,[deg] linear transformation element cos{th}
+ctype1,RA---TAN,right ascension coordinate type
+ctype2,DEC--TAN,declination coordinate type
+CUNIT1,deg,physical unit in column dimension
+CUNIT2,deg,physical unit in row dimension
+35
+crval1,284.553,[deg] right ascension at reference pixel
+crval2,48.8199,[deg] declination at reference pixel
+crpix1,261.586,[pixel] reference pixel along image axis 1
+crpix2,879.103,[pixel] reference pixel along image axis 2
+cd1_1,0.00087671841,[deg] linear transformation element cos{th}
+cd1_2,0.00067280633,[deg] linear transformation element -sin{th}
+cd2_1,0.00067258876,[deg] linear transformation element sin{th}
+cd2_2,-0.00087665346,[deg] linear transformation element cos{th}
+ctype1,RA---TAN,right ascension coordinate type
+ctype2,DEC--TAN,declination coordinate type
+CUNIT1,deg,physical unit in column dimension
+CUNIT2,deg,physical unit in row dimension
+36
+crval1,285.957,[deg] right ascension at reference pixel
+crval2,49.5005,[deg] declination at reference pixel
+crpix1,929.503,[pixel] reference pixel along image axis 1
+crpix2,886.487,[pixel] reference pixel along image axis 2
+cd1_1,-0.00088901885,[deg] linear transformation element cos{th}
+cd1_2,0.00065623093,[deg] linear transformation element -sin{th}
+cd2_1,-0.00065608704,[deg] linear transformation element sin{th}
+cd2_2,-0.00088878477,[deg] linear transformation element cos{th}
+ctype1,RA---TAN,right ascension coordinate type
+ctype2,DEC--TAN,declination coordinate type
+CUNIT1,deg,physical unit in column dimension
+CUNIT2,deg,physical unit in row dimension
+37
+crval1,290.008,[deg] right ascension at reference pixel
+crval2,47.2594,[deg] declination at reference pixel
+crpix1,94.0097,[pixel] reference pixel along image axis 1
+crpix2,808.327,[pixel] reference pixel along image axis 2
+cd1_1,-0.00092259508,[deg] linear transformation element cos{th}
+cd1_2,-0.00060987834,[deg] linear transformation element -sin{th}
+cd2_1,-0.00060969460,[deg] linear transformation element sin{th}
+cd2_2,0.00092114347,[deg] linear transformation element cos{th}
+ctype1,RA---TAN,right ascension coordinate type
+ctype2,DEC--TAN,declination coordinate type
+CUNIT1,deg,physical unit in column dimension
+CUNIT2,deg,physical unit in row dimension
+38
+crval1,288.011,[deg] right ascension at reference pixel
+crval2,45.6738,[deg] declination at reference pixel
+crpix1,295.278,[pixel] reference pixel along image axis 1
+crpix2,320.044,[pixel] reference pixel along image axis 2
+cd1_1,0.00090609875,[deg] linear transformation element cos{th}
+cd1_2,-0.00063235758,[deg] linear transformation element -sin{th}
+cd2_1,0.00063171510,[deg] linear transformation element sin{th}
+cd2_2,0.00090549535,[deg] linear transformation element cos{th}
+ctype1,RA---TAN,right ascension coordinate type
+ctype2,DEC--TAN,declination coordinate type
+CUNIT1,deg,physical unit in column dimension
+CUNIT2,deg,physical unit in row dimension
+39
+crval1,286.339,[deg] right ascension at reference pixel
+crval2,47.0047,[deg] declination at reference pixel
+crpix1,144.506,[pixel] reference pixel along image axis 1
+crpix2,256.269,[pixel] reference pixel along image axis 2
+cd1_1,0.00089195941,[deg] linear transformation element cos{th}
+cd1_2,0.00065054133,[deg] linear transformation element -sin{th}
+cd2_1,0.00065119174,[deg] linear transformation element sin{th}
+cd2_2,-0.00089263300,[deg] linear transformation element cos{th}
+ctype1,RA---TAN,right ascension coordinate type
+ctype2,DEC--TAN,declination coordinate type
+CUNIT1,deg,physical unit in column dimension
+CUNIT2,deg,physical unit in row dimension
+40
+crval1,287.740,[deg] right ascension at reference pixel
+crval2,47.6991,[deg] declination at reference pixel
+crpix1,1016.02,[pixel] reference pixel along image axis 1
+crpix2,245.425,[pixel] reference pixel along image axis 2
+cd1_1,-0.00090412252,[deg] linear transformation element cos{th}
+cd1_2,0.00063540576,[deg] linear transformation element -sin{th}
+cd2_1,-0.00063486320,[deg] linear transformation element sin{th}
+cd2_2,-0.00090368971,[deg] linear transformation element cos{th}
+ctype1,RA---TAN,right ascension coordinate type
+ctype2,DEC--TAN,declination coordinate type
+CUNIT1,deg,physical unit in column dimension
+CUNIT2,deg,physical unit in row dimension
+41
+crval1,291.826,[deg] right ascension at reference pixel
+crval2,44.3933,[deg] declination at reference pixel
+crpix1,535.240,[pixel] reference pixel along image axis 1
+crpix2,595.112,[pixel] reference pixel along image axis 2
+cd1_1,-0.00093410254,[deg] linear transformation element cos{th}
+cd1_2,-0.00058865569,[deg] linear transformation element -sin{th}
+cd2_1,-0.00058915355,[deg] linear transformation element sin{th}
+cd2_2,0.00093463257,[deg] linear transformation element cos{th}
+ctype1,RA---TAN,right ascension coordinate type
+ctype2,DEC--TAN,declination coordinate type
+CUNIT1,deg,physical unit in column dimension
+CUNIT2,deg,physical unit in row dimension
+42
+crval1,290.356,[deg] right ascension at reference pixel
+crval2,43.0718,[deg] declination at reference pixel
+crpix1,234.162,[pixel] reference pixel along image axis 1
+crpix2,108.580,[pixel] reference pixel along image axis 2
+cd1_1,0.00092396894,[deg] linear transformation element cos{th}
+cd1_2,-0.00060582957,[deg] linear transformation element -sin{th}
+cd2_1,0.00060515509,[deg] linear transformation element sin{th}
+cd2_2,0.00092332441,[deg] linear transformation element cos{th}
+ctype1,RA---TAN,right ascension coordinate type
+ctype2,DEC--TAN,declination coordinate type
+CUNIT1,deg,physical unit in column dimension
+CUNIT2,deg,physical unit in row dimension
+43
+crval1,289.412,[deg] right ascension at reference pixel
+crval2,44.1348,[deg] declination at reference pixel
+crpix1,251.140,[pixel] reference pixel along image axis 1
+crpix2,911.840,[pixel] reference pixel along image axis 2
+cd1_1,0.00091713630,[deg] linear transformation element cos{th}
+cd1_2,0.00061661421,[deg] linear transformation element -sin{th}
+cd2_1,0.00061646775,[deg] linear transformation element sin{th}
+cd2_2,-0.00091703604,[deg] linear transformation element cos{th}
+ctype1,RA---TAN,right ascension coordinate type
+ctype2,DEC--TAN,declination coordinate type
+CUNIT1,deg,physical unit in column dimension
+CUNIT2,deg,physical unit in row dimension
+44
+crval1,290.788,[deg] right ascension at reference pixel
+crval2,44.9846,[deg] declination at reference pixel
+crpix1,809.655,[pixel] reference pixel along image axis 1
+crpix2,758.884,[pixel] reference pixel along image axis 2
+cd1_1,-0.00092733566,[deg] linear transformation element cos{th}
+cd1_2,0.00060088974,[deg] linear transformation element -sin{th}
+cd2_1,-0.00060096283,[deg] linear transformation element sin{th}
+cd2_2,-0.00092712257,[deg] linear transformation element cos{th}
+ctype1,RA---TAN,right ascension coordinate type
+ctype2,DEC--TAN,declination coordinate type
+CUNIT1,deg,physical unit in column dimension
+CUNIT2,deg,physical unit in row dimension
+45
+crval1,291.306,[deg] right ascension at reference pixel
+crval2,41.6868,[deg] declination at reference pixel
+crpix1,87.8619,[pixel] reference pixel along image axis 1
+crpix2,869.063,[pixel] reference pixel along image axis 2
+cd1_1,0.00093192016,[deg] linear transformation element cos{th}
+cd1_2,0.00059281577,[deg] linear transformation element -sin{th}
+cd2_1,0.00059354527,[deg] linear transformation element sin{th}
+cd2_2,-0.00093212384,[deg] linear transformation element cos{th}
+ctype1,RA---TAN,right ascension coordinate type
+ctype2,DEC--TAN,declination coordinate type
+CUNIT1,deg,physical unit in column dimension
+CUNIT2,deg,physical unit in row dimension
+46
+crval1,292.777,[deg] right ascension at reference pixel
+crval2,42.4134,[deg] declination at reference pixel
+crpix1,950.652,[pixel] reference pixel along image axis 1
+crpix2,834.831,[pixel] reference pixel along image axis 2
+cd1_1,-0.00094256403,[deg] linear transformation element cos{th}
+cd1_2,0.00057717973,[deg] linear transformation element -sin{th}
+cd2_1,-0.00057734927,[deg] linear transformation element sin{th}
+cd2_2,-0.00094231375,[deg] linear transformation element cos{th}
+ctype1,RA---TAN,right ascension coordinate type
+ctype2,DEC--TAN,declination coordinate type
+CUNIT1,deg,physical unit in column dimension
+CUNIT2,deg,physical unit in row dimension
+47
+crval1,293.849,[deg] right ascension at reference pixel
+crval2,41.3140,[deg] declination at reference pixel
+crpix1,846.930,[pixel] reference pixel along image axis 1
+crpix2,106.283,[pixel] reference pixel along image axis 2
+cd1_1,-0.00094830968,[deg] linear transformation element cos{th}
+cd1_2,-0.00056523889,[deg] linear transformation element -sin{th}
+cd2_1,-0.00056616851,[deg] linear transformation element sin{th}
+cd2_2,0.00094887264,[deg] linear transformation element cos{th}
+ctype1,RA---TAN,right ascension coordinate type
+ctype2,DEC--TAN,declination coordinate type
+CUNIT1,deg,physical unit in column dimension
+CUNIT2,deg,physical unit in row dimension
+48
+crval1,292.065,[deg] right ascension at reference pixel
+crval2,40.7624,[deg] declination at reference pixel
+crpix1,78.2296,[pixel] reference pixel along image axis 1
+crpix2,314.759,[pixel] reference pixel along image axis 2
+cd1_1,0.00093677529,[deg] linear transformation element cos{th}
+cd1_2,-0.00058613236,[deg] linear transformation element -sin{th}
+cd2_1,0.00058477899,[deg] linear transformation element sin{th}
+cd2_2,0.00093594990,[deg] linear transformation element cos{th}
+ctype1,RA---TAN,right ascension coordinate type
+ctype2,DEC--TAN,declination coordinate type
+CUNIT1,deg,physical unit in column dimension
+CUNIT2,deg,physical unit in row dimension
+49
+crval1,293.534,[deg] right ascension at reference pixel
+crval2,39.3006,[deg] declination at reference pixel
+crpix1,255.120,[pixel] reference pixel along image axis 1
+crpix2,922.482,[pixel] reference pixel along image axis 2
+cd1_1,0.00094675109,[deg] linear transformation element cos{th}
+cd1_2,0.00056955201,[deg] linear transformation element -sin{th}
+cd2_1,0.00056999688,[deg] linear transformation element sin{th}
+cd2_2,-0.00094647954,[deg] linear transformation element cos{th}
+ctype1,RA---TAN,right ascension coordinate type
+ctype2,DEC--TAN,declination coordinate type
+CUNIT1,deg,physical unit in column dimension
+CUNIT2,deg,physical unit in row dimension
+50
+crval1,294.895,[deg] right ascension at reference pixel
+crval2,40.0290,[deg] declination at reference pixel
+crpix1,818.661,[pixel] reference pixel along image axis 1
+crpix2,837.982,[pixel] reference pixel along image axis 2
+cd1_1,-0.00095506884,[deg] linear transformation element cos{th}
+cd1_2,0.00055576808,[deg] linear transformation element -sin{th}
+cd2_1,-0.00055542353,[deg] linear transformation element sin{th}
+cd2_2,-0.00095510341,[deg] linear transformation element cos{th}
+ctype1,RA---TAN,right ascension coordinate type
+ctype2,DEC--TAN,declination coordinate type
+CUNIT1,deg,physical unit in column dimension
+CUNIT2,deg,physical unit in row dimension
+51
+crval1,295.765,[deg] right ascension at reference pixel
+crval2,38.8823,[deg] declination at reference pixel
+crpix1,808.720,[pixel] reference pixel along image axis 1
+crpix2,124.749,[pixel] reference pixel along image axis 2
+cd1_1,-0.00096080948,[deg] linear transformation element cos{th}
+cd1_2,-0.00054594837,[deg] linear transformation element -sin{th}
+cd2_1,-0.00054618237,[deg] linear transformation element sin{th}
+cd2_2,0.00096065738,[deg] linear transformation element cos{th}
+ctype1,RA---TAN,right ascension coordinate type
+ctype2,DEC--TAN,declination coordinate type
+CUNIT1,deg,physical unit in column dimension
+CUNIT2,deg,physical unit in row dimension
+52
+crval1,294.086,[deg] right ascension at reference pixel
+crval2,38.3773,[deg] declination at reference pixel
+crpix1,160.167,[pixel] reference pixel along image axis 1
+crpix2,325.664,[pixel] reference pixel along image axis 2
+cd1_1,0.00095025005,[deg] linear transformation element cos{th}
+cd1_2,-0.00056380594,[deg] linear transformation element -sin{th}
+cd2_1,0.00056338329,[deg] linear transformation element sin{th}
+cd2_2,0.00095035817,[deg] linear transformation element cos{th}
+ctype1,RA---TAN,right ascension coordinate type
+ctype2,DEC--TAN,declination coordinate type
+CUNIT1,deg,physical unit in column dimension
+CUNIT2,deg,physical unit in row dimension
+53
+crval1,290.560,[deg] right ascension at reference pixel
+crval2,49.9430,[deg] declination at reference pixel
+crpix1,1065.30,[pixel] reference pixel along image axis 1
+crpix2,75.1364,[pixel] reference pixel along image axis 2
+cd1_1,-0.00092592890,[deg] linear transformation element cos{th}
+cd1_2,-0.00060198881,[deg] linear transformation element -sin{th}
+cd2_1,-0.00060235831,[deg] linear transformation element sin{th}
+cd2_2,0.00092639537,[deg] linear transformation element cos{th}
+ctype1,RA---TAN,right ascension coordinate type
+ctype2,DEC--TAN,declination coordinate type
+CUNIT1,deg,physical unit in column dimension
+CUNIT2,deg,physical unit in row dimension
+54
+crval1,289.075,[deg] right ascension at reference pixel
+crval2,49.5894,[deg] declination at reference pixel
+crpix1,259.867,[pixel] reference pixel along image axis 1
+crpix2,288.867,[pixel] reference pixel along image axis 2
+cd1_1,0.00091374373,[deg] linear transformation element cos{th}
+cd1_2,-0.00062095505,[deg] linear transformation element -sin{th}
+cd2_1,0.00062009992,[deg] linear transformation element sin{th}
+cd2_2,0.00091349366,[deg] linear transformation element cos{th}
+ctype1,RA---TAN,right ascension coordinate type
+ctype2,DEC--TAN,declination coordinate type
+CUNIT1,deg,physical unit in column dimension
+CUNIT2,deg,physical unit in row dimension
+55
+crval1,287.988,[deg] right ascension at reference pixel
+crval2,50.6009,[deg] declination at reference pixel
+crpix1,261.243,[pixel] reference pixel along image axis 1
+crpix2,762.378,[pixel] reference pixel along image axis 2
+cd1_1,0.00090407950,[deg] linear transformation element cos{th}
+cd1_2,0.00063362588,[deg] linear transformation element -sin{th}
+cd2_1,0.00063428795,[deg] linear transformation element sin{th}
+cd2_2,-0.00090470750,[deg] linear transformation element cos{th}
+ctype1,RA---TAN,right ascension coordinate type
+ctype2,DEC--TAN,declination coordinate type
+CUNIT1,deg,physical unit in column dimension
+CUNIT2,deg,physical unit in row dimension
+56
+crval1,289.451,[deg] right ascension at reference pixel
+crval2,51.1744,[deg] declination at reference pixel
+crpix1,981.323,[pixel] reference pixel along image axis 1
+crpix2,807.289,[pixel] reference pixel along image axis 2
+cd1_1,-0.00091715379,[deg] linear transformation element cos{th}
+cd1_2,0.00061629934,[deg] linear transformation element -sin{th}
+cd2_1,-0.00061606144,[deg] linear transformation element sin{th}
+cd2_2,-0.00091674197,[deg] linear transformation element cos{th}
+ctype1,RA---TAN,right ascension coordinate type
+ctype2,DEC--TAN,declination coordinate type
+CUNIT1,deg,physical unit in column dimension
+CUNIT2,deg,physical unit in row dimension
+57
+crval1,292.847,[deg] right ascension at reference pixel
+crval2,47.6246,[deg] declination at reference pixel
+crpix1,1035.74,[pixel] reference pixel along image axis 1
+crpix2,157.588,[pixel] reference pixel along image axis 2
+cd1_1,-0.00094276270,[deg] linear transformation element cos{th}
+cd1_2,-0.00057571918,[deg] linear transformation element -sin{th}
+cd2_1,-0.00057576602,[deg] linear transformation element sin{th}
+cd2_2,0.00094313318,[deg] linear transformation element cos{th}
+ctype1,RA---TAN,right ascension coordinate type
+ctype2,DEC--TAN,declination coordinate type
+CUNIT1,deg,physical unit in column dimension
+CUNIT2,deg,physical unit in row dimension
+58
+crval1,291.288,[deg] right ascension at reference pixel
+crval2,47.0891,[deg] declination at reference pixel
+crpix1,121.865,[pixel] reference pixel along image axis 1
+crpix2,252.294,[pixel] reference pixel along image axis 2
+cd1_1,0.00093109915,[deg] linear transformation element cos{th}
+cd1_2,-0.00059470475,[deg] linear transformation element -sin{th}
+cd2_1,0.00059404803,[deg] linear transformation element sin{th}
+cd2_2,0.00093057595,[deg] linear transformation element cos{th}
+ctype1,RA---TAN,right ascension coordinate type
+ctype2,DEC--TAN,declination coordinate type
+CUNIT1,deg,physical unit in column dimension
+CUNIT2,deg,physical unit in row dimension
+59
+crval1,290.408,[deg] right ascension at reference pixel
+crval2,48.0481,[deg] declination at reference pixel
+crpix1,142.678,[pixel] reference pixel along image axis 1
+crpix2,890.603,[pixel] reference pixel along image axis 2
+cd1_1,0.00092430928,[deg] linear transformation element cos{th}
+cd1_2,0.00060506128,[deg] linear transformation element -sin{th}
+cd2_1,0.00060560783,[deg] linear transformation element sin{th}
+cd2_2,-0.00092415708,[deg] linear transformation element cos{th}
+ctype1,RA---TAN,right ascension coordinate type
+ctype2,DEC--TAN,declination coordinate type
+CUNIT1,deg,physical unit in column dimension
+CUNIT2,deg,physical unit in row dimension
+60
+crval1,292.899,[deg] right ascension at reference pixel
+crval2,49.0471,[deg] declination at reference pixel
+crpix1,338.078,[pixel] reference pixel along image axis 1
+crpix2,923.957,[pixel] reference pixel along image axis 2
+cd1_1,-0.00094384777,[deg] linear transformation element cos{th}
+cd1_2,0.00057508976,[deg] linear transformation element -sin{th}
+cd2_1,-0.00057519565,[deg] linear transformation element sin{th}
+cd2_2,-0.00094369992,[deg] linear transformation element cos{th}
+ctype1,RA---TAN,right ascension coordinate type
+ctype2,DEC--TAN,declination coordinate type
+CUNIT1,deg,physical unit in column dimension
+CUNIT2,deg,physical unit in row dimension
+61
+crval1,293.685,[deg] right ascension at reference pixel
+crval2,44.6508,[deg] declination at reference pixel
+crpix1,197.194,[pixel] reference pixel along image axis 1
+crpix2,215.732,[pixel] reference pixel along image axis 2
+cd1_1,-0.00056733099,[deg] linear transformation element cos{th}
+cd1_2,0.00094805562,[deg] linear transformation element -sin{th}
+cd2_1,0.00094764195,[deg] linear transformation element sin{th}
+cd2_2,0.00056667751,[deg] linear transformation element cos{th}
+ctype1,RA---TAN,right ascension coordinate type
+ctype2,DEC--TAN,declination coordinate type
+CUNIT1,deg,physical unit in column dimension
+CUNIT2,deg,physical unit in row dimension
+62
+crval1,292.762,[deg] right ascension at reference pixel
+crval2,45.7272,[deg] declination at reference pixel
+crpix1,889.068,[pixel] reference pixel along image axis 1
+crpix2,217.101,[pixel] reference pixel along image axis 2
+cd1_1,0.00057844948,[deg] linear transformation element cos{th}
+cd1_2,0.00094151510,[deg] linear transformation element -sin{th}
+cd2_1,-0.00094156907,[deg] linear transformation element sin{th}
+cd2_2,0.00057826510,[deg] linear transformation element cos{th}
+ctype1,RA---TAN,right ascension coordinate type
+ctype2,DEC--TAN,declination coordinate type
+CUNIT1,deg,physical unit in column dimension
+CUNIT2,deg,physical unit in row dimension
+63
+crval1,293.745,[deg] right ascension at reference pixel
+crval2,46.9585,[deg] declination at reference pixel
+crpix1,253.595,[pixel] reference pixel along image axis 1
+crpix2,846.683,[pixel] reference pixel along image axis 2
+cd1_1,0.00056595667,[deg] linear transformation element cos{th}
+cd1_2,-0.00094884353,[deg] linear transformation element -sin{th}
+cd2_1,-0.00094905918,[deg] linear transformation element sin{th}
+cd2_2,-0.00056527363,[deg] linear transformation element cos{th}
+ctype1,RA---TAN,right ascension coordinate type
+ctype2,DEC--TAN,declination coordinate type
+CUNIT1,deg,physical unit in column dimension
+CUNIT2,deg,physical unit in row dimension
+64
+crval1,295.243,[deg] right ascension at reference pixel
+crval2,45.3926,[deg] declination at reference pixel
+crpix1,274.520,[pixel] reference pixel along image axis 1
+crpix2,750.400,[pixel] reference pixel along image axis 2
+cd1_1,-0.00054773451,[deg] linear transformation element cos{th}
+cd1_2,-0.00095963752,[deg] linear transformation element -sin{th}
+cd2_1,0.00095949639,[deg] linear transformation element sin{th}
+cd2_2,-0.00054790133,[deg] linear transformation element cos{th}
+ctype1,RA---TAN,right ascension coordinate type
+ctype2,DEC--TAN,declination coordinate type
+CUNIT1,deg,physical unit in column dimension
+CUNIT2,deg,physical unit in row dimension
+65
+crval1,295.411,[deg] right ascension at reference pixel
+crval2,42.2331,[deg] declination at reference pixel
+crpix1,320.734,[pixel] reference pixel along image axis 1
+crpix2,94.2666,[pixel] reference pixel along image axis 2
+cd1_1,-0.00054748296,[deg] linear transformation element cos{th}
+cd1_2,0.00095951443,[deg] linear transformation element -sin{th}
+cd2_1,0.00095927266,[deg] linear transformation element sin{th}
+cd2_2,0.00054674089,[deg] linear transformation element cos{th}
+ctype1,RA---TAN,right ascension coordinate type
+ctype2,DEC--TAN,declination coordinate type
+CUNIT1,deg,physical unit in column dimension
+CUNIT2,deg,physical unit in row dimension
+66
+crval1,294.766,[deg] right ascension at reference pixel
+crval2,43.3656,[deg] declination at reference pixel
+crpix1,801.704,[pixel] reference pixel along image axis 1
+crpix2,234.104,[pixel] reference pixel along image axis 2
+cd1_1,0.00055423897,[deg] linear transformation element cos{th}
+cd1_2,0.00095534383,[deg] linear transformation element -sin{th}
+cd2_1,-0.00095521094,[deg] linear transformation element sin{th}
+cd2_2,0.00055493020,[deg] linear transformation element cos{th}
+ctype1,RA---TAN,right ascension coordinate type
+ctype2,DEC--TAN,declination coordinate type
+CUNIT1,deg,physical unit in column dimension
+CUNIT2,deg,physical unit in row dimension
+67
+crval1,296.459,[deg] right ascension at reference pixel
+crval2,43.7617,[deg] declination at reference pixel
+crpix1,1036.92,[pixel] reference pixel along image axis 1
+crpix2,790.586,[pixel] reference pixel along image axis 2
+cd1_1,0.00053508097,[deg] linear transformation element cos{th}
+cd1_2,-0.00096663274,[deg] linear transformation element -sin{th}
+cd2_1,-0.00096672286,[deg] linear transformation element sin{th}
+cd2_2,-0.00053438566,[deg] linear transformation element cos{th}
+ctype1,RA---TAN,right ascension coordinate type
+ctype2,DEC--TAN,declination coordinate type
+CUNIT1,deg,physical unit in column dimension
+CUNIT2,deg,physical unit in row dimension
+68
+crval1,297.252,[deg] right ascension at reference pixel
+crval2,42.6995,[deg] declination at reference pixel
+crpix1,93.5884,[pixel] reference pixel along image axis 1
+crpix2,793.080,[pixel] reference pixel along image axis 2
+cd1_1,-0.00052595648,[deg] linear transformation element cos{th}
+cd1_2,-0.00097101924,[deg] linear transformation element -sin{th}
+cd2_1,0.00097162525,[deg] linear transformation element sin{th}
+cd2_2,-0.00052591112,[deg] linear transformation element cos{th}
+ctype1,RA---TAN,right ascension coordinate type
+ctype2,DEC--TAN,declination coordinate type
+CUNIT1,deg,physical unit in column dimension
+CUNIT2,deg,physical unit in row dimension
+69
+crval1,296.762,[deg] right ascension at reference pixel
+crval2,40.6859,[deg] declination at reference pixel
+crpix1,243.779,[pixel] reference pixel along image axis 1
+crpix2,957.589,[pixel] reference pixel along image axis 2
+cd1_1,0.00096798150,[deg] linear transformation element cos{th}
+cd1_2,0.00053230159,[deg] linear transformation element -sin{th}
+cd2_1,0.00053283145,[deg] linear transformation element sin{th}
+cd2_2,-0.00096814875,[deg] linear transformation element cos{th}
+ctype1,RA---TAN,right ascension coordinate type
+ctype2,DEC--TAN,declination coordinate type
+CUNIT1,deg,physical unit in column dimension
+CUNIT2,deg,physical unit in row dimension
+70
+crval1,297.989,[deg] right ascension at reference pixel
+crval2,41.3890,[deg] declination at reference pixel
+crpix1,942.124,[pixel] reference pixel along image axis 1
+crpix2,796.588,[pixel] reference pixel along image axis 2
+cd1_1,-0.00097551565,[deg] linear transformation element cos{th}
+cd1_2,0.00051910705,[deg] linear transformation element -sin{th}
+cd2_1,-0.00051858476,[deg] linear transformation element sin{th}
+cd2_2,-0.00097574953,[deg] linear transformation element cos{th}
+ctype1,RA---TAN,right ascension coordinate type
+ctype2,DEC--TAN,declination coordinate type
+CUNIT1,deg,physical unit in column dimension
+CUNIT2,deg,physical unit in row dimension
+71
+crval1,298.673,[deg] right ascension at reference pixel
+crval2,40.2455,[deg] declination at reference pixel
+crpix1,1010.20,[pixel] reference pixel along image axis 1
+crpix2,235.711,[pixel] reference pixel along image axis 2
+cd1_1,-0.00097961202,[deg] linear transformation element cos{th}
+cd1_2,-0.00051021861,[deg] linear transformation element -sin{th}
+cd2_1,-0.00051106176,[deg] linear transformation element sin{th}
+cd2_2,0.00097971105,[deg] linear transformation element cos{th}
+ctype1,RA---TAN,right ascension coordinate type
+ctype2,DEC--TAN,declination coordinate type
+CUNIT1,deg,physical unit in column dimension
+CUNIT2,deg,physical unit in row dimension
+72
+crval1,297.561,[deg] right ascension at reference pixel
+crval2,39.6868,[deg] declination at reference pixel
+crpix1,296.581,[pixel] reference pixel along image axis 1
+crpix2,149.384,[pixel] reference pixel along image axis 2
+cd1_1,0.00097319942,[deg] linear transformation element cos{th}
+cd1_2,-0.00052328083,[deg] linear transformation element -sin{th}
+cd2_1,0.00052248196,[deg] linear transformation element sin{th}
+cd2_2,0.00097346529,[deg] linear transformation element cos{th}
+ctype1,RA---TAN,right ascension coordinate type
+ctype2,DEC--TAN,declination coordinate type
+CUNIT1,deg,physical unit in column dimension
+CUNIT2,deg,physical unit in row dimension
+73
+crval1,295.069,[deg] right ascension at reference pixel
+crval2,48.6559,[deg] declination at reference pixel
+crpix1,313.995,[pixel] reference pixel along image axis 1
+crpix2,203.974,[pixel] reference pixel along image axis 2
+cd1_1,-0.00054958818,[deg] linear transformation element cos{th}
+cd1_2,0.00095857791,[deg] linear transformation element -sin{th}
+cd2_1,0.00095827449,[deg] linear transformation element sin{th}
+cd2_2,0.00054896352,[deg] linear transformation element cos{th}
+ctype1,RA---TAN,right ascension coordinate type
+ctype2,DEC--TAN,declination coordinate type
+CUNIT1,deg,physical unit in column dimension
+CUNIT2,deg,physical unit in row dimension
+74
+crval1,294.379,[deg] right ascension at reference pixel
+crval2,49.6524,[deg] declination at reference pixel
+crpix1,925.654,[pixel] reference pixel along image axis 1
+crpix2,302.360,[pixel] reference pixel along image axis 2
+cd1_1,0.00055787269,[deg] linear transformation element cos{th}
+cd1_2,0.00095273141,[deg] linear transformation element -sin{th}
+cd2_1,-0.00095359502,[deg] linear transformation element sin{th}
+cd2_2,0.00055844633,[deg] linear transformation element cos{th}
+ctype1,RA---TAN,right ascension coordinate type
+ctype2,DEC--TAN,declination coordinate type
+CUNIT1,deg,physical unit in column dimension
+CUNIT2,deg,physical unit in row dimension
+75
+crval1,295.960,[deg] right ascension at reference pixel
+crval2,50.7271,[deg] declination at reference pixel
+crpix1,536.035,[pixel] reference pixel along image axis 1
+crpix2,583.073,[pixel] reference pixel along image axis 2
+cd1_1,0.00053783365,[deg] linear transformation element cos{th}
+cd1_2,-0.00096513296,[deg] linear transformation element -sin{th}
+cd2_1,-0.00096453116,[deg] linear transformation element sin{th}
+cd2_2,-0.00053717386,[deg] linear transformation element cos{th}
+ctype1,RA---TAN,right ascension coordinate type
+ctype2,DEC--TAN,declination coordinate type
+CUNIT1,deg,physical unit in column dimension
+CUNIT2,deg,physical unit in row dimension
+76
+crval1,296.957,[deg] right ascension at reference pixel
+crval2,49.0750,[deg] declination at reference pixel
+crpix1,98.6515,[pixel] reference pixel along image axis 1
+crpix2,792.569,[pixel] reference pixel along image axis 2
+cd1_1,-0.00052438004,[deg] linear transformation element cos{th}
+cd1_2,-0.00097157826,[deg] linear transformation element -sin{th}
+cd2_1,0.00097203008,[deg] linear transformation element sin{th}
+cd2_2,-0.00052513746,[deg] linear transformation element cos{th}
+ctype1,RA---TAN,right ascension coordinate type
+ctype2,DEC--TAN,declination coordinate type
+CUNIT1,deg,physical unit in column dimension
+CUNIT2,deg,physical unit in row dimension
+77
+crval1,297.191,[deg] right ascension at reference pixel
+crval2,45.9624,[deg] declination at reference pixel
+crpix1,127.773,[pixel] reference pixel along image axis 1
+crpix2,155.574,[pixel] reference pixel along image axis 2
+cd1_1,-0.00052452917,[deg] linear transformation element cos{th}
+cd1_2,0.00097272047,[deg] linear transformation element -sin{th}
+cd2_1,0.00097208485,[deg] linear transformation element sin{th}
+cd2_2,0.00052381545,[deg] linear transformation element cos{th}
+ctype1,RA---TAN,right ascension coordinate type
+ctype2,DEC--TAN,declination coordinate type
+CUNIT1,deg,physical unit in column dimension
+CUNIT2,deg,physical unit in row dimension
+78
+crval1,296.458,[deg] right ascension at reference pixel
+crval2,47.0457,[deg] declination at reference pixel
+crpix1,1017.60,[pixel] reference pixel along image axis 1
+crpix2,224.180,[pixel] reference pixel along image axis 2
+cd1_1,0.00053319288,[deg] linear transformation element cos{th}
+cd1_2,0.00096690353,[deg] linear transformation element -sin{th}
+cd2_1,-0.00096767150,[deg] linear transformation element sin{th}
+cd2_2,0.00053368248,[deg] linear transformation element cos{th}
+ctype1,RA---TAN,right ascension coordinate type
+ctype2,DEC--TAN,declination coordinate type
+CUNIT1,deg,physical unit in column dimension
+CUNIT2,deg,physical unit in row dimension
+79
+crval1,297.870,[deg] right ascension at reference pixel
+crval2,47.7711,[deg] declination at reference pixel
+crpix1,850.278,[pixel] reference pixel along image axis 1
+crpix2,868.745,[pixel] reference pixel along image axis 2
+cd1_1,0.00051536494,[deg] linear transformation element cos{th}
+cd1_2,-0.00097747577,[deg] linear transformation element -sin{th}
+cd2_1,-0.00097748481,[deg] linear transformation element sin{th}
+cd2_2,-0.00051525036,[deg] linear transformation element cos{th}
+ctype1,RA---TAN,right ascension coordinate type
+ctype2,DEC--TAN,declination coordinate type
+CUNIT1,deg,physical unit in column dimension
+CUNIT2,deg,physical unit in row dimension
+80
+crval1,299.684,[deg] right ascension at reference pixel
+crval2,46.9931,[deg] declination at reference pixel
+crpix1,241.100,[pixel] reference pixel along image axis 1
+crpix2,200.184,[pixel] reference pixel along image axis 2
+cd1_1,-0.00049205868,[deg] linear transformation element cos{th}
+cd1_2,-0.00098927986,[deg] linear transformation element -sin{th}
+cd2_1,0.00098905299,[deg] linear transformation element sin{th}
+cd2_2,-0.00049243048,[deg] linear transformation element cos{th}
+ctype1,RA---TAN,right ascension coordinate type
+ctype2,DEC--TAN,declination coordinate type
+CUNIT1,deg,physical unit in column dimension
+CUNIT2,deg,physical unit in row dimension
+81
+crval1,299.166,[deg] right ascension at reference pixel
+crval2,43.3725,[deg] declination at reference pixel
+crpix1,38.4229,[pixel] reference pixel along image axis 1
+crpix2,194.181,[pixel] reference pixel along image axis 2
+cd1_1,-0.00050225845,[deg] linear transformation element cos{th}
+cd1_2,0.00098428006,[deg] linear transformation element -sin{th}
+cd2_1,0.00098382471,[deg] linear transformation element sin{th}
+cd2_2,0.00050145762,[deg] linear transformation element cos{th}
+ctype1,RA---TAN,right ascension coordinate type
+ctype2,DEC--TAN,declination coordinate type
+CUNIT1,deg,physical unit in column dimension
+CUNIT2,deg,physical unit in row dimension
+82
+crval1,298.274,[deg] right ascension at reference pixel
+crval2,44.7291,[deg] declination at reference pixel
+crpix1,829.011,[pixel] reference pixel along image axis 1
+crpix2,242.789,[pixel] reference pixel along image axis 2
+cd1_1,0.00051247017,[deg] linear transformation element cos{th}
+cd1_2,0.00097821637,[deg] linear transformation element -sin{th}
+cd2_1,-0.00097856000,[deg] linear transformation element sin{th}
+cd2_2,0.00051313737,[deg] linear transformation element cos{th}
+ctype1,RA---TAN,right ascension coordinate type
+ctype2,DEC--TAN,declination coordinate type
+CUNIT1,deg,physical unit in column dimension
+CUNIT2,deg,physical unit in row dimension
+83
+crval1,299.766,[deg] right ascension at reference pixel
+crval2,45.0647,[deg] declination at reference pixel
+crpix1,994.621,[pixel] reference pixel along image axis 1
+crpix2,933.477,[pixel] reference pixel along image axis 2
+cd1_1,0.00049458489,[deg] linear transformation element cos{th}
+cd1_2,-0.00098835232,[deg] linear transformation element -sin{th}
+cd2_1,-0.00098846820,[deg] linear transformation element sin{th}
+cd2_2,-0.00049454506,[deg] linear transformation element cos{th}
+ctype1,RA---TAN,right ascension coordinate type
+ctype2,DEC--TAN,declination coordinate type
+CUNIT1,deg,physical unit in column dimension
+CUNIT2,deg,physical unit in row dimension
+84
+crval1,300.465,[deg] right ascension at reference pixel
+crval2,43.9838,[deg] declination at reference pixel
+crpix1,153.598,[pixel] reference pixel along image axis 1
+crpix2,962.860,[pixel] reference pixel along image axis 2
+cd1_1,-0.00048607521,[deg] linear transformation element cos{th}
+cd1_2,-0.00099297549,[deg] linear transformation element -sin{th}
+cd2_1,0.00099260803,[deg] linear transformation element sin{th}
+cd2_2,-0.00048568881,[deg] linear transformation element cos{th}
+ctype1,RA---TAN,right ascension coordinate type
+ctype2,DEC--TAN,declination coordinate type
+CUNIT1,deg,physical unit in column dimension
+CUNIT2,deg,physical unit in row dimension

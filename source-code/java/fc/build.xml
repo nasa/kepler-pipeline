@@ -1,0 +1,455 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Copyright 2017 United States Government as represented by the
+  Administrator of the National Aeronautics and Space Administration.
+  All Rights Reserved.
+  
+  This file is available under the terms of the NASA Open Source Agreement
+  (NOSA). You should have received a copy of this agreement with the
+  Kepler source code; see the file NASA-OPEN-SOURCE-AGREEMENT.doc.
+  
+  No Warranty: THE SUBJECT SOFTWARE IS PROVIDED "AS IS" WITHOUT ANY
+  WARRANTY OF ANY KIND, EITHER EXPRESSED, IMPLIED, OR STATUTORY,
+  INCLUDING, BUT NOT LIMITED TO, ANY WARRANTY THAT THE SUBJECT SOFTWARE
+  WILL CONFORM TO SPECIFICATIONS, ANY IMPLIED WARRANTIES OF
+  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, OR FREEDOM FROM
+  INFRINGEMENT, ANY WARRANTY THAT THE SUBJECT SOFTWARE WILL BE ERROR
+  FREE, OR ANY WARRANTY THAT DOCUMENTATION, IF PROVIDED, WILL CONFORM
+  TO THE SUBJECT SOFTWARE. THIS AGREEMENT DOES NOT, IN ANY MANNER,
+  CONSTITUTE AN ENDORSEMENT BY GOVERNMENT AGENCY OR ANY PRIOR RECIPIENT
+  OF ANY RESULTS, RESULTING DESIGNS, HARDWARE, SOFTWARE PRODUCTS OR ANY
+  OTHER APPLICATIONS RESULTING FROM USE OF THE SUBJECT SOFTWARE.
+  FURTHER, GOVERNMENT AGENCY DISCLAIMS ALL WARRANTIES AND LIABILITIES
+  REGARDING THIRD-PARTY SOFTWARE, IF PRESENT IN THE ORIGINAL SOFTWARE,
+  AND DISTRIBUTES IT "AS IS."
+
+  Waiver and Indemnity: RECIPIENT AGREES TO WAIVE ANY AND ALL CLAIMS
+  AGAINST THE UNITED STATES GOVERNMENT, ITS CONTRACTORS AND
+  SUBCONTRACTORS, AS WELL AS ANY PRIOR RECIPIENT. IF RECIPIENT'S USE OF
+  THE SUBJECT SOFTWARE RESULTS IN ANY LIABILITIES, DEMANDS, DAMAGES,
+  EXPENSES OR LOSSES ARISING FROM SUCH USE, INCLUDING ANY DAMAGES FROM
+  PRODUCTS BASED ON, OR RESULTING FROM, RECIPIENT'S USE OF THE SUBJECT
+  SOFTWARE, RECIPIENT SHALL INDEMNIFY AND HOLD HARMLESS THE UNITED
+  STATES GOVERNMENT, ITS CONTRACTORS AND SUBCONTRACTORS, AS WELL AS ANY
+  PRIOR RECIPIENT, TO THE EXTENT PERMITTED BY LAW. RECIPIENT'S SOLE
+  REMEDY FOR ANY SUCH MATTER SHALL BE THE IMMEDIATE, UNILATERAL
+  TERMINATION OF THIS AGREEMENT.
+-->
+
+<project basedir="." default="build" name="fc">
+
+  <import file="../include/ant/standard.xml" />
+
+  <target name="dist-post" description="Copy seed data to dist/seed-data">
+    <copy todir="${dist.seed-data}">
+      <fileset dir="${seed-data}" includes="**/*"/>
+    </copy>
+  </target>
+
+  <target name="import-all" depends="build, import-largeflat-defaults, import-image-all, import-nonimage-all" description="import all">
+  </target>
+
+  <target name="import-radec2pix" depends="build, import-rolltime-defaults, import-pointing-defaults, import-geometry-defaults" description="import db for radec2pix">
+  </target>
+
+  <target name="import-nonimage-all" depends="build, import-readnoise-defaults, import-undershoot-defaults, import-gain-defaults, import-linearity-defaults, import-radec2pix, import-invalidpixels-defaults" description="Seed the database using the non-image importers with default arguments.">
+  </target>
+
+  <target name="import-image-all" depends="build, import-smallflat-defaults, import-twodblack-defaults" description="Seed the database with image-based models using the importers with default arguments (mod2/out1 only).">
+  </target>
+
+  <target name="import-smallflat-args" depends="build" description="use the importer to import smallflat.">
+    <java classname="gov.nasa.kepler.fc.importer.ImporterSmallFlatField" failonerror="true" fork="yes">
+      <classpath refid="classpath.runtime" />
+      <jvmarg value="-Xmx1500M" />
+      <arg value="${operation}" />
+      <arg value="${reason}" />
+      <arg value="${file}" />
+    </java>
+  </target>
+
+  <target name="import-smallflat-defaults" depends="build" description="use the importer to import smallflat.">
+    <java classname="gov.nasa.kepler.fc.importer.ImporterSmallFlatField" failonerror="true" fork="yes">
+      <classpath refid="classpath.runtime" />
+      <jvmarg value="-Xmx1500M" />
+      <arg value="update" />
+      <arg value="importerLoad smallflat" />
+      <arg value="/path/to/recdels/so/rec/small_scale_flat/smallscaleflat021-2008022614.txt" />
+    </java>
+  </target>
+
+  <target name="import-twodblack-args" depends="build" description="use the importer to import 2d black.">
+    <java classname="gov.nasa.kepler.fc.importer.ImporterTwoDBlack" failonerror="true" fork="yes">
+      <classpath refid="classpath.runtime" />
+      <jvmarg value="-Xmx1500M" />
+      <arg value="${operation}" />
+      <arg value="${reason}" />
+      <arg value="${file}" />
+    </java>
+  </target>
+
+  <target name="import-twodblack-defaults" depends="build" description="use the importer to import 2d black.">
+    <java classname="gov.nasa.kepler.fc.importer.ImporterTwoDBlack" failonerror="true" fork="yes">
+      <classpath refid="classpath.runtime" />
+      <jvmarg value="-Xmx1500M" />
+      <arg value="update" />
+      <arg value="importerLoad 2dblack" />
+      <arg value="/path/to/recdels/so/rec/2D_black/fake-black2d-mod2out1.txt" />
+    </java>
+  </target>
+
+  <target name="import-undershoot-args" depends="build" description="use the importer to import undershoot.">
+    <java classname="gov.nasa.kepler.fc.importer.ImporterUndershoot" failonerror="true" fork="yes">
+      <classpath refid="classpath.runtime" />
+      <arg value="${operation}" />
+      <arg value="${reason}" />
+      <arg value="${file}" />
+    </java>
+  </target>
+
+  <target name="import-undershoot-defaults" depends="build" description="use the importer to import undershoot.">
+    <java classname="gov.nasa.kepler.fc.importer.ImporterUndershoot" failonerror="true" fork="yes">
+      <classpath refid="classpath.runtime" />
+      <arg value="update" />
+      <arg value="importerLoad undershoot" />
+    </java>
+  </target>
+
+  <target name="import-prf-args" depends="build" description="use the importer to import prf.">
+    <java classname="gov.nasa.kepler.fc.importer.ImporterPrf" failonerror="true" fork="yes">
+      <classpath refid="classpath.runtime" />
+      <arg value="${operation}" />
+      <arg value="${reason}" />
+      <arg value="${file}" />
+    </java>
+  </target>
+
+  <target name="import-prf-defaults" depends="import-prf-defaults1, import-prf-defaults2" description="Seed the database with prfs, in two parts.">
+  </target>
+
+  <target name="import-prf-defaults1" depends="build" description="use the importer to import prf (first 42 prf files).">
+    <java classname="gov.nasa.kepler.fc.importer.ImporterPrf" failonerror="true" fork="yes">
+      <jvmarg value="-Xmx1500M" />
+      <classpath refid="classpath.runtime" />
+      <arg value="update" />
+      <arg value="importerLoad prf1/2" />
+      <arg value="/path/to/ETEM_PSFs/all_blobs/prf021-2008032321.dat" />
+      <arg value="/path/to/ETEM_PSFs/all_blobs/prf022-2008032321.dat" />
+      <arg value="/path/to/ETEM_PSFs/all_blobs/prf023-2008032321.dat" />
+      <arg value="/path/to/ETEM_PSFs/all_blobs/prf024-2008032321.dat" />
+      <arg value="/path/to/ETEM_PSFs/all_blobs/prf031-2008032321.dat" />
+      <arg value="/path/to/ETEM_PSFs/all_blobs/prf032-2008032321.dat" />
+      <arg value="/path/to/ETEM_PSFs/all_blobs/prf033-2008032321.dat" />
+      <arg value="/path/to/ETEM_PSFs/all_blobs/prf034-2008032321.dat" />
+      <arg value="/path/to/ETEM_PSFs/all_blobs/prf041-2008032321.dat" />
+      <arg value="/path/to/ETEM_PSFs/all_blobs/prf042-2008032321.dat" />
+      <arg value="/path/to/ETEM_PSFs/all_blobs/prf043-2008032321.dat" />
+      <arg value="/path/to/ETEM_PSFs/all_blobs/prf044-2008032321.dat" />
+      <arg value="/path/to/ETEM_PSFs/all_blobs/prf061-2008032321.dat" />
+      <arg value="/path/to/ETEM_PSFs/all_blobs/prf062-2008032321.dat" />
+      <arg value="/path/to/ETEM_PSFs/all_blobs/prf063-2008032321.dat" />
+      <arg value="/path/to/ETEM_PSFs/all_blobs/prf064-2008032321.dat" />
+      <arg value="/path/to/ETEM_PSFs/all_blobs/prf071-2008032321.dat" />
+      <arg value="/path/to/ETEM_PSFs/all_blobs/prf072-2008032321.dat" />
+      <arg value="/path/to/ETEM_PSFs/all_blobs/prf073-2008032321.dat" />
+      <arg value="/path/to/ETEM_PSFs/all_blobs/prf074-2008032321.dat" />
+      <arg value="/path/to/ETEM_PSFs/all_blobs/prf081-2008032321.dat" />
+      <arg value="/path/to/ETEM_PSFs/all_blobs/prf082-2008032321.dat" />
+      <arg value="/path/to/ETEM_PSFs/all_blobs/prf083-2008032321.dat" />
+      <arg value="/path/to/ETEM_PSFs/all_blobs/prf084-2008032321.dat" />
+      <arg value="/path/to/ETEM_PSFs/all_blobs/prf091-2008032321.dat" />
+      <arg value="/path/to/ETEM_PSFs/all_blobs/prf092-2008032321.dat" />
+      <arg value="/path/to/ETEM_PSFs/all_blobs/prf093-2008032321.dat" />
+      <arg value="/path/to/ETEM_PSFs/all_blobs/prf094-2008032321.dat" />
+      <arg value="/path/to/ETEM_PSFs/all_blobs/prf101-2008032321.dat" />
+      <arg value="/path/to/ETEM_PSFs/all_blobs/prf102-2008032321.dat" />
+      <arg value="/path/to/ETEM_PSFs/all_blobs/prf103-2008032321.dat" />
+      <arg value="/path/to/ETEM_PSFs/all_blobs/prf104-2008032321.dat" />
+      <arg value="/path/to/ETEM_PSFs/all_blobs/prf111-2008032321.dat" />
+      <arg value="/path/to/ETEM_PSFs/all_blobs/prf112-2008032321.dat" />
+      <arg value="/path/to/ETEM_PSFs/all_blobs/prf113-2008032321.dat" />
+      <arg value="/path/to/ETEM_PSFs/all_blobs/prf114-2008032321.dat" />
+      <arg value="/path/to/ETEM_PSFs/all_blobs/prf121-2008032321.dat" />
+      <arg value="/path/to/ETEM_PSFs/all_blobs/prf122-2008032321.dat" />
+      <arg value="/path/to/ETEM_PSFs/all_blobs/prf123-2008032321.dat" />
+      <arg value="/path/to/ETEM_PSFs/all_blobs/prf124-2008032321.dat" />
+      <arg value="/path/to/ETEM_PSFs/all_blobs/prf131-2008032321.dat" />
+      <arg value="/path/to/ETEM_PSFs/all_blobs/prf132-2008032321.dat" />
+    </java>
+  </target>
+
+  <target name="import-prf-defaults2" depends="build" description="use the importer to import prf (second 42 files).">
+    <java classname="gov.nasa.kepler.fc.importer.ImporterPrf" failonerror="true" fork="yes">
+      <jvmarg value="-Xmx1500M" />
+      <classpath refid="classpath.runtime" />
+      <arg value="update" />
+      <arg value="importerLoad prf2/2" />
+      <arg value="/path/to/ETEM_PSFs/all_blobs/prf133-2008032321.dat" />
+      <arg value="/path/to/ETEM_PSFs/all_blobs/prf134-2008032321.dat" />
+      <arg value="/path/to/ETEM_PSFs/all_blobs/prf141-2008032321.dat" />
+      <arg value="/path/to/ETEM_PSFs/all_blobs/prf142-2008032321.dat" />
+      <arg value="/path/to/ETEM_PSFs/all_blobs/prf143-2008032321.dat" />
+      <arg value="/path/to/ETEM_PSFs/all_blobs/prf144-2008032321.dat" />
+      <arg value="/path/to/ETEM_PSFs/all_blobs/prf151-2008032321.dat" />
+      <arg value="/path/to/ETEM_PSFs/all_blobs/prf152-2008032321.dat" />
+      <arg value="/path/to/ETEM_PSFs/all_blobs/prf153-2008032321.dat" />
+      <arg value="/path/to/ETEM_PSFs/all_blobs/prf154-2008032321.dat" />
+      <arg value="/path/to/ETEM_PSFs/all_blobs/prf161-2008032321.dat" />
+      <arg value="/path/to/ETEM_PSFs/all_blobs/prf162-2008032321.dat" />
+      <arg value="/path/to/ETEM_PSFs/all_blobs/prf163-2008032321.dat" />
+      <arg value="/path/to/ETEM_PSFs/all_blobs/prf164-2008032321.dat" />
+      <arg value="/path/to/ETEM_PSFs/all_blobs/prf171-2008032321.dat" />
+      <arg value="/path/to/ETEM_PSFs/all_blobs/prf172-2008032321.dat" />
+      <arg value="/path/to/ETEM_PSFs/all_blobs/prf173-2008032321.dat" />
+      <arg value="/path/to/ETEM_PSFs/all_blobs/prf174-2008032321.dat" />
+      <arg value="/path/to/ETEM_PSFs/all_blobs/prf181-2008032321.dat" />
+      <arg value="/path/to/ETEM_PSFs/all_blobs/prf182-2008032321.dat" />
+      <arg value="/path/to/ETEM_PSFs/all_blobs/prf183-2008032321.dat" />
+      <arg value="/path/to/ETEM_PSFs/all_blobs/prf184-2008032321.dat" />
+      <arg value="/path/to/ETEM_PSFs/all_blobs/prf191-2008032321.dat" />
+      <arg value="/path/to/ETEM_PSFs/all_blobs/prf192-2008032321.dat" />
+      <arg value="/path/to/ETEM_PSFs/all_blobs/prf193-2008032321.dat" />
+      <arg value="/path/to/ETEM_PSFs/all_blobs/prf194-2008032321.dat" />
+      <arg value="/path/to/ETEM_PSFs/all_blobs/prf201-2008032321.dat" />
+      <arg value="/path/to/ETEM_PSFs/all_blobs/prf202-2008032321.dat" />
+      <arg value="/path/to/ETEM_PSFs/all_blobs/prf203-2008032321.dat" />
+      <arg value="/path/to/ETEM_PSFs/all_blobs/prf204-2008032321.dat" />
+      <arg value="/path/to/ETEM_PSFs/all_blobs/prf221-2008032321.dat" />
+      <arg value="/path/to/ETEM_PSFs/all_blobs/prf222-2008032321.dat" />
+      <arg value="/path/to/ETEM_PSFs/all_blobs/prf223-2008032321.dat" />
+      <arg value="/path/to/ETEM_PSFs/all_blobs/prf224-2008032321.dat" />
+      <arg value="/path/to/ETEM_PSFs/all_blobs/prf231-2008032321.dat" />
+      <arg value="/path/to/ETEM_PSFs/all_blobs/prf232-2008032321.dat" />
+      <arg value="/path/to/ETEM_PSFs/all_blobs/prf233-2008032321.dat" />
+      <arg value="/path/to/ETEM_PSFs/all_blobs/prf234-2008032321.dat" />
+      <arg value="/path/to/ETEM_PSFs/all_blobs/prf241-2008032321.dat" />
+      <arg value="/path/to/ETEM_PSFs/all_blobs/prf242-2008032321.dat" />
+      <arg value="/path/to/ETEM_PSFs/all_blobs/prf243-2008032321.dat" />
+      <arg value="/path/to/ETEM_PSFs/all_blobs/prf244-2008032321.dat" />
+    </java>
+  </target>
+
+  <target name="import-readnoise-args" depends="build" description="use the importer to import read noise.">
+    <java classname="gov.nasa.kepler.fc.importer.ImporterReadNoise" failonerror="true" fork="yes">
+      <classpath refid="classpath.runtime" />
+      <arg value="${operation}" />
+      <arg value="${reason}" />
+      <arg value="${file}" />
+    </java>
+  </target>
+
+  <target name="import-readnoise-defaults" depends="build" description="use the importer to import read noise.">
+    <java classname="gov.nasa.kepler.fc.importer.ImporterReadNoise" failonerror="true" fork="yes">
+      <classpath refid="classpath.runtime" />
+      <arg value="update" />
+      <arg value="importerLoad readnoise" />
+    </java>
+  </target>
+
+  <target name="import-gain-args" depends="build" description="use the importer to import gain.">
+    <java classname="gov.nasa.kepler.fc.importer.ImporterGain" failonerror="true" fork="yes">
+      <classpath refid="classpath.runtime" />
+      <arg value="${operation}" />
+      <arg value="${reason}" />
+      <arg value="${file}" />
+    </java>
+  </target>
+
+  <target name="import-gain-defaults" depends="build" description="use the importer to import gain.">
+    <java classname="gov.nasa.kepler.fc.importer.ImporterGain" failonerror="true" fork="yes">
+      <classpath refid="classpath.runtime" />
+      <arg value="update" />
+      <arg value="importerLoad gain" />
+    </java>
+  </target>
+
+  <target name="import-rolltime-args" depends="build" description="use the importer to import rolltime.">
+    <java classname="gov.nasa.kepler.fc.importer.ImporterRollTime" failonerror="true" fork="yes">
+      <classpath refid="classpath.runtime" />
+      <arg value="${operation}" />
+      <arg value="${reason}" />
+      <arg value="${file}" />
+    </java>
+  </target>
+
+  <target name="import-rolltime-defaults" depends="build" description="use the importer to import rolltime.">
+    <java classname="gov.nasa.kepler.fc.importer.ImporterRollTime" failonerror="true" fork="yes">
+      <classpath refid="classpath.runtime" />
+      <arg value="update" />
+      <arg value="importerLoad rolltime" />
+    </java>
+  </target>
+
+  <target name="import-pointing-args" depends="build" description="use the importer to import pointing.">
+    <java classname="gov.nasa.kepler.fc.importer.ImporterPointing" failonerror="true" fork="yes">
+      <classpath refid="classpath.runtime" />
+      <arg value="${operation}" />
+      <arg value="${reason}" />
+      <arg value="${file}" />
+    </java>
+  </target>
+
+  <target name="import-pointing-defaults" depends="build" description="use the importer to import pointing.">
+    <java classname="gov.nasa.kepler.fc.importer.ImporterPointing" failonerror="true" fork="yes">
+      <classpath refid="classpath.runtime" />
+      <arg value="update" />
+      <arg value="importerLoad pointing" />
+    </java>
+  </target>
+
+  <target name="import-linearity-args" depends="build" description="use the importer to import linearity.">
+    <java classname="gov.nasa.kepler.fc.importer.ImporterLinearity" failonerror="true" fork="yes">
+      <classpath refid="classpath.runtime" />
+      <arg value="${operation}" />
+      <arg value="${reason}" />
+      <arg value="${file}" />
+    </java>
+  </target>
+
+  <target name="import-linearity-defaults" depends="build" description="use the importer to import linearity.">
+    <java classname="gov.nasa.kepler.fc.importer.ImporterLinearity" failonerror="true" fork="yes">
+      <classpath refid="classpath.runtime" />
+      <arg value="update" />
+      <arg value="importerLoad linearity" />
+    </java>
+  </target>
+
+  <target name="import-invalidpixels-args" depends="build" description="use the importer to import invalidpixels.">
+    <java classname="gov.nasa.kepler.fc.importer.ImporterInvalidPixels" failonerror="true" fork="yes">
+      <classpath refid="classpath.runtime" />
+      <arg value="${operation}" />
+      <arg value="${reason}" />
+      <arg value="${file}" />
+    </java>
+  </target>
+
+  <target name="import-invalidpixels-defaults" depends="build" description="use the importer to import invalidpixels.">
+    <java classname="gov.nasa.kepler.fc.importer.ImporterInvalidPixels" failonerror="true" fork="yes">
+      <classpath refid="classpath.runtime" />
+      <arg value="update" />
+      <arg value="importerUpdate invalidpixels" />
+    </java>
+  </target>
+
+  <target name="import-geometry-args" depends="build" description="use the importer to import geometry.">
+    <java classname="gov.nasa.kepler.fc.importer.ImporterGeometry" failonerror="true" fork="yes">
+      <classpath refid="classpath.runtime" />
+      <arg value="${operation}" />
+      <arg value="${reason}" />
+      <arg value="${file}" />
+    </java>
+  </target>
+
+  <target name="import-geometry-defaults" depends="build" description="use the importer to import geometry.">
+    <java classname="gov.nasa.kepler.fc.importer.ImporterGeometry" failonerror="true" fork="yes">
+      <classpath refid="classpath.runtime" />
+      <arg value="update" />
+      <arg value="importerLoad geometry" />
+    </java>
+  </target>
+
+  <target name="import-largeflat-defaults" depends="build" description="use the importer to import largeflat.">
+    <java classname="gov.nasa.kepler.fc.importer.ImporterLargeFlatField" failonerror="true" fork="yes">
+      <classpath refid="classpath.runtime" />
+      <arg value="update" />
+      <arg value="importerLoad largeflat" />
+    </java>
+  </target>
+
+  <target name="import-largeflat-args" depends="build" description="use the importer to import geometry.">
+    <java classname="gov.nasa.kepler.fc.importer.ImporterLargeFlatField" failonerror="true" fork="yes">
+      <classpath refid="classpath.runtime" />
+      <arg value="${operation}" />
+      <arg value="${reason}" />
+      <arg value="${file}" />
+    </java>
+  </target>
+
+  <target name="seed-db" depends="build, seed-geometry, seed-pointing, seed-rolltime, seed-gain, seed-linearity, seed-prf, seed-undershoot, seed-largeflat, seed-smallflat, seed-twodblack" description="Seed the database.">
+  </target>
+
+  <target name="seed-geometry" depends="build" description="Seed the geometry table in the database.">
+    <java classname="gov.nasa.kepler.fc.geometry.SeedDatabaseGeometry" failonerror="true" fork="yes">
+      <classpath refid="classpath.runtime" />
+      <jvmarg value="-Xmx1G" />
+    </java>
+  </target>
+
+  <target name="seed-largeflat" depends="build" description="Seed the large flat table in the database.">
+    <java classname="gov.nasa.kepler.fc.flatfield.SeedDatabaseLargeFlatfield" failonerror="true" fork="yes">
+      <classpath refid="classpath.runtime" />
+      <jvmarg value="-Xmx1G" />
+    </java>
+  </target>
+
+  <target name="seed-smallflat" depends="build" description="Seed the small flat table in the database.">
+    <java classname="gov.nasa.kepler.fc.flatfield.SeedDatabaseSmallFlatfield" failonerror="true" fork="yes">
+      <classpath refid="classpath.runtime" />
+      <jvmarg value="-Xmx1500M" />
+    </java>
+  </target>
+
+  <target name="seed-twodblack" depends="build" description="Seed the Two-D Black table in the database.">
+    <java classname="gov.nasa.kepler.fc.twodblack.SeedDatabaseTwoDBlack" failonerror="true" fork="yes">
+      <classpath refid="classpath.runtime" />
+      <jvmarg value="-Xmx1500M" />
+    </java>
+  </target>
+
+  <target name="seed-gain" depends="build" description="Seed the gain table in the database.">
+    <java classname="gov.nasa.kepler.fc.gain.SeedDatabaseGain" failonerror="true" fork="yes">
+      <classpath refid="classpath.runtime" />
+      <jvmarg value="-Xmx1G" />
+    </java>
+  </target>
+
+  <target name="seed-pointing" depends="build" description="Seed the pointing table in the database.">
+    <java classname="gov.nasa.kepler.fc.pointing.SeedDatabasePointing" failonerror="true" fork="yes">
+      <classpath refid="classpath.runtime" />
+      <jvmarg value="-Xmx1G" />
+    </java>
+  </target>
+
+  <target name="seed-rolltime" depends="build" description="Seed the rolltime table in the database.">
+    <java classname="gov.nasa.kepler.fc.rolltime.SeedDatabaseRollTime" failonerror="true" fork="yes">
+      <classpath refid="classpath.runtime" />
+      <jvmarg value="-Xmx1G" />
+    </java>
+  </target>
+
+  <target name="seed-undershoot" depends="build" description="Seed the undershoot table in the database.">
+    <java classname="gov.nasa.kepler.fc.undershoot.SeedDatabaseUndershoot" failonerror="true" fork="yes">
+      <classpath refid="classpath.runtime" />
+      <jvmarg value="-Xmx1G" />
+    </java>
+  </target>
+
+  <target name="seed-linearity" depends="build" description="Seed the linearity table in the database.">
+    <java classname="gov.nasa.kepler.fc.linearity.SeedDatabaseLinearity" failonerror="true" fork="yes">
+      <classpath refid="classpath.runtime" />
+      <jvmarg value="-Xmx1G" />
+    </java>
+  </target>
+  
+  <target name="seed-pixels" depends="build" description="Seed the invalid pixels table in the database.">
+    <java classname="gov.nasa.kepler.fc.importer.ImporterInvalidPixels" failonerror="true" fork="yes">
+      <classpath refid="classpath.runtime" />
+      <jvmarg value="-Xmx1G" />
+      <arg value="${file}" />
+    </java>
+  </target>
+  
+  <target name="seed-prf" depends="build" description="Seed the prf in the database.">
+    <java classname="gov.nasa.kepler.fc.prf.SeedDatabasePrf" failonerror="true" fork="yes">
+      <classpath refid="classpath.runtime" />
+      <jvmarg value="-Xmx1G" />
+    </java>
+  </target>
+
+  <target name="junktest" depends="build">
+    <java classname="gov.nasa.kepler.fc.flatfield.JunkTest" failonerror="true" fork="yes">
+      <classpath refid="classpath.runtime" />
+    </java>
+  </target>
+
+</project>

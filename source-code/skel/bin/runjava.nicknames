@@ -1,0 +1,228 @@
+# FORMAT: 
+# nickname|fully.specified.classname|space-delimited jvm args|space-delimited program args
+#
+# 
+# Copyright 2017 United States Government as represented by the
+# Administrator of the National Aeronautics and Space Administration.
+# All Rights Reserved.
+# 
+# This file is available under the terms of the NASA Open Source Agreement
+# (NOSA). You should have received a copy of this agreement with the
+# Kepler source code; see the file NASA-OPEN-SOURCE-AGREEMENT.doc.
+# 
+# No Warranty: THE SUBJECT SOFTWARE IS PROVIDED "AS IS" WITHOUT ANY
+# WARRANTY OF ANY KIND, EITHER EXPRESSED, IMPLIED, OR STATUTORY,
+# INCLUDING, BUT NOT LIMITED TO, ANY WARRANTY THAT THE SUBJECT SOFTWARE
+# WILL CONFORM TO SPECIFICATIONS, ANY IMPLIED WARRANTIES OF
+# MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, OR FREEDOM FROM
+# INFRINGEMENT, ANY WARRANTY THAT THE SUBJECT SOFTWARE WILL BE ERROR
+# FREE, OR ANY WARRANTY THAT DOCUMENTATION, IF PROVIDED, WILL CONFORM
+# TO THE SUBJECT SOFTWARE. THIS AGREEMENT DOES NOT, IN ANY MANNER,
+# CONSTITUTE AN ENDORSEMENT BY GOVERNMENT AGENCY OR ANY PRIOR RECIPIENT
+# OF ANY RESULTS, RESULTING DESIGNS, HARDWARE, SOFTWARE PRODUCTS OR ANY
+# OTHER APPLICATIONS RESULTING FROM USE OF THE SUBJECT SOFTWARE.
+# FURTHER, GOVERNMENT AGENCY DISCLAIMS ALL WARRANTIES AND LIABILITIES
+# REGARDING THIRD-PARTY SOFTWARE, IF PRESENT IN THE ORIGINAL SOFTWARE,
+# AND DISTRIBUTES IT "AS IS."
+#
+# Waiver and Indemnity: RECIPIENT AGREES TO WAIVE ANY AND ALL CLAIMS
+# AGAINST THE UNITED STATES GOVERNMENT, ITS CONTRACTORS AND
+# SUBCONTRACTORS, AS WELL AS ANY PRIOR RECIPIENT. IF RECIPIENT'S USE OF
+# THE SUBJECT SOFTWARE RESULTS IN ANY LIABILITIES, DEMANDS, DAMAGES,
+# EXPENSES OR LOSSES ARISING FROM SUCH USE, INCLUDING ANY DAMAGES FROM
+# PRODUCTS BASED ON, OR RESULTING FROM, RECIPIENT'S USE OF THE SUBJECT
+# SOFTWARE, RECIPIENT SHALL INDEMNIFY AND HOLD HARMLESS THE UNITED
+# STATES GOVERNMENT, ITS CONTRACTORS AND SUBCONTRACTORS, AS WELL AS ANY
+# PRIOR RECIPIENT, TO THE EXTENT PERMITTED BY LAW. RECIPIENT'S SOLE
+# REMEDY FOR ANY SUCH MATTER SHALL BE THE IMMEDIATE, UNILATERAL
+# TERMINATION OF THIS AGREEMENT.
+#
+
+DEFAULT_JVM_ARGS=-Dfoo=foo
+
+derby|org.apache.derby.drda.NetworkServerControl||start -h 0.0.0.0 -p 1528
+dump-props1|gov.nasa.kepler.services.configuration.DumpSystemProperties||
+
+# These defaults are used for all nicknames listed below, but they can be overridden for a specific nick
+DEFAULT_JVM_ARGS=-Dconfig.propfile=SOC_HOME/etc/kepler.properties -Dlog4j.configuration=file:SOC_HOME/etc/log4j.xml -Dlog4j.logfile.prefix=SOC_HOME/logs/runjava -Djava.library.path=SOC_HOME/lib
+
+seed-security|gov.nasa.kepler.services.security.SecuritySeedData||
+seed-cm|gov.nasa.kepler.cm.CmSeedData||
+
+# fc importers
+import-gain|gov.nasa.kepler.fc.importer.ImporterGain||
+import-geometry|gov.nasa.kepler.fc.importer.ImporterGeometry||
+import-invalid-pixels|gov.nasa.kepler.fc.importer.ImporterInvalidPixels||
+import-largeflat|gov.nasa.kepler.fc.importer.ImporterLargeFlatField||
+import-linearity|gov.nasa.kepler.fc.importer.ImporterLinearity||
+import-pointing|gov.nasa.kepler.fc.importer.ImporterPointing||
+import-read-noise|gov.nasa.kepler.fc.importer.ImporterReadNoise||
+import-rolltime|gov.nasa.kepler.fc.importer.ImporterRollTime||
+import-undershoot|gov.nasa.kepler.fc.importer.ImporterUndershoot||
+import-2dblack|gov.nasa.kepler.fc.importer.ImporterTwoDBlack||
+import-smallflat|gov.nasa.kepler.fc.importer.ImporterSmallFlatField||
+import-prf|gov.nasa.kepler.fc.importer.ImporterPrf||
+import-saturation|gov.nasa.kepler.fc.importer.ImporterSaturation||
+
+# huffman importer
+import-huffman|gov.nasa.kepler.gar.xml.HuffmanImporter||
+import-requant|gov.nasa.kepler.gar.xml.RequantImporter||
+
+# Pipeline Infrastructure utilities & tools
+
+pig|gov.nasa.kepler.ui.PipelineConsole|-Dawt.useSystemAAFontSettings=on -Dswing.aatext=true -Xmx2G -XX:MaxPermSize=256m -Dlog4j.logfile.prefix=SOC_HOME/logs/pig|
+picli|gov.nasa.kepler.pi.cli.PipelineConsoleCli||
+soc-version|gov.nasa.kepler.systest.SocVersion||
+task-copy|gov.nasa.kepler.systest.WorkerTaskFileCopier||
+status-listener|gov.nasa.kepler.services.process.StatusMessageLogger||
+pl-import|gov.nasa.kepler.pi.parameters.ParameterLibraryImportExportCli||-import
+pl-export|gov.nasa.kepler.pi.parameters.ParameterLibraryImportExportCli||-export
+pc-import|gov.nasa.kepler.pi.configuration.PipelineConfigImportExportCli||-import
+pc-export|gov.nasa.kepler.pi.configuration.PipelineConfigImportExportCli||-export
+export-pipeline-instance-parameters|gov.nasa.kepler.pi.parameters.PipelineInstanceParametersExporter||
+import-trigger-parameters|gov.nasa.kepler.pi.parameters.TriggerParametersImporter||
+ol-import|gov.nasa.kepler.mc.obslog.ObservingLogImporter||
+dump-props|gov.nasa.kepler.services.configuration.DumpSystemProperties||
+config-maker|gov.nasa.kepler.hibernate.dbservice.ConfigMaker||
+config-worker|gov.nasa.kepler.services.configuration.ConfigWorker||
+report-task|gov.nasa.kepler.pi.worker.TaskReporter||
+mlog|gov.nasa.kepler.services.metrics.logger.MetricsLogger||
+modelreg-import|gov.nasa.kepler.pi.models.ModelMetadataCli||-import
+modelreg-export|gov.nasa.kepler.pi.models.ModelMetadataCli||-export
+findmodules|gov.nasa.kepler.ui.common.FindPipelineModuleClasses||
+metrics|gov.nasa.kepler.pi.metrics.report.MetricsCli||
+launch-matlab|gov.nasa.kepler.pi.module.MatlabLauncher|-Xmx32M -XX:ParallelGCThreads=2 -XX:+UseParallelGC -XX:OnOutOfMemoryError="kill -QUIT %p"|
+exec-matlab|gov.nasa.kepler.pi.module.MatlabMcrExecutable|-Xmx32M -XX:ParallelGCThreads=2 -XX:+UseParallelGC -XX:OnOutOfMemoryError="kill -QUIT %p"|
+config-merge|gov.nasa.kepler.services.configuration.ConfigMerge||
+subtaskmon|gov.nasa.kepler.pi.module.SubTaskStateMonitor||
+test-socket-server|gov.nasa.kepler.services.messaging.TestSocketServer||
+test-socket-client|gov.nasa.kepler.services.messaging.TestSocketClient||
+terminate-state-files|gov.nasa.kepler.pi.module.remote.TerminateStateFiles||
+remote-task-master|gov.nasa.kepler.pi.module.remote.RemoteTaskMaster|-XX:ParallelGCThreads=2 -XX:+UseParallelGC -XX:OnOutOfMemoryError="kill -QUIT %p"|
+remote-node-master|gov.nasa.kepler.pi.module.remote.RemoteNodeMaster|-XX:ParallelGCThreads=2 -XX:+UseParallelGC -XX:OnOutOfMemoryError="kill -QUIT %p"|
+update-state|gov.nasa.kepler.pi.module.remote.RemoteTaskMonitor||
+perf-report|gov.nasa.kepler.pi.metrics.report.PerformanceReport||
+uow-annotate|gov.nasa.kepler.pi.worker.UowAnnotator||
+memdrone|gov.nasa.kepler.pi.metrics.report.MemdroneLog||
+
+dump-rclc-blob|gov.nasa.kepler.mc.dr.RclcPixelTimeSeriesOperations||
+
+# use the following with care!
+drain-q|gov.nasa.kepler.pi.worker.WorkerQueueDrainer||
+execsql|gov.nasa.kepler.hibernate.dbservice.SqlRunner||
+ddlinit|gov.nasa.kepler.hibernate.dbservice.ScriptedDdlInitializer||
+
+# Misc. utils
+ksoc|gov.nasa.kepler.ui.Ksoc|-Xmx30g -Dlog4j.logfile.prefix=SOC_HOME/logs/ui|
+queues|gov.nasa.kepler.services.messaging.WorkerQueueTaskStatus||
+ee-file-scraper|gov.nasa.kepler.systest.EncircledEnergyFileScraper||
+print-rolltimes|gov.nasa.kepler.systest.RolltimesPrinter||
+tls-approve|gov.nasa.kepler.systest.TargetListSetApprover||
+tls-uplink|gov.nasa.kepler.systest.TargetListSetUplinker||
+tls-un-uplink|gov.nasa.kepler.systest.TargetListSetUnUplinker||
+compression-uplink|gov.nasa.kepler.systest.CompressionUplinker||
+ffi2lc|gov.nasa.kepler.etem2.FitsFfi2FitsLc||
+sct-check|gov.nasa.kepler.etem2.SctChecker||
+sct-cat|gov.nasa.kepler.etem2.SctCatenater||
+export-morc-text-file|gov.nasa.kepler.systest.tad.TargetXmlToMorcTextFile|-Xmx2G|
+validate-cadence-fits|gov.nasa.kepler.systest.CadenceFitsValidator|-Xmx4G|
+clean-smoke-test|gov.nasa.kepler.systest.SmokeTestCleaner|-Xmx2G|
+launch-release-pipeline|gov.nasa.kepler.dev.seed.ReleasePipelineLauncher|-Xmx2G|
+validate-supplemental-tad|gov.nasa.kepler.hibernate.tad.TargetTableComparator|-Xmx2G|
+import-characteristics|gov.nasa.kepler.cm.CharacteristicsImporter|-Xmx2G|
+merge-target-lists|gov.nasa.kepler.cm.TargetListMergerCli||
+fits-report|gov.nasa.kepler.dr.fits.CadenceFitsReport||
+nmsort|gov.nasa.kepler.dr.dispatch.NmSort||
+rpdump|gov.nasa.kepler.mc.refpixels.RefPixelFileReader||
+migrate-dr-release5-to-6|gov.nasa.kepler.dr.dispatch.DrRelease5To6DataMigrator|-Xmx2G|
+validate-tad-trigger|gov.nasa.kepler.systest.tad.TadTriggerValidator||
+set-supplemental-target-list-set|gov.nasa.kepler.hibernate.tad.SupplementalTargetListSetSetter|-Xmx2G|
+version-tls|gov.nasa.kepler.systest.tad.TargetListSetVersioner||
+rename-tls|gov.nasa.kepler.systest.tad.TargetListSetRenamer||
+generate-kid|gov.nasa.kepler.ops.kid.KidGenerator|-Xmx2G|
+validate-task-copy|gov.nasa.kepler.systest.TaskCopyValidator|-Xmx2G|
+create-tad-product-char-types|gov.nasa.kepler.tad.peer.chartable.TadProductCharTypeCreator||
+ksop-190|gov.nasa.kepler.ar.KSOP_190||
+convertShortCadenceToLongCadence|gov.nasa.kepler.systest.ShortCadenceToLongCadenceConverter||
+convertLongCadenceToShortCadence|gov.nasa.kepler.systest.LongCadenceToShortCadenceConverter||
+pfind|gov.nasa.kepler.common.file.ParallelFindCli|-Dlog4j.configuration=file:../etc/log4j-quiet.xml||
+test-real-sbt-data|gov.nasa.kepler.systest.sbt.data.SbtDataOperationsRealDataTest|-Xmx2G|
+opscli|gov.nasa.kepler.systest.ops.OperationsReportGenerator||
+validate-trigger|gov.nasa.kepler.systest.ops.TriggerValidator||
+da-import|gov.nasa.kepler.dr.dataanomaly.DataAnomalyImportExportCli||-import
+da-export|gov.nasa.kepler.dr.dataanomaly.DataAnomalyImportExportCli||-export
+import-kic-override-model|gov.nasa.kepler.mc.cm.KicOverrideModelImporter|-Xmx2G|
+export-kic-override-model|gov.nasa.kepler.mc.cm.KicOverrideModelExporter|-Xmx2G|
+import-kic-extension|gov.nasa.kepler.dr.kicextension.KicExtensionImporter|-Xmx2G|
+export-kic-extension|gov.nasa.kepler.dr.kicextension.KicExtensionExporter|-Xmx2G|
+svnlcr|gov.nasa.kepler.common.SvnUtils||
+genmodreg|gov.nasa.kepler.systest.utils.GenerateModelRegistrySeedXml||
+iochecker|gov.nasa.kepler.common.os.IOChecker||
+fitsdiff|gov.nasa.kepler.common.FitsDiff|-Xmx2G|
+count-tps-results|gov.nasa.kepler.systest.TpsDbResultCounter|-Xmx2G|
+dump-picli-reports|gov.nasa.kepler.systest.PicliReportDumper|-Xmx2G|
+export-attitude-adjustment|gov.nasa.kepler.pdq.xml.AttitudeAdjustmentExporter|-Xmx2G|
+ukirt|gov.nasa.kepler.mc.ukirt.UkirtImageRetriever||
+import-tip|gov.nasa.kepler.tip.TipImporter||
+import-transit-parameters-model|gov.nasa.kepler.mc.TransitParameterModelImporter|-Xmx2G|
+import-external-tce-model|gov.nasa.kepler.mc.ExternalTceModelImporter|-Xmx2G|
+import-transit-names-model|gov.nasa.kepler.mc.TransitNameModelImporter|-Xmx2G|
+import-eb-transit-parameters-model|gov.nasa.kepler.mc.EbTransitParameterModelImporter|-Xmx2G|
+pixel-dump|gov.nasa.kepler.mc.SciencePixelOperations|-Xmx1G|
+set-wrapper-heap-size|gov.nasa.kepler.systest.WrapperHeapSizeSetter||
+deserial-pa-outputs|gov.nasa.kepler.pa.PaPipelineModule||
+remove-pa-target-aperture-duplicates|gov.nasa.kepler.systest.PaTargetApertureDuplicateRemover|-Xmx2G|
+
+# NM tools
+generate-nm|gov.nasa.kepler.dr.NmGenerator||
+nmfileops|gov.nasa.kepler.dr.dispatch.NmFileOps||
+drcopy|gov.nasa.kepler.dr.dispatch.NmFileOps||-drcopy
+nmcopy|gov.nasa.kepler.dr.dispatch.NmFileOps||-nmcopy
+nmmove|gov.nasa.kepler.dr.dispatch.NmFileOps||-nmmove
+
+# dr copiers
+drcopy-moc-model|gov.nasa.kepler.dr.importer.MocModelDrCopier||
+
+# tad
+export-observed-targets|gov.nasa.kepler.tad.xml.ObservedTargetsExporter|-Xmx8G|
+import-observed-targets|gov.nasa.kepler.tad.xml.ObservedTargetsImporter|-Xmx8G|
+shift-apertures|gov.nasa.kepler.hibernate.tad.ApertureShifter|-Xmx8G|
+
+# AR Exporters
+# Flux and CDPP exporters are run as pipeline modules.
+ktcexport|gov.nasa.kepler.ar.cli.KtcExportCli|-Xmx4G -XX:MaxPermSize=96M|
+kicexport|gov.nasa.kepler.ar.cli.KicExportCli|-Xmx256M -XX:MaxPermSize=96M -XX:+UseParallelGC|
+charexport|gov.nasa.kepler.ar.cli.CharacteristicsExportCli|-Xmx256M -XX:MaxPermSize=96M -XX:+UseParallelGC|
+calexport|gov.nasa.kepler.ar.cli.CalibratedPixelExportCli|-Xmx19G -XX:MaxPermSize=96M|
+cffexport|gov.nasa.kepler.ar.cli.CombinedFlatFieldExportCli|-Xmx2500m|
+export-dynablack|gov.nasa.kepler.ar.exporter.cal.DynablackExportCli||
+export-1d-black|gov.nasa.kepler.ar.exporter.cal.OneDBlackExportCli||
+qdnm|gov.nasa.kepler.ar.cli.QdnmCli|-Xmx1G -XX:+ExplicitGCInvokesConcurrent|
+ls-pixel-times|gov.nasa.kepler.ar.cli.AvailablePixelDates||
+dirsplit|gov.nasa.kepler.ar.cli.DirectorySplitterCli|-Xmx512M|
+dvexport|gov.nasa.kepler.ar.cli.DvResultsExportCli|-Xmx4G -XX:MaxPermSize=96M -XX:+UseCompressedOops|
+pcp|gov.nasa.kepler.common.file.ParallelCopyCli|-Xmx2G -XX:+UseCompressedOops|
+releasetagger|gov.nasa.kepler.ar.cli.ReleaseTaggerCli||
+ktcchecker|gov.nasa.kepler.ar.exporter.ktc.verifier.KtcVerifierCli||
+
+# Validation Tools
+fits-validator|gov.nasa.kepler.systest.validation.FitsValidator|-Xmx512M|
+db-validator|gov.nasa.kepler.systest.validation.cmtad.DbValidator||
+
+#File Store Tools
+fscli|gov.nasa.kepler.fs.cli.Cli|-Xmx512M|
+fsextract|gov.nasa.kepler.fs.cli.Extractor||
+fsls|gov.nasa.kepler.fs.cli.Ls|-Xmx128M|
+fschk|gov.nasa.kepler.fs.cli.Checker|-Xmx512M|
+migrateksoc791|gov.nasa.kepler.fs.cli.MigrateKsoc791Cli|-Xmx2G|
+migrateblink|gov.nasa.kepler.fs.cli.MigrateToBLinkTreeCli|-Xmx2G -ea:gov.nasa.kepler...|
+fscp|gov.nasa.kepler.fs.cli.CopyFileStoreToFileStore|-Xmx3G|
+
+#File Store Test Programs
+fsclient-tsload|gov.nasa.kepler.fs.client.TimeSeriesPerformance|-Xmx512m|
+fsclient-blobload|gov.nasa.kepler.fs.client.BlobPerformanceTest||
+fsclient-mtsload|gov.nasa.kepler.fs.client.MjdTimeSeriesTest|-Xmx512M|
+
+#Start a hsql database
+start-hsqldb|org.hsqldb.Server|-Xmx1g|-database.0 file:../db/kepler -dbname.0 kepler
+

@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Copyright 2017 United States Government as represented by the
+  Administrator of the National Aeronautics and Space Administration.
+  All Rights Reserved.
+  
+  This file is available under the terms of the NASA Open Source Agreement
+  (NOSA). You should have received a copy of this agreement with the
+  Kepler source code; see the file NASA-OPEN-SOURCE-AGREEMENT.doc.
+  
+  No Warranty: THE SUBJECT SOFTWARE IS PROVIDED "AS IS" WITHOUT ANY
+  WARRANTY OF ANY KIND, EITHER EXPRESSED, IMPLIED, OR STATUTORY,
+  INCLUDING, BUT NOT LIMITED TO, ANY WARRANTY THAT THE SUBJECT SOFTWARE
+  WILL CONFORM TO SPECIFICATIONS, ANY IMPLIED WARRANTIES OF
+  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, OR FREEDOM FROM
+  INFRINGEMENT, ANY WARRANTY THAT THE SUBJECT SOFTWARE WILL BE ERROR
+  FREE, OR ANY WARRANTY THAT DOCUMENTATION, IF PROVIDED, WILL CONFORM
+  TO THE SUBJECT SOFTWARE. THIS AGREEMENT DOES NOT, IN ANY MANNER,
+  CONSTITUTE AN ENDORSEMENT BY GOVERNMENT AGENCY OR ANY PRIOR RECIPIENT
+  OF ANY RESULTS, RESULTING DESIGNS, HARDWARE, SOFTWARE PRODUCTS OR ANY
+  OTHER APPLICATIONS RESULTING FROM USE OF THE SUBJECT SOFTWARE.
+  FURTHER, GOVERNMENT AGENCY DISCLAIMS ALL WARRANTIES AND LIABILITIES
+  REGARDING THIRD-PARTY SOFTWARE, IF PRESENT IN THE ORIGINAL SOFTWARE,
+  AND DISTRIBUTES IT "AS IS."
+
+  Waiver and Indemnity: RECIPIENT AGREES TO WAIVE ANY AND ALL CLAIMS
+  AGAINST THE UNITED STATES GOVERNMENT, ITS CONTRACTORS AND
+  SUBCONTRACTORS, AS WELL AS ANY PRIOR RECIPIENT. IF RECIPIENT'S USE OF
+  THE SUBJECT SOFTWARE RESULTS IN ANY LIABILITIES, DEMANDS, DAMAGES,
+  EXPENSES OR LOSSES ARISING FROM SUCH USE, INCLUDING ANY DAMAGES FROM
+  PRODUCTS BASED ON, OR RESULTING FROM, RECIPIENT'S USE OF THE SUBJECT
+  SOFTWARE, RECIPIENT SHALL INDEMNIFY AND HOLD HARMLESS THE UNITED
+  STATES GOVERNMENT, ITS CONTRACTORS AND SUBCONTRACTORS, AS WELL AS ANY
+  PRIOR RECIPIENT, TO THE EXTENT PERMITTED BY LAW. RECIPIENT'S SOLE
+  REMEDY FOR ANY SUCH MATTER SHALL BE THE IMMEDIATE, UNILATERAL
+  TERMINATION OF THIS AGREEMENT.
+-->
+
+<project name="code" basedir="." default="build">
+
+  <property name="build.top" value="${basedir}" />
+
+  <!-- properties and imports; needed to use IF element -->
+  <import file="java/include/ant/standard.xml" />
+
+  <!-- clean -->
+  <target name="clean"
+          description="Remove all compilation artifacts">
+    <echo message="*********************** clean java **********************"/>
+    <ant dir="java" inheritAll="true" target="clean"/>
+  
+    <echo message="********************** clean matlab *********************"/>
+    <ant dir="matlab" inheritAll="true" target="clean"/>
+
+    <delete dir="dist"/>
+  </target>
+
+  <!-- build -->
+  <target name="build" description="Compile all projects">
+    <echo message="*********************** build java **********************"/>
+    <ant dir="java" inheritAll="true" target="build"/>
+  
+    <echo message="********************** build matlab *********************"/>
+    <ant dir="matlab" inheritAll="true" target="build"/>
+  </target>
+
+  <!-- build-nomcc -->
+  <target name="build-nomcc" description="Compile all projects (without mcc in MATLAB)">
+    <echo message="*********************** dist java **********************"/>
+    <ant dir="java" inheritAll="true" target="dist"/>
+  
+    <echo message="********************** build-nomcc matlab *********************"/>
+    <ant dir="matlab" inheritAll="true" target="build-nomcc"/>
+  </target>
+
+  <!-- dist -->
+  <target name="dist"
+          description="Assemble binaries into a runtime file structure">
+    <echo message="*********************** dist java ***********************"/>
+    <delete dir="dist" />
+    <ant dir="java" inheritAll="true" target="dist"/>
+  
+    <echo message="********************** dist matlab **********************"/>
+    <ant dir="matlab" inheritAll="true" target="dist"/>
+  </target>
+
+  <!-- release -->
+  <target name="release"
+          description="Create SOC software release package">
+    <echo message="************************ release ************************"/>
+    <ant dir="java" inheritAll="true" target="release" />
+  </target>
+
+  <!-- test -->
+  <target name="test" depends="dist" description="Run unit tests (with JaCoCo)">
+    <echo message="*********************** test java ***********************"/>
+    <ant dir="java" inheritAll="true" target="jacoco"/>
+  </target>
+
+  <!-- test-matlab -->
+  <target name="test-matlab" depends="dist"
+          description="Run MATLAB unit tests">
+    <echo message="********************** test matlab **********************"/>
+    <ant dir="matlab" inheritAll="true" target="test"/>
+  </target>
+
+  <!-- test-integration -->
+  <target name="test-integration" depends="dist"
+          description="Run integration tests">
+    <echo message="***************** test-integration java *****************"/>
+    <ant dir="java" inheritAll="true" target="test-integration"/>
+  </target>
+
+  <!-- static-analysis -->
+  <target name="static-analysis"
+          description="Perform static analysis on code">
+    <echo message="*********************** findbugs ************************"/>
+    <ant dir="java" inheritAll="true" target="findbugs"/>
+  
+    <echo message="************************* mlint *************************"/>
+    <ant dir="matlab" inheritAll="true" target="mlint"/>
+  </target>
+
+
+  <!-- doc -->
+  <target name="doc"
+          description="Generate all developer documentation">
+    <echo message="*********************** doc java ************************"/>
+    <ant dir="java" inheritAll="true" target="javadoc" />
+
+    <!-- Create MATLAB documentation if the Graphviz SFDP filter exists -->
+    <available filepath="/usr/local/bin" file="sfdp" property="sfdp.exists" />
+    <if>
+      <isset property="sfdp.exists" />
+      <then>
+        <echo message="********************** doc matlab ***********************"/>
+        <ant dir="matlab" inheritAll="true" target="doc" />
+      </then>
+    </if>
+  </target>
+
+  <!-- all -->
+  <target name="all" depends="clean, test"/>
+
+</project>

@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Copyright 2017 United States Government as represented by the
+  Administrator of the National Aeronautics and Space Administration.
+  All Rights Reserved.
+  
+  This file is available under the terms of the NASA Open Source Agreement
+  (NOSA). You should have received a copy of this agreement with the
+  Kepler source code; see the file NASA-OPEN-SOURCE-AGREEMENT.doc.
+  
+  No Warranty: THE SUBJECT SOFTWARE IS PROVIDED "AS IS" WITHOUT ANY
+  WARRANTY OF ANY KIND, EITHER EXPRESSED, IMPLIED, OR STATUTORY,
+  INCLUDING, BUT NOT LIMITED TO, ANY WARRANTY THAT THE SUBJECT SOFTWARE
+  WILL CONFORM TO SPECIFICATIONS, ANY IMPLIED WARRANTIES OF
+  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, OR FREEDOM FROM
+  INFRINGEMENT, ANY WARRANTY THAT THE SUBJECT SOFTWARE WILL BE ERROR
+  FREE, OR ANY WARRANTY THAT DOCUMENTATION, IF PROVIDED, WILL CONFORM
+  TO THE SUBJECT SOFTWARE. THIS AGREEMENT DOES NOT, IN ANY MANNER,
+  CONSTITUTE AN ENDORSEMENT BY GOVERNMENT AGENCY OR ANY PRIOR RECIPIENT
+  OF ANY RESULTS, RESULTING DESIGNS, HARDWARE, SOFTWARE PRODUCTS OR ANY
+  OTHER APPLICATIONS RESULTING FROM USE OF THE SUBJECT SOFTWARE.
+  FURTHER, GOVERNMENT AGENCY DISCLAIMS ALL WARRANTIES AND LIABILITIES
+  REGARDING THIRD-PARTY SOFTWARE, IF PRESENT IN THE ORIGINAL SOFTWARE,
+  AND DISTRIBUTES IT "AS IS."
+
+  Waiver and Indemnity: RECIPIENT AGREES TO WAIVE ANY AND ALL CLAIMS
+  AGAINST THE UNITED STATES GOVERNMENT, ITS CONTRACTORS AND
+  SUBCONTRACTORS, AS WELL AS ANY PRIOR RECIPIENT. IF RECIPIENT'S USE OF
+  THE SUBJECT SOFTWARE RESULTS IN ANY LIABILITIES, DEMANDS, DAMAGES,
+  EXPENSES OR LOSSES ARISING FROM SUCH USE, INCLUDING ANY DAMAGES FROM
+  PRODUCTS BASED ON, OR RESULTING FROM, RECIPIENT'S USE OF THE SUBJECT
+  SOFTWARE, RECIPIENT SHALL INDEMNIFY AND HOLD HARMLESS THE UNITED
+  STATES GOVERNMENT, ITS CONTRACTORS AND SUBCONTRACTORS, AS WELL AS ANY
+  PRIOR RECIPIENT, TO THE EXTENT PERMITTED BY LAW. RECIPIENT'S SOLE
+  REMEDY FOR ANY SUCH MATTER SHALL BE THE IMMEDIATE, UNILATERAL
+  TERMINATION OF THIS AGREEMENT.
+-->
+
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" 
+    targetNamespace="http://kepler.nasa.gov/apertures" 
+    xmlns="http://kepler.nasa.gov/apertures">
+
+    <xs:simpleType name="TableIdXB">
+        <xs:restriction base="xs:int">
+            <xs:minInclusive value="0"/>
+            <xs:maxInclusive value="255"/>
+        </xs:restriction>
+    </xs:simpleType>
+    
+    <xs:simpleType name="TargetTypesXB">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="long-cadence"/>
+            <xs:enumeration value="short-cadence"/>
+            <xs:enumeration value="reference-pixel"/>
+            <xs:enumeration value="background"/>
+        </xs:restriction>
+    </xs:simpleType>
+    
+    <xs:simpleType name="ApertureTypesXB">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="target"/>
+            <xs:enumeration value="background"/>
+        </xs:restriction>
+    </xs:simpleType>
+    
+    <xs:complexType name="TargetXB">
+        <xs:attribute name="index" type="xs:int" use="required"></xs:attribute>
+        <xs:attribute name="keplerId" type="xs:int" use="required"></xs:attribute>
+        <xs:attribute name="column" type="xs:int" use="required"></xs:attribute>
+        <xs:attribute name="row" type="xs:int" use="required"></xs:attribute>
+        <xs:attribute name="aperture-index" type="xs:int" use="required"></xs:attribute>
+    </xs:complexType>
+
+    <xs:complexType name="ChannelTargetsXB">
+        <xs:sequence minOccurs="0" maxOccurs="unbounded">
+            <xs:element name="target" type="TargetXB">
+            </xs:element>
+        </xs:sequence>
+        <xs:attribute name="module" type="xs:int" use="required"></xs:attribute>
+        <xs:attribute name="output" type="xs:int" use="required"></xs:attribute>
+        <xs:attribute name="targetCount" type="xs:int" use="required"></xs:attribute>
+        <xs:attribute name="pixelCount" type="xs:int" use="required"></xs:attribute>
+    </xs:complexType>
+
+    <xs:complexType name="TargetDefinitionsXB">
+        <xs:sequence minOccurs="1" maxOccurs="84">
+            <xs:element name="channel" type="ChannelTargetsXB"></xs:element>
+        </xs:sequence>
+        <xs:attribute name="type" type="TargetTypesXB" use="required"></xs:attribute>
+        <xs:attribute name="tableId" type="TableIdXB" use="required"></xs:attribute>
+        <xs:attribute name="apertureTableId" type="TableIdXB" use="required"></xs:attribute>
+        <xs:attribute name="plannedStartTime" type="xs:dateTime" use="required"></xs:attribute>
+        <xs:attribute name="plannedEndTime" type="xs:dateTime" use="required"></xs:attribute>
+        <xs:attribute name="totalTargetCount" type="xs:int" use="required"></xs:attribute>
+        <xs:attribute name="totalPixelCount" type="xs:int" use="required"></xs:attribute>
+    </xs:complexType>
+
+    <xs:complexType name="ApertureOffsetXB">
+        <xs:attribute name="index" type="xs:int" use="required"></xs:attribute>
+        <xs:attribute name="row" type="xs:short" use="required"></xs:attribute>
+        <xs:attribute name="column" type="xs:short" use="required"></xs:attribute>
+    </xs:complexType>
+
+    <xs:complexType name="ApertureXB">
+        <xs:sequence minOccurs="1" maxOccurs="unbounded">
+            <xs:element name="offset" type="ApertureOffsetXB">
+            </xs:element>
+        </xs:sequence>
+        <xs:attribute name="index" type="xs:int" use="required"></xs:attribute>
+        <xs:attribute name="count" type="xs:int" use="required"></xs:attribute>
+    </xs:complexType>
+
+    <xs:complexType name="ApertureDefinitionsXB">
+        <xs:sequence minOccurs="1" maxOccurs="1024">
+            <xs:element name="aperture" type="ApertureXB">
+            </xs:element>  
+        </xs:sequence>
+        <xs:attribute name="type" type="ApertureTypesXB" use="required"></xs:attribute>
+        <xs:attribute name="tableId" type="TableIdXB" use="required"></xs:attribute>
+        <xs:attribute name="plannedStartTime" type="xs:dateTime" use="required"></xs:attribute>
+        <xs:attribute name="plannedEndTime" type="xs:dateTime" use="required"></xs:attribute>
+    </xs:complexType>
+
+    <xs:element name="target-definitions" type="TargetDefinitionsXB">
+    </xs:element>
+    
+    <xs:element name="aperture-definitions" type="ApertureDefinitionsXB">
+    </xs:element>
+</xs:schema>

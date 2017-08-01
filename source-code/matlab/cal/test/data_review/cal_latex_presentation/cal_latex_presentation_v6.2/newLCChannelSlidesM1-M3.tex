@@ -1,0 +1,274 @@
+%%START SLIDE 
+% 
+% Copyright 2017 United States Government as represented by the
+% Administrator of the National Aeronautics and Space Administration.
+% All Rights Reserved.
+% 
+% NASA acknowledges the SETI Institute's primary role in authoring and
+% producing the Kepler Data Processing Pipeline under Cooperative
+% Agreement Nos. NNA04CC63A, NNX07AD96A, NNX07AD98A, NNX11AI13A,
+% NNX11AI14A, NNX13AD01A & NNX13AD16A.
+% 
+% This file is available under the terms of the NASA Open Source Agreement
+% (NOSA). You should have received a copy of this agreement with the
+% Kepler source code; see the file NASA-OPEN-SOURCE-AGREEMENT.doc.
+% 
+% No Warranty: THE SUBJECT SOFTWARE IS PROVIDED "AS IS" WITHOUT ANY
+% WARRANTY OF ANY KIND, EITHER EXPRESSED, IMPLIED, OR STATUTORY,
+% INCLUDING, BUT NOT LIMITED TO, ANY WARRANTY THAT THE SUBJECT SOFTWARE
+% WILL CONFORM TO SPECIFICATIONS, ANY IMPLIED WARRANTIES OF
+% MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, OR FREEDOM FROM
+% INFRINGEMENT, ANY WARRANTY THAT THE SUBJECT SOFTWARE WILL BE ERROR
+% FREE, OR ANY WARRANTY THAT DOCUMENTATION, IF PROVIDED, WILL CONFORM
+% TO THE SUBJECT SOFTWARE. THIS AGREEMENT DOES NOT, IN ANY MANNER,
+% CONSTITUTE AN ENDORSEMENT BY GOVERNMENT AGENCY OR ANY PRIOR RECIPIENT
+% OF ANY RESULTS, RESULTING DESIGNS, HARDWARE, SOFTWARE PRODUCTS OR ANY
+% OTHER APPLICATIONS RESULTING FROM USE OF THE SUBJECT SOFTWARE.
+% FURTHER, GOVERNMENT AGENCY DISCLAIMS ALL WARRANTIES AND LIABILITIES
+% REGARDING THIRD-PARTY SOFTWARE, IF PRESENT IN THE ORIGINAL SOFTWARE,
+% AND DISTRIBUTES IT "AS IS."
+% 
+% Waiver and Indemnity: RECIPIENT AGREES TO WAIVE ANY AND ALL CLAIMS
+% AGAINST THE UNITED STATES GOVERNMENT, ITS CONTRACTORS AND
+% SUBCONTRACTORS, AS WELL AS ANY PRIOR RECIPIENT. IF RECIPIENT'S USE OF
+% THE SUBJECT SOFTWARE RESULTS IN ANY LIABILITIES, DEMANDS, DAMAGES,
+% EXPENSES OR LOSSES ARISING FROM SUCH USE, INCLUDING ANY DAMAGES FROM
+% PRODUCTS BASED ON, OR RESULTING FROM, RECIPIENT'S USE OF THE SUBJECT
+% SOFTWARE, RECIPIENT SHALL INDEMNIFY AND HOLD HARMLESS THE UNITED
+% STATES GOVERNMENT, ITS CONTRACTORS AND SUBCONTRACTORS, AS WELL AS ANY
+% PRIOR RECIPIENT, TO THE EXTENT PERMITTED BY LAW. RECIPIENT'S SOLE
+% REMEDY FOR ANY SUCH MATTER SHALL BE THE IMMEDIATE, UNILATERAL
+% TERMINATION OF THIS AGREEMENT.
+%
+\cleardoublepage
+\begin{figure*}[h!]
+  \centering
+  \subfigure{\includegraphics[width=1in]{\logo}}
+  \hfill
+  {\Huge {\bf Channel \channel\ \channelCharacteristics}}
+  \hfill
+  \subfigure{\includegraphics[angle=90,width=1in]{\spacecraft}}
+\end{figure*}
+\hrule
+
+%% END SLIDE 
+
+%%START SLIDE 
+\cleardoublepage
+\begin{figure*}[h!]
+  \centering
+  \subfigure{\includegraphics[width=1in]{\logo}}
+  \hfill
+  {\Huge {\bf \quarter\ Channel \channel\ black residuals}}
+  \hfill
+  \subfigure{\includegraphics[angle=90,width=1in]{\spacecraft}}
+\end{figure*}
+\hrule
+\vfill
+\begin{figure*}[h!]
+  \centering
+  \subfigure{\includegraphics[width=0.5\textwidth]{\BlackResidualsImage}}
+  \subfigure{\includegraphics[width=0.45\textwidth]{\BlackResidualsPlot}}
+  \subfigure{\includegraphics[width=5in,height=1.8in]{\BestBlackPolyOrder}}
+  \subfigure{\includegraphics[height=1.8in]{\BlackResidualsMesh}}
+  \caption{LC Black Residuals (ADU/exposure) for Channel \channel}
+%  \subfigure{\includegraphics[width=4in]{\lcBlackResidualsImageChannel19}}
+%  \subfigure{\includegraphics[width=2in]{\lcBlackResidualsPlotChannel19}}
+\end{figure*}
+%% END SLIDE 
+
+%%START SLIDE 
+\cleardoublepage
+\begin{figure*}[h!]
+  \centering
+  \subfigure{\includegraphics[width=1in]{\logo}}
+  \hfill
+  {\Huge {\bf \quarter\ Channel \channel\ smear residuals}}
+  \hfill
+  \subfigure{\includegraphics[angle=90,width=1in]{\spacecraft}}
+\end{figure*}
+\hrule
+\begin{figure*}[h!]
+  \centering
+  \subfigure{\includegraphics[width=0.43\textwidth]{\SmearDifferenceImage}}
+  \subfigure{\includegraphics[width=0.43\textwidth]{\SmearDifferencePlot}}
+  \hfill
+  \subfigure{\includegraphics[width=0.25\textwidth]{\SmearDifferenceMesh}}
+  \caption{LC Smear Residuals (ADU/exposure) for Channel \channel}
+\end{figure*}
+%% END SLIDE 
+
+%%START SLIDE 
+\cleardoublepage
+\begin{figure*}[h!]
+  \centering
+  \subfigure{\includegraphics[width=1in]{\logo}}
+  \hfill
+  {\Huge {\bf \quarter\ Channel \channel\ smear and dark levels}}
+  \hfill
+  \subfigure{\includegraphics[angle=90,width=1in]{\spacecraft}}
+\end{figure*}
+\hrule
+
+\begin{figure*}[h!]
+  \centering
+  \includegraphics[width=0.7\textwidth]{\SmearAndDarkLevelsPlot}
+  \caption{LC Smear and Dark Levels (e-/exposure)}
+\end{figure*}
+
+%% END SLIDE 
+
+%%START SLIDE 
+\cleardoublepage
+\begin{figure*}[h!]
+  \centering
+  \subfigure{\includegraphics[width=1in]{\logo}}
+  \hfill
+  {\Huge {\bf \quarter\ Channel \channel\ smear/dark/black level metrics}}
+  \hfill
+  \subfigure{\includegraphics[angle=90,width=1in]{\spacecraft}}
+\end{figure*}
+\hrule
+\begin{figure*}[h!]
+  \centering
+  \includegraphics[width=0.7\textwidth]{\CollateralMetrics}
+  \caption{Black, Smear and Dark Current Metrics}
+\end{figure*}
+
+%% END SLIDE 
+
+%%START SLIDE 
+\cleardoublepage
+\begin{figure*}[h!]
+  \centering
+  \subfigure{\includegraphics[width=1in]{\logo}}
+  \hfill
+  {\Huge {\bf \quarter\ Channel \channel\ Smear Levels}}
+  \hfill
+  \subfigure{\includegraphics[angle=90,width=1in]{\spacecraft}}
+\end{figure*}
+\hrule
+
+\begin{figure*}[h!]
+  \centering
+  \includegraphics[width=0.7\textwidth]{\DeltaSmearAndGappedCols}
+  \caption{Normalized Smear Levels}
+\end{figure*}
+
+%% END SLIDE 
+
+%%START SLIDE 
+\cleardoublepage
+\begin{figure*}[h!]
+  \centering
+  \subfigure{\includegraphics[width=1in]{\logo}}
+  \hfill
+  {\Huge {\bf \quarter\ Channel \channel\ Photometric Pixels Month 1}}
+  \hfill
+  \subfigure{\includegraphics[angle=90,width=1in]{\spacecraft}}
+\end{figure*}
+\hrule
+\begin{figure*}[h!]
+  \centering
+  \subfigure[Input Pixels vs Output Pixels (e-/cadence)]{\includegraphics[width=0.45\textwidth]{\PhotometricPixelsInVsOutMOne}}
+  \subfigure[Input Pixels/Output Pixels]{\includegraphics[width=0.45\textwidth]{\PhotometricPixelsInVsOutRatioMOne}}
+\end{figure*}
+
+%% END SLIDE 
+
+%%START SLIDE 
+\cleardoublepage
+\begin{figure*}[h!]
+  \centering
+  \subfigure{\includegraphics[width=1in]{\logo}}
+  \hfill
+  {\Huge {\bf \quarter\ Channel \channel\ Photometric Pixels Month 1}}
+  \hfill
+  \subfigure{\includegraphics[angle=90,width=1in]{\spacecraft}}
+\end{figure*}
+\hrule
+
+\begin{figure*}[h!]
+  \centering
+  \includegraphics[width=0.45\textwidth]{\PhotometricPixelUncertaintiesMOne}
+  \caption{Uncertainties vs Sqrt(Output Pixels)}
+\end{figure*}
+
+%% END SLIDE 
+%%START SLIDE 
+\cleardoublepage
+\begin{figure*}[h!]
+  \centering
+  \subfigure{\includegraphics[width=1in]{\logo}}
+  \hfill
+  {\Huge {\bf \quarter\ Channel \channel\ Photometric Pixels Month 2}}
+  \hfill
+  \subfigure{\includegraphics[angle=90,width=1in]{\spacecraft}}
+\end{figure*}
+\hrule
+\begin{figure*}[h!]
+  \centering
+  \subfigure[Input Pixels vs Output Pixels (e-/cadence)]{\includegraphics[width=0.45\textwidth]{\PhotometricPixelsInVsOutMTwo}}
+  \subfigure[Input Pixels/Output Pixels]{\includegraphics[width=0.45\textwidth]{\PhotometricPixelsInVsOutRatioMTwo}}
+\end{figure*}
+
+%% END SLIDE 
+
+%%START SLIDE 
+\cleardoublepage
+\begin{figure*}[h!]
+  \centering
+  \subfigure{\includegraphics[width=1in]{\logo}}
+  \hfill
+  {\Huge {\bf \quarter\ Channel \channel\ Photometric Pixels Month 2}}
+  \hfill
+  \subfigure{\includegraphics[angle=90,width=1in]{\spacecraft}}
+\end{figure*}
+\hrule
+
+\begin{figure*}[h!]
+  \centering
+  \includegraphics[width=0.45\textwidth]{\PhotometricPixelUncertaintiesMTwo}
+  \caption{Uncertainties vs Sqrt(Output Pixels)}
+\end{figure*}
+
+%% END SLIDE 
+%%START SLIDE 
+\cleardoublepage
+\begin{figure*}[h!]
+  \centering
+  \subfigure{\includegraphics[width=1in]{\logo}}
+  \hfill
+  {\Huge {\bf \quarter\ Channel \channel\ Photometric Pixels Month 3}}
+  \hfill
+  \subfigure{\includegraphics[angle=90,width=1in]{\spacecraft}}
+\end{figure*}
+\hrule
+\begin{figure*}[h!]
+  \centering
+  \subfigure[Input Pixels vs Output Pixels (e-/cadence)]{\includegraphics[width=0.45\textwidth]{\PhotometricPixelsInVsOutMThree}}
+  \subfigure[Input Pixels/Output Pixels]{\includegraphics[width=0.45\textwidth]{\PhotometricPixelsInVsOutRatioMThree}}
+\end{figure*}
+
+%% END SLIDE 
+
+%%START SLIDE 
+\cleardoublepage
+\begin{figure*}[h!]
+  \centering
+  \subfigure{\includegraphics[width=1in]{\logo}}
+  \hfill
+  {\Huge {\bf \quarter\ Channel \channel\ Photometric Pixels Month 3}}
+  \hfill
+  \subfigure{\includegraphics[angle=90,width=1in]{\spacecraft}}
+\end{figure*}
+\hrule
+
+\begin{figure*}[h!]
+  \centering
+  \includegraphics[width=0.45\textwidth]{\PhotometricPixelUncertaintiesMThree}
+  \caption{Uncertainties vs Sqrt(Output Pixels)}
+\end{figure*}
+
+%% END SLIDE 
+

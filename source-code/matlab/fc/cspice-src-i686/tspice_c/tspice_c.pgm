@@ -1,0 +1,625 @@
+/*
+   Created  on Fri Dec 16 17:48:20 PST 2005 as part 
+   of an automated process for delivering the test
+   programs. --- Boris Semenov
+*/
+ 
+
+/*
+
+-Program tspice_c ( Test cspice product )
+
+-Abstract
+ 
+  This program performs a set of standard tests on the 
+  cspice product. 
+ 
+-Copyright
+ 
+   Copyright (2001), California Institute of Technology. 
+   U.S. Government sponsorship acknowledged. 
+ 
+-Required_Reading
+ 
+   None. 
+ 
+-Keywords
+ 
+   TESTING 
+ 
+*/
+   #include "SpiceUsr.h"
+   #include "SpiceZfc.h"
+   #include "SpiceZst.h"
+   #include "tutils_c.h"
+   
+
+   int main( int argc, char **argv )
+   
+
+/*
+
+-Files
+ 
+   This program creates two log files. 
+ 
+   The first is the test log whose name follows the pattern 
+   cspice{0-9}{0-9}.log.  The second is an ERROR log or 
+   a pass log. 
+ 
+   The pass log follows the pattern pass{0-9}{0-9}{0-9}{0-9}.log 
+   The error log follows the pattern ERROR{0-9}{0-9}{0-9}.LOG 
+ 
+   Any kernel files needed by this program are created by the 
+   program. 
+ 
+-Particulars
+ 
+   To run this test, execute the program 
+ 
+     tspice_c 
+ 
+   You may optionally specify that the program use one of the 
+   command options: 
+ 
+      -c  logs results of individual test cases 
+ 
+      -v  logs every test comparison performed.  You should 
+          probably never use this option. 
+ 
+-Restrictions
+ 
+   None. 
+ 
+-Author_and_Institution
+ 
+   N.J. Bachman    (JPL)
+   B.V. Semenov    (JPL)
+   W.L. Taber      (JPL) 
+ 
+-Literature_References
+ 
+   None. 
+ 
+-Version
+
+   tspice_c Version 1.0.0 -- auto-generated -- (NJB) (WLT) (BVS)
+ 
+-&
+
+*/
+
+{  /* Begin tspice_c.pgm */
+
+ 
+   /*
+   Prototypes for test families generated from tspice.
+   */
+ 
+   int f_badkpv__ ( logical * plain_ok );
+   int f_bodcod__ ( logical * plain_ok );
+   int f_bodvar__ ( logical * plain_ok );
+   int f_chgirf__ ( logical * plain_ok );
+   int f_chgrfx__ ( logical * plain_ok );
+   int f_ck05__ ( logical * plain_ok );
+   int f_ckbsr__ ( logical * plain_ok );
+   int f_ckcov__ ( logical * plain_ok );
+   int f_ckfrot__ ( logical * plain_ok );
+   int f_ckfxfm__ ( logical * plain_ok );
+   int f_ckgp__ ( logical * plain_ok );
+   int f_ckmeta__ ( logical * plain_ok );
+   int f_ckw01__ ( logical * plain_ok );
+   int f_ckw02__ ( logical * plain_ok );
+   int f_ckw03__ ( logical * plain_ok );
+   int f_cyip__ ( logical * plain_ok );
+   int f_dafah__ ( logical * plain_ok );
+   int f_dafana__ ( logical * plain_ok );
+   int f_dafnn__ ( logical * plain_ok );
+   int f_dascud__ ( logical * plain_ok );
+   int f_dasfr__ ( logical * plain_ok );
+   int f_ddhcls__ ( logical * plain_ok );
+   int f_ddhclu__ ( logical * plain_ok );
+   int f_ddhf2h__ ( logical * plain_ok );
+   int f_ddhfnh__ ( logical * plain_ok );
+   int f_ddhgsd__ ( logical * plain_ok );
+   int f_ddhgtu__ ( logical * plain_ok );
+   int f_ddhhlu__ ( logical * plain_ok );
+   int f_ddhisn__ ( logical * plain_ok );
+   int f_ddhivf__ ( logical * plain_ok );
+   int f_ddhluh__ ( logical * plain_ok );
+   int f_ddhnfo__ ( logical * plain_ok );
+   int f_ddhopn__ ( logical * plain_ok );
+   int f_ddhppf__ ( logical * plain_ok );
+   int f_ddhrcm__ ( logical * plain_ok );
+   int f_ddhrmu__ ( logical * plain_ok );
+   int f_ddhunl__ ( logical * plain_ok );
+   int f_dnearp__ ( logical * plain_ok );
+   int f_dpfmt__ ( logical * plain_ok );
+   int f_dpstrf__ ( logical * plain_ok );
+   int f_dvops__ ( logical * plain_ok );
+   int f_dyn01__ ( logical * plain_ok );
+   int f_dyn02__ ( logical * plain_ok );
+   int f_dyn03__ ( logical * plain_ok );
+   int f_dyn04__ ( logical * plain_ok );
+   int f_dyn05__ ( logical * plain_ok );
+   int f_dyn06__ ( logical * plain_ok );
+   int f_dyn07__ ( logical * plain_ok );
+   int f_dyn08__ ( logical * plain_ok );
+   int f_ek01__ ( logical * plain_ok );
+   int f_ek02__ ( logical * plain_ok );
+   int f_ek03__ ( logical * plain_ok );
+   int f_eqncpv__ ( logical * plain_ok );
+   int f_et2lst__ ( logical * plain_ok );
+   int f_et2utc__ ( logical * plain_ok );
+   int f_etcal__ ( logical * plain_ok );
+   int f_euler__ ( logical * plain_ok );
+   int f_framex__ ( logical * plain_ok );
+   int f_frmchg__ ( logical * plain_ok );
+   int f_frmget__ ( logical * plain_ok );
+   int f_ge01__ ( logical * plain_ok );
+   int f_getfov__ ( logical * plain_ok );
+   int f_getfv2__ ( logical * plain_ok );
+   int f_hrmite__ ( logical * plain_ok );
+   int f_inelpl__ ( logical * plain_ok );
+   int f_inrypl__ ( logical * plain_ok );
+   int f_insert__ ( logical * plain_ok );
+   int f_jul2gr__ ( logical * plain_ok );
+   int f_keeper__ ( logical * plain_ok );
+   int f_kpsolv__ ( logical * plain_ok );
+   int f_lagrng__ ( logical * plain_ok );
+   int f_locati__ ( logical * plain_ok );
+   int f_lparse__ ( logical * plain_ok );
+   int f_ls__ ( logical * plain_ok );
+   int f_ltime__ ( logical * plain_ok );
+   int f_m2q__ ( logical * plain_ok );
+   int f_moved__ ( logical * plain_ok );
+   int f_nearpt__ ( logical * plain_ok );
+   int f_npedln__ ( logical * plain_ok );
+   int f_npelpt__ ( logical * plain_ok );
+   int f_nplnpt__ ( logical * plain_ok );
+   int f_oscelt__ ( logical * plain_ok );
+   int f_pckbsr__ ( logical * plain_ok );
+   int f_pgr__ ( logical * plain_ok );
+   int f_pln__ ( logical * plain_ok );
+   int f_pool__ ( logical * plain_ok );
+   int f_pxform__ ( logical * plain_ok );
+   int f_q2m__ ( logical * plain_ok );
+   int f_qderiv__ ( logical * plain_ok );
+   int f_quat__ ( logical * plain_ok );
+   int f_rdpck__ ( logical * plain_ok );
+   int f_refchg__ ( logical * plain_ok );
+   int f_repmx__ ( logical * plain_ok );
+   int f_rotget__ ( logical * plain_ok );
+   int f_saelgv__ ( logical * plain_ok );
+   int f_sctran__ ( logical * plain_ok );
+   int f_sgmeta__ ( logical * plain_ok );
+   int f_sharpr__ ( logical * plain_ok );
+   int f_slice__ ( logical * plain_ok );
+   int f_spk02__ ( logical * plain_ok );
+   int f_spk03__ ( logical * plain_ok );
+   int f_spk05__ ( logical * plain_ok );
+   int f_spk08__ ( logical * plain_ok );
+   int f_spk09__ ( logical * plain_ok );
+   int f_spk10__ ( logical * plain_ok );
+   int f_spk12__ ( logical * plain_ok );
+   int f_spk13__ ( logical * plain_ok );
+   int f_spk14__ ( logical * plain_ok );
+   int f_spk17__ ( logical * plain_ok );
+   int f_spk18__ ( logical * plain_ok );
+   int f_spkapo__ ( logical * plain_ok );
+   int f_spkapp__ ( logical * plain_ok );
+   int f_spkbsr__ ( logical * plain_ok );
+   int f_spkcov__ ( logical * plain_ok );
+   int f_spke15__ ( logical * plain_ok );
+   int f_spkez__ ( logical * plain_ok );
+   int f_spkezp__ ( logical * plain_ok );
+   int f_spkf15__ ( logical * plain_ok );
+   int f_spkgeo__ ( logical * plain_ok );
+   int f_spkgps__ ( logical * plain_ok );
+   int f_spkgpx__ ( logical * plain_ok );
+   int f_spkgxc__ ( logical * plain_ok );
+   int f_spkpds__ ( logical * plain_ok );
+   int f_spkpvn__ ( logical * plain_ok );
+   int f_spkspv__ ( logical * plain_ok );
+   int f_spkw01__ ( logical * plain_ok );
+   int f_srfxpt__ ( logical * plain_ok );
+   int f_stlabx__ ( logical * plain_ok );
+   int f_stpool__ ( logical * plain_ok );
+   int f_str2et__ ( logical * plain_ok );
+   int f_surfnm__ ( logical * plain_ok );
+   int f_swapac__ ( logical * plain_ok );
+   int f_swapad__ ( logical * plain_ok );
+   int f_swapai__ ( logical * plain_ok );
+   int f_sxform__ ( logical * plain_ok );
+   int f_symtbc__ ( logical * plain_ok );
+   int f_symtbd__ ( logical * plain_ok );
+   int f_symtbi__ ( logical * plain_ok );
+   int f_tcheck__ ( logical * plain_ok );
+   int f_texpyr__ ( logical * plain_ok );
+   int f_timcvr__ ( logical * plain_ok );
+   int f_timdef__ ( logical * plain_ok );
+   int f_timout__ ( logical * plain_ok );
+   int f_tkfram__ ( logical * plain_ok );
+   int f_tparse__ ( logical * plain_ok );
+   int f_tpartv1__ ( logical * plain_ok );
+   int f_tpartv2__ ( logical * plain_ok );
+   int f_tstck3__ ( logical * plain_ok );
+   int f_ttrans__ ( logical * plain_ok );
+   int f_utc2et__ ( logical * plain_ok );
+   int f_vstrng__ ( logical * plain_ok );
+   int f_xfneul__ ( logical * plain_ok );
+   int f_xfrav__ ( logical * plain_ok );
+   int f_xlated__ ( logical * plain_ok );
+   int f_xlatei__ ( logical * plain_ok );
+   int f_zzasc1__ ( logical * plain_ok );
+   int f_zzasc2__ ( logical * plain_ok );
+   int f_zzasryel__ ( logical * plain_ok );
+   int f_zzbdin__ ( logical * plain_ok );
+   int f_zzbdkr__ ( logical * plain_ok );
+   int f_zzbdtn__ ( logical * plain_ok );
+   int f_zzbdtrn__ ( logical * plain_ok );
+   int f_zzbods__ ( logical * plain_ok );
+   int f_zzdgdr__ ( logical * plain_ok );
+   int f_zzdgfr__ ( logical * plain_ok );
+   int f_zzdgsr__ ( logical * plain_ok );
+   int f_zzelvupy0__ ( logical * plain_ok );
+   int f_zzfdat__ ( logical * plain_ok );
+   int f_zzgetelm__ ( logical * plain_ok );
+   int f_zzmsxf__ ( logical * plain_ok );
+   int f_zzocced__ ( logical * plain_ok );
+   int f_zzplat__ ( logical * plain_ok );
+   int f_zzrxr__ ( logical * plain_ok );
+   int f_zztime__ ( logical * plain_ok );
+   int f_zzutc__ ( logical * plain_ok );
+ 
+   /*
+   Prototypes for test families delivered to tspice_c.
+   */
+ 
+   void f_a001_c ( SpiceBoolean * spice_ok );
+   void f_bod_c ( SpiceBoolean * spice_ok );
+   void f_cc01_c ( SpiceBoolean * spice_ok );
+   void f_cc02_c ( SpiceBoolean * spice_ok );
+   void f_cell_c ( SpiceBoolean * spice_ok );
+   void f_ck05_c ( SpiceBoolean * spice_ok );
+   void f_ck_c ( SpiceBoolean * spice_ok );
+   void f_ckcov_c ( SpiceBoolean * spice_ok );
+   void f_cnst_c ( SpiceBoolean * spice_ok );
+   void f_daf_c ( SpiceBoolean * spice_ok );
+   void f_das01_c ( SpiceBoolean * spice_ok );
+   void f_ec01_c ( SpiceBoolean * spice_ok );
+   void f_edln_c ( SpiceBoolean * spice_ok );
+   void f_ek01_c ( SpiceBoolean * spice_ok );
+   void f_ek02_c ( SpiceBoolean * spice_ok );
+   void f_ek03_c ( SpiceBoolean * spice_ok );
+   void f_ell_c ( SpiceBoolean * spice_ok );
+   void f_errh_c ( SpiceBoolean * spice_ok );
+   void f_extr_c ( SpiceBoolean * spice_ok );
+   void f_file_c ( SpiceBoolean * spice_ok );
+   void f_fram_c ( SpiceBoolean * spice_ok );
+   void f_ge01_c ( SpiceBoolean * spice_ok );
+   void f_getfov_c ( SpiceBoolean * spice_ok );
+   void f_inry_c ( SpiceBoolean * spice_ok );
+   void f_jac_c ( SpiceBoolean * spice_ok );
+   void f_keep_c ( SpiceBoolean * spice_ok );
+   void f_ls_c ( SpiceBoolean * spice_ok );
+   void f_m001_c ( SpiceBoolean * spice_ok );
+   void f_m002_c ( SpiceBoolean * spice_ok );
+   void f_nnck_c ( SpiceBoolean * spice_ok );
+   void f_nndaf_c ( SpiceBoolean * spice_ok );
+   void f_nnpool_c ( SpiceBoolean * spice_ok );
+   void f_nnsp10_c ( SpiceBoolean * spice_ok );
+   void f_nnsp15_c ( SpiceBoolean * spice_ok );
+   void f_nnsp17_c ( SpiceBoolean * spice_ok );
+   void f_nnspk_c ( SpiceBoolean * spice_ok );
+   void f_num_c ( SpiceBoolean * spice_ok );
+   void f_pck_c ( SpiceBoolean * spice_ok );
+   void f_pln_c ( SpiceBoolean * spice_ok );
+   void f_pool_c ( SpiceBoolean * spice_ok );
+   void f_prjp_c ( SpiceBoolean * spice_ok );
+   void f_quat_c ( SpiceBoolean * spice_ok );
+   void f_rot_c ( SpiceBoolean * spice_ok );
+   void f_sclk_c ( SpiceBoolean * spice_ok );
+   void f_set_c ( SpiceBoolean * spice_ok );
+   void f_sort_c ( SpiceBoolean * spice_ok );
+   void f_sp10_c ( SpiceBoolean * spice_ok );
+   void f_sp15_c ( SpiceBoolean * spice_ok );
+   void f_sp17_c ( SpiceBoolean * spice_ok );
+   void f_spk18_c ( SpiceBoolean * spice_ok );
+   void f_spk_c ( SpiceBoolean * spice_ok );
+   void f_spkcov_c ( SpiceBoolean * spice_ok );
+   void f_st01_c ( SpiceBoolean * spice_ok );
+   void f_st02_c ( SpiceBoolean * spice_ok );
+   void f_st03_c ( SpiceBoolean * spice_ok );
+   void f_st04_c ( SpiceBoolean * spice_ok );
+   void f_tm01_c ( SpiceBoolean * spice_ok );
+   void f_util_c ( SpiceBoolean * spice_ok );
+   void f_v001_c ( SpiceBoolean * spice_ok );
+   void f_v002_c ( SpiceBoolean * spice_ok );
+   void f_wind_c ( SpiceBoolean * spice_ok );
+   
+   /*
+   Local variables
+   */
+   SpiceBoolean            spice_ok;
+   logical                 plain_ok;
+
+   /*
+   Participate in error tracing.
+   */
+   chkin_c ( "tspice_c" );
+
+   /*
+   Save command line arguments.
+   */
+   putcml_c ( argc, argv );
+   
+   /*
+   Set up for testing.  Establish the name of the log file and
+   the version number of the test program.
+   */
+   tsetup_c ( "cspice{0-9}{0-9}.log", "1.0.0" ); 
+ 
+   /*
+   Invoke test families generated from tspice.
+   */
+ 
+   f_badkpv__ ( &plain_ok );
+   f_bodcod__ ( &plain_ok );
+   f_bodvar__ ( &plain_ok );
+   f_chgirf__ ( &plain_ok );
+   f_chgrfx__ ( &plain_ok );
+   f_ck05__ ( &plain_ok );
+   f_ckbsr__ ( &plain_ok );
+   f_ckcov__ ( &plain_ok );
+   f_ckfrot__ ( &plain_ok );
+   f_ckfxfm__ ( &plain_ok );
+   f_ckgp__ ( &plain_ok );
+   f_ckmeta__ ( &plain_ok );
+   f_ckw01__ ( &plain_ok );
+   f_ckw02__ ( &plain_ok );
+   f_ckw03__ ( &plain_ok );
+   f_cyip__ ( &plain_ok );
+   f_dafah__ ( &plain_ok );
+   f_dafana__ ( &plain_ok );
+   f_dafnn__ ( &plain_ok );
+   f_dascud__ ( &plain_ok );
+   f_dasfr__ ( &plain_ok );
+   f_ddhcls__ ( &plain_ok );
+   f_ddhclu__ ( &plain_ok );
+   f_ddhf2h__ ( &plain_ok );
+   f_ddhfnh__ ( &plain_ok );
+   f_ddhgsd__ ( &plain_ok );
+   f_ddhgtu__ ( &plain_ok );
+   f_ddhhlu__ ( &plain_ok );
+   f_ddhisn__ ( &plain_ok );
+   f_ddhivf__ ( &plain_ok );
+   f_ddhluh__ ( &plain_ok );
+   f_ddhnfo__ ( &plain_ok );
+   f_ddhopn__ ( &plain_ok );
+   f_ddhppf__ ( &plain_ok );
+   f_ddhrcm__ ( &plain_ok );
+   f_ddhrmu__ ( &plain_ok );
+   f_ddhunl__ ( &plain_ok );
+   f_dnearp__ ( &plain_ok );
+   f_dpfmt__ ( &plain_ok );
+   f_dpstrf__ ( &plain_ok );
+   f_dvops__ ( &plain_ok );
+   f_dyn01__ ( &plain_ok );
+   f_dyn02__ ( &plain_ok );
+   f_dyn03__ ( &plain_ok );
+   f_dyn04__ ( &plain_ok );
+   f_dyn05__ ( &plain_ok );
+   f_dyn06__ ( &plain_ok );
+   f_dyn07__ ( &plain_ok );
+   f_dyn08__ ( &plain_ok );
+   f_ek01__ ( &plain_ok );
+   f_ek02__ ( &plain_ok );
+   f_ek03__ ( &plain_ok );
+   f_eqncpv__ ( &plain_ok );
+   f_et2lst__ ( &plain_ok );
+   f_et2utc__ ( &plain_ok );
+   f_etcal__ ( &plain_ok );
+   f_euler__ ( &plain_ok );
+   f_framex__ ( &plain_ok );
+   f_frmchg__ ( &plain_ok );
+   f_frmget__ ( &plain_ok );
+   f_ge01__ ( &plain_ok );
+   f_getfov__ ( &plain_ok );
+   f_getfv2__ ( &plain_ok );
+   f_hrmite__ ( &plain_ok );
+   f_inelpl__ ( &plain_ok );
+   f_inrypl__ ( &plain_ok );
+   f_insert__ ( &plain_ok );
+   f_jul2gr__ ( &plain_ok );
+   f_keeper__ ( &plain_ok );
+   f_kpsolv__ ( &plain_ok );
+   f_lagrng__ ( &plain_ok );
+   f_locati__ ( &plain_ok );
+   f_lparse__ ( &plain_ok );
+   f_ls__ ( &plain_ok );
+   f_ltime__ ( &plain_ok );
+   f_m2q__ ( &plain_ok );
+   f_moved__ ( &plain_ok );
+   f_nearpt__ ( &plain_ok );
+   f_npedln__ ( &plain_ok );
+   f_npelpt__ ( &plain_ok );
+   f_nplnpt__ ( &plain_ok );
+   f_oscelt__ ( &plain_ok );
+   f_pckbsr__ ( &plain_ok );
+   f_pgr__ ( &plain_ok );
+   f_pln__ ( &plain_ok );
+   f_pool__ ( &plain_ok );
+   f_pxform__ ( &plain_ok );
+   f_q2m__ ( &plain_ok );
+   f_qderiv__ ( &plain_ok );
+   f_quat__ ( &plain_ok );
+   f_rdpck__ ( &plain_ok );
+   f_refchg__ ( &plain_ok );
+   f_repmx__ ( &plain_ok );
+   f_rotget__ ( &plain_ok );
+   f_saelgv__ ( &plain_ok );
+   f_sctran__ ( &plain_ok );
+   f_sgmeta__ ( &plain_ok );
+   f_sharpr__ ( &plain_ok );
+   f_slice__ ( &plain_ok );
+   f_spk02__ ( &plain_ok );
+   f_spk03__ ( &plain_ok );
+   f_spk05__ ( &plain_ok );
+   f_spk08__ ( &plain_ok );
+   f_spk09__ ( &plain_ok );
+   f_spk10__ ( &plain_ok );
+   f_spk12__ ( &plain_ok );
+   f_spk13__ ( &plain_ok );
+   f_spk14__ ( &plain_ok );
+   f_spk17__ ( &plain_ok );
+   f_spk18__ ( &plain_ok );
+   f_spkapo__ ( &plain_ok );
+   f_spkapp__ ( &plain_ok );
+   f_spkbsr__ ( &plain_ok );
+   f_spkcov__ ( &plain_ok );
+   f_spke15__ ( &plain_ok );
+   f_spkez__ ( &plain_ok );
+   f_spkezp__ ( &plain_ok );
+   f_spkf15__ ( &plain_ok );
+   f_spkgeo__ ( &plain_ok );
+   f_spkgps__ ( &plain_ok );
+   f_spkgpx__ ( &plain_ok );
+   f_spkgxc__ ( &plain_ok );
+   f_spkpds__ ( &plain_ok );
+   f_spkpvn__ ( &plain_ok );
+   f_spkspv__ ( &plain_ok );
+   f_spkw01__ ( &plain_ok );
+   f_srfxpt__ ( &plain_ok );
+   f_stlabx__ ( &plain_ok );
+   f_stpool__ ( &plain_ok );
+   f_str2et__ ( &plain_ok );
+   f_surfnm__ ( &plain_ok );
+   f_swapac__ ( &plain_ok );
+   f_swapad__ ( &plain_ok );
+   f_swapai__ ( &plain_ok );
+   f_sxform__ ( &plain_ok );
+   f_symtbc__ ( &plain_ok );
+   f_symtbd__ ( &plain_ok );
+   f_symtbi__ ( &plain_ok );
+   f_tcheck__ ( &plain_ok );
+   f_texpyr__ ( &plain_ok );
+   f_timcvr__ ( &plain_ok );
+   f_timdef__ ( &plain_ok );
+   f_timout__ ( &plain_ok );
+   f_tkfram__ ( &plain_ok );
+   f_tparse__ ( &plain_ok );
+   f_tpartv1__ ( &plain_ok );
+   f_tpartv2__ ( &plain_ok );
+   f_tstck3__ ( &plain_ok );
+   f_ttrans__ ( &plain_ok );
+   f_utc2et__ ( &plain_ok );
+   f_vstrng__ ( &plain_ok );
+   f_xfneul__ ( &plain_ok );
+   f_xfrav__ ( &plain_ok );
+   f_xlated__ ( &plain_ok );
+   f_xlatei__ ( &plain_ok );
+   f_zzasc1__ ( &plain_ok );
+   f_zzasc2__ ( &plain_ok );
+   f_zzasryel__ ( &plain_ok );
+   f_zzbdin__ ( &plain_ok );
+   f_zzbdkr__ ( &plain_ok );
+   f_zzbdtn__ ( &plain_ok );
+   f_zzbdtrn__ ( &plain_ok );
+   f_zzbods__ ( &plain_ok );
+   f_zzdgdr__ ( &plain_ok );
+   f_zzdgfr__ ( &plain_ok );
+   f_zzdgsr__ ( &plain_ok );
+   f_zzelvupy0__ ( &plain_ok );
+   f_zzfdat__ ( &plain_ok );
+   f_zzgetelm__ ( &plain_ok );
+   f_zzmsxf__ ( &plain_ok );
+   f_zzocced__ ( &plain_ok );
+   f_zzplat__ ( &plain_ok );
+   f_zzrxr__ ( &plain_ok );
+   f_zztime__ ( &plain_ok );
+   f_zzutc__ ( &plain_ok );
+ 
+   /*
+   Invoke test families delivered to tspice_c.
+   */
+ 
+   f_a001_c ( &spice_ok );
+   f_bod_c ( &spice_ok );
+   f_cc01_c ( &spice_ok );
+   f_cc02_c ( &spice_ok );
+   f_cell_c ( &spice_ok );
+   f_ck05_c ( &spice_ok );
+   f_ck_c ( &spice_ok );
+   f_ckcov_c ( &spice_ok );
+   f_cnst_c ( &spice_ok );
+   f_daf_c ( &spice_ok );
+   f_das01_c ( &spice_ok );
+   f_ec01_c ( &spice_ok );
+   f_edln_c ( &spice_ok );
+   f_ek01_c ( &spice_ok );
+   f_ek02_c ( &spice_ok );
+   f_ek03_c ( &spice_ok );
+   f_ell_c ( &spice_ok );
+   f_errh_c ( &spice_ok );
+   f_extr_c ( &spice_ok );
+   f_file_c ( &spice_ok );
+   f_fram_c ( &spice_ok );
+   f_ge01_c ( &spice_ok );
+   f_getfov_c ( &spice_ok );
+   f_inry_c ( &spice_ok );
+   f_jac_c ( &spice_ok );
+   f_keep_c ( &spice_ok );
+   f_ls_c ( &spice_ok );
+   f_m001_c ( &spice_ok );
+   f_m002_c ( &spice_ok );
+   f_nnck_c ( &spice_ok );
+   f_nndaf_c ( &spice_ok );
+   f_nnpool_c ( &spice_ok );
+   f_nnsp10_c ( &spice_ok );
+   f_nnsp15_c ( &spice_ok );
+   f_nnsp17_c ( &spice_ok );
+   f_nnspk_c ( &spice_ok );
+   f_num_c ( &spice_ok );
+   f_pck_c ( &spice_ok );
+   f_pln_c ( &spice_ok );
+   f_pool_c ( &spice_ok );
+   f_prjp_c ( &spice_ok );
+   f_quat_c ( &spice_ok );
+   f_rot_c ( &spice_ok );
+   f_sclk_c ( &spice_ok );
+   f_set_c ( &spice_ok );
+   f_sort_c ( &spice_ok );
+   f_sp10_c ( &spice_ok );
+   f_sp15_c ( &spice_ok );
+   f_sp17_c ( &spice_ok );
+   f_spk18_c ( &spice_ok );
+   f_spk_c ( &spice_ok );
+   f_spkcov_c ( &spice_ok );
+   f_st01_c ( &spice_ok );
+   f_st02_c ( &spice_ok );
+   f_st03_c ( &spice_ok );
+   f_st04_c ( &spice_ok );
+   f_tm01_c ( &spice_ok );
+   f_util_c ( &spice_ok );
+   f_v001_c ( &spice_ok );
+   f_v002_c ( &spice_ok );
+   f_wind_c ( &spice_ok );
+     
+   /*
+   Close up the testing.
+   */
+   tclose_c();
+
+   chkout_c ( "tspice_c" );
+
+   if ( spice_ok && plain_ok ) 
+   {
+      return ( 0 );
+   }
+   else 
+   {
+      return ( 1 );
+   }
+
+} /* End tspice_c.pgm */

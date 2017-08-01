@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Copyright 2017 United States Government as represented by the
+  Administrator of the National Aeronautics and Space Administration.
+  All Rights Reserved.
+  
+  This file is available under the terms of the NASA Open Source Agreement
+  (NOSA). You should have received a copy of this agreement with the
+  Kepler source code; see the file NASA-OPEN-SOURCE-AGREEMENT.doc.
+  
+  No Warranty: THE SUBJECT SOFTWARE IS PROVIDED "AS IS" WITHOUT ANY
+  WARRANTY OF ANY KIND, EITHER EXPRESSED, IMPLIED, OR STATUTORY,
+  INCLUDING, BUT NOT LIMITED TO, ANY WARRANTY THAT THE SUBJECT SOFTWARE
+  WILL CONFORM TO SPECIFICATIONS, ANY IMPLIED WARRANTIES OF
+  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, OR FREEDOM FROM
+  INFRINGEMENT, ANY WARRANTY THAT THE SUBJECT SOFTWARE WILL BE ERROR
+  FREE, OR ANY WARRANTY THAT DOCUMENTATION, IF PROVIDED, WILL CONFORM
+  TO THE SUBJECT SOFTWARE. THIS AGREEMENT DOES NOT, IN ANY MANNER,
+  CONSTITUTE AN ENDORSEMENT BY GOVERNMENT AGENCY OR ANY PRIOR RECIPIENT
+  OF ANY RESULTS, RESULTING DESIGNS, HARDWARE, SOFTWARE PRODUCTS OR ANY
+  OTHER APPLICATIONS RESULTING FROM USE OF THE SUBJECT SOFTWARE.
+  FURTHER, GOVERNMENT AGENCY DISCLAIMS ALL WARRANTIES AND LIABILITIES
+  REGARDING THIRD-PARTY SOFTWARE, IF PRESENT IN THE ORIGINAL SOFTWARE,
+  AND DISTRIBUTES IT "AS IS."
+
+  Waiver and Indemnity: RECIPIENT AGREES TO WAIVE ANY AND ALL CLAIMS
+  AGAINST THE UNITED STATES GOVERNMENT, ITS CONTRACTORS AND
+  SUBCONTRACTORS, AS WELL AS ANY PRIOR RECIPIENT. IF RECIPIENT'S USE OF
+  THE SUBJECT SOFTWARE RESULTS IN ANY LIABILITIES, DEMANDS, DAMAGES,
+  EXPENSES OR LOSSES ARISING FROM SUCH USE, INCLUDING ANY DAMAGES FROM
+  PRODUCTS BASED ON, OR RESULTING FROM, RECIPIENT'S USE OF THE SUBJECT
+  SOFTWARE, RECIPIENT SHALL INDEMNIFY AND HOLD HARMLESS THE UNITED
+  STATES GOVERNMENT, ITS CONTRACTORS AND SUBCONTRACTORS, AS WELL AS ANY
+  PRIOR RECIPIENT, TO THE EXTENT PERMITTED BY LAW. RECIPIENT'S SOLE
+  REMEDY FOR ANY SUCH MATTER SHALL BE THE IMMEDIATE, UNILATERAL
+  TERMINATION OF THIS AGREEMENT.
+-->
+
+<project basedir="." default="build" name="ui">
+
+  <import file="../include/ant/standard.xml" />
+  <import file="${targets}/signjars.xml" />
+
+  <target name="dist-pre">
+    <property name="manifest" value="${etc}/manifest.txt" />
+    <copy file="${etc}/log4j.xml" todir="${classes.src.dir}/etc" />
+    <!--<copy file="${etc}/ui-dev.properties" todir="${classes.src.dir}/etc" />-->
+  </target>
+
+  <target name="dist-post">
+    <copy todir="${dist.images}">
+      <fileset dir="${src}/${images}" />
+    </copy>
+
+    <!--
+    <copy file="${bin}/ds9" todir="${dist.bin}" />
+    <copy todir="${dist.bin}/ftools-libc2.2.4">
+      <fileset dir="${bin}/ftools-libc2.2.4" />
+    </copy>
+    <chmod perm="+x" dir="${dist.bin}" includes="*" />
+    -->
+    <copy file="${etc}/ksoc.jnlp" todir="${dist.etc}" />
+  </target>
+
+  <!-- Create ui directory for Java Web Start. -->
+  <target name="dist-postproc">
+    <mkdir dir="${dist}/ui" />
+    <copy file="${etc}/ksoc.jnlp" todir="${dist}/ui/${etc}" />
+    <copy todir="${dist}/ui/${images}">
+      <fileset dir="${src}/${images}" />
+    </copy>
+    <copy todir="${dist}/ui/${lib}">
+      <fileset dir="${dist.lib}">
+        <include name="AppFramework.jar" />
+        <include name="EventBus.jar" />
+        <include name="antlr-2.7.6.jar" />
+        <include name="cm.jar" />
+        <include name="common.jar" />
+        <include name="commons-collections-3.1.jar" />
+        <include name="commons-configuration-1.1.jar" />
+        <include name="commons-lang-2.2.jar" />
+        <include name="commons-logging.jar" />
+        <include name="dom4j-1.6.1.jar" />
+        <include name="ejb3-persistence.jar" />
+        <include name="gtk-icons.jar" />
+        <include name="hibernate-annotations-3.3.0.GA.jar" />
+        <include name="hibernate-commons-annotations.jar" />
+        <include name="hibernate-core-3.2.3.GA.jar" />
+        <include name="hibernate.jar" />
+        <include name="jta.jar" />
+        <include name="log4j-1.2.9.jar" />
+        <include name="ojdbc14.jar" />
+        <include name="swing-worker.jar" />
+      </fileset>
+    </copy>
+    <antcall target="signjars">
+      <param name="dist.lib" value="${dist}/ui/lib" />
+    </antcall>
+  </target>
+
+  <target name="ksoc" depends="build"
+          description="Run KSOC">
+    <java classname="gov.nasa.kepler.ui.Ksoc" failonerror="true" fork="yes">
+      <classpath refid="classpath.runtime" />
+      <sysproperty key="log4j.configuration" value="file:etc/log4j.xml" />
+      <jvmarg value="-Xmx1G" />
+    </java>
+  </target>
+
+  <target name="seed-testdb" depends="build"
+          description="Seed database for development">
+    <java classname="gov.nasa.kepler.ui.UiSeedTestData"
+          failonerror="true" fork="yes">
+      <classpath refid="classpath.runtime" />
+      <sysproperty key="log4j.configuration" value="file:etc/log4j.xml" />
+    </java>
+  </target>
+</project>

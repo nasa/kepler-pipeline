@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Copyright 2017 United States Government as represented by the
+  Administrator of the National Aeronautics and Space Administration.
+  All Rights Reserved.
+  
+  This file is available under the terms of the NASA Open Source Agreement
+  (NOSA). You should have received a copy of this agreement with the
+  Kepler source code; see the file NASA-OPEN-SOURCE-AGREEMENT.doc.
+  
+  No Warranty: THE SUBJECT SOFTWARE IS PROVIDED "AS IS" WITHOUT ANY
+  WARRANTY OF ANY KIND, EITHER EXPRESSED, IMPLIED, OR STATUTORY,
+  INCLUDING, BUT NOT LIMITED TO, ANY WARRANTY THAT THE SUBJECT SOFTWARE
+  WILL CONFORM TO SPECIFICATIONS, ANY IMPLIED WARRANTIES OF
+  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, OR FREEDOM FROM
+  INFRINGEMENT, ANY WARRANTY THAT THE SUBJECT SOFTWARE WILL BE ERROR
+  FREE, OR ANY WARRANTY THAT DOCUMENTATION, IF PROVIDED, WILL CONFORM
+  TO THE SUBJECT SOFTWARE. THIS AGREEMENT DOES NOT, IN ANY MANNER,
+  CONSTITUTE AN ENDORSEMENT BY GOVERNMENT AGENCY OR ANY PRIOR RECIPIENT
+  OF ANY RESULTS, RESULTING DESIGNS, HARDWARE, SOFTWARE PRODUCTS OR ANY
+  OTHER APPLICATIONS RESULTING FROM USE OF THE SUBJECT SOFTWARE.
+  FURTHER, GOVERNMENT AGENCY DISCLAIMS ALL WARRANTIES AND LIABILITIES
+  REGARDING THIRD-PARTY SOFTWARE, IF PRESENT IN THE ORIGINAL SOFTWARE,
+  AND DISTRIBUTES IT "AS IS."
+
+  Waiver and Indemnity: RECIPIENT AGREES TO WAIVE ANY AND ALL CLAIMS
+  AGAINST THE UNITED STATES GOVERNMENT, ITS CONTRACTORS AND
+  SUBCONTRACTORS, AS WELL AS ANY PRIOR RECIPIENT. IF RECIPIENT'S USE OF
+  THE SUBJECT SOFTWARE RESULTS IN ANY LIABILITIES, DEMANDS, DAMAGES,
+  EXPENSES OR LOSSES ARISING FROM SUCH USE, INCLUDING ANY DAMAGES FROM
+  PRODUCTS BASED ON, OR RESULTING FROM, RECIPIENT'S USE OF THE SUBJECT
+  SOFTWARE, RECIPIENT SHALL INDEMNIFY AND HOLD HARMLESS THE UNITED
+  STATES GOVERNMENT, ITS CONTRACTORS AND SUBCONTRACTORS, AS WELL AS ANY
+  PRIOR RECIPIENT, TO THE EXTENT PERMITTED BY LAW. RECIPIENT'S SOLE
+  REMEDY FOR ANY SUCH MATTER SHALL BE THE IMMEDIATE, UNILATERAL
+  TERMINATION OF THIS AGREEMENT.
+-->
+
+<project basedir="." default="build" name="etem2">
+
+	<import file="../include/ant/standard.xml" />
+
+	<property name="gen-proxy.modules" value="Etem2,MkCadu" />
+
+	<property name="gen-proxy.module.Etem2.mfilesGenDir" value="${build.top.matlab}/etem2/mfiles/${build}/generated/mfiles" />
+	<property name="gen-proxy.module.Etem2.mfilesDir" value="${build.top.matlab}/etem2/mfiles" />
+	<property name="gen-proxy.module.Etem2.incDir" value="${build.top.matlab}/etem2/mfiles/${build}/generated" />
+	<property name="gen-proxy.module.Etem2.srcDir" value="${build.top.matlab}/etem2/mfiles/${build}/generated" />
+	<property name="gen-proxy.module.Etem2.controllerIncDir" value="${build.top.matlab}/etem2/include" />
+	<property name="gen-proxy.module.Etem2.controllerSrcDir" value="${build.top.matlab}/etem2/src" />
+	<property name="gen-proxy.module.Etem2.classes" value="gov.nasa.kepler.etem2.Etem2Inputs,gov.nasa.kepler.etem2.Etem2Outputs" />
+
+	<property name="gen-proxy.module.MkCadu.mfilesGenDir" value="${build.top.matlab}/mkcadu/${build}/generated/mfiles" />
+	<property name="gen-proxy.module.MkCadu.mfilesDir" value="${build.top.matlab}/mkcadu/mfiles" />
+	<property name="gen-proxy.module.MkCadu.incDir" value="${build.top.matlab}/mkcadu/${build}/generated" />
+	<property name="gen-proxy.module.MkCadu.srcDir" value="${build.top.matlab}/mkcadu/${build}/generated" />
+	<property name="gen-proxy.module.MkCadu.controllerIncDir" value="${build.top.matlab}/mkcadu/include" />
+	<property name="gen-proxy.module.MkCadu.controllerSrcDir" value="${build.top.matlab}/mkcadu/src" />
+	<property name="gen-proxy.module.MkCadu.classes" value="gov.nasa.kepler.etem2.mkcadu.MkCaduInputs,gov.nasa.kepler.etem2.mkcadu.MkCaduOutputs" />
+
+	<target name="compile-pre">
+		<mkdir dir="${build.top.matlab}/etem2/mfiles/${build}/generated" />
+		<mkdir dir="${build.top.matlab}/mkcadu/${build}/generated" />
+	</target>
+
+	<target name="compile-post" depends="gen-proxy" />
+
+	<target name="gen-fits">
+		<java classname="gov.nasa.kepler.etem.GenerateFitsDataSet" failonerror="true" fork="yes">
+			<jvmarg value="-Xms500M" />
+			<jvmarg value="-Xmx1G" />
+			<classpath refid="classpath.runtime" />
+		</java>
+	</target>
+
+	<target name="seed-db" depends="build" description="Seed the pipeline seed data.">
+		<java classname="gov.nasa.kepler.tad.TadToFitsPipelineSeedData" failonerror="true" fork="yes">
+			<classpath refid="classpath.runtime" />
+			<jvmarg value="-Xmx2G" />
+		</java>
+	</target>
+
+	<target name="gen-compression" depends="build" description="Convert compression table otb files to xml files.">
+		<java classname="gov.nasa.kepler.otb.CompressionOtbToXml" failonerror="true" fork="yes">
+			<classpath refid="classpath.runtime" />
+			<jvmarg value="-Xmx2G" />
+		</java>
+	</target>
+
+	<target name="tad-to-fits-cadence-zero" depends="build" description="">
+		<java classname="gov.nasa.kepler.tad.TadToFitsPipelineModule" failonerror="true" fork="yes">
+			<classpath refid="classpath.runtime" />
+			<jvmarg value="-Xmx2G" />
+		</java>
+	</target>
+
+</project>

@@ -1,0 +1,454 @@
+
+Instance Summary
+
+ID     Pipeline Name                                            State      P-time    
+-------------------------------------------------------------------------------------
+11635  TPS-lite x 4: r9.3.19: Q9, Q10, Q11 TPS-lite, KSOP-2185  COMPLETED  11:42:32  
+
+Instance ID: 11635
+Instance Name: r9.3.19: Q9, Q10, Q11 TPS-lite, KSOP-2185
+Instance Priority: 4
+Instance State: COMPLETED
+Instance Software Revisions: [svn+ssh://murzim/repo/soc/tags/release/9.3.19@60029]
+
+Definition Name: TPS-lite x 4
+Definition Version: 0
+Definition ID: 18099962
+
+Pipeline Parameter Sets
+  Parameter Set: tps (lite) (type=TpsModuleParameters, version=10)
+    applyAttitudeTweakCorrection = true
+    bootstrapGaussianEquivalentThreshold = 6.36
+    bootstrapLowMesCutoff = 0.0
+    bootstrapThresholdReductionFactor = 3.5
+    chiSquare2Threshold = 7.0
+    chiSquareGofThreshold = 7.0
+    clusterProximity = 1
+    debugLevel = 0
+    deemphasizePeriodAfterSafeModeInDays = 1.5
+    deemphasizePeriodAfterTweakInCadences = 12
+    deweightReactionWheelZeroCrossingCadences = false
+    looperMaxWallTimeFraction = 0.8
+    maxDutyCycle = 0.16
+    maxFoldingLoopCount = 1000
+    maxFoldingsInPeriodSearch = -1
+    maxPeriodParameter = 0.01696
+    maxRemovedFeatureCount = 2
+    maxTrialTransitPulseInHours = 15.0
+    maximumSearchPeriodInDays = 1050.0
+    medfiltStandoffDays = 3.0
+    medfiltWindowLengthDays = 1.5
+    mesHistogramBinSize = 0.2
+    mesHistogramMaxMes = 20.0
+    mesHistogramMinMes = -10.0
+    minSesInMesCount = 3
+    minTrialTransitPulseInHours = 1.5
+    minimumSearchPeriodInDays = 0.5
+    noiseEstimationByQuarterEnabled = true
+    performQuarterStitching = true
+    performWeakSecondaryTest = true
+    pixelSensitivityDropoutThreshold = 7.5
+    positiveOutlierHaircutEnabled = true
+    positiveOutlierHaircutThreshold = 10.0
+    requiredTrialTransitPulseInHours = 3.0,6.0,12.0
+    robustStatisticConvergenceTolerance = 0.01
+    robustStatisticThreshold = 6.8
+    robustWeightGappingThreshold = 0.05
+    searchPeriodStepControlFactor = 0.9
+    searchTransitThreshold = 7.1
+    searchTrialTransitPulseDurationStepControlFactor = 0.8
+    superResolutionFactor = 3
+    tpsLiteEnabled = true
+    usePolyFitTransitModel = false
+    varianceWindowLengthMultiplier = 7.0
+    waveletFamily = daub
+    waveletFilterLength = 12
+    weakSecondaryPeakRangeMultiplier = 1.0
+
+  Parameter Set: customTarget (type=CustomTargetParameters, version=2)
+    processingEnabled = true
+
+  Parameter Set: fluxType (type=FluxTypeParameters, version=0)
+    fluxType = SAP
+
+  Parameter Set: tpsHarmonicsIdentification (type=TpsHarmonicsIdentificationParameters, version=3)
+    falseDetectionProbabilityForTimeSeries = 0.001
+    maxHarmonicComponents = 25
+    medianWindowLengthForPeriodogramSmoothing = 47
+    medianWindowLengthForTimeSeriesSmoothing = 21
+    minHarmonicSeparationInBins = 25
+    movingAverageWindowLength = 47
+    retainFrequencyCombsEnabled = false
+    timeOutInMinutes = 2.5
+
+  Parameter Set: gapFill (type=GapFillModuleParameters, version=4)
+    arAutoCorrelationThreshold = 0.05
+    gapFillModeIsAddBackPredictionError = true
+    giantTransitPolyFitChunkLengthInHours = 72.0
+    madXFactor = 10.0
+    maxArOrderLimit = 25
+    maxCorrelationWindowXFactor = 5
+    maxDetrendPolyOrder = 25
+    maxGiantTransitDurationInHours = 72.0
+    removeEclipsingBinariesOnList = false
+    waveletFamily = daub
+    waveletFilterLength = 12
+
+  Parameter Set: remoteExecution (tps lite) (type=RemoteExecutionParameters, version=7)
+    bbftpEnabled = false
+    enabled = true
+    gigsPerCore = 2.4
+    localBinToMatEnabled = false
+    maxFailedSubtaskCount = 0
+    memdroneEnabled = true
+    numElementsPerTaskFile = 1
+    queueName = kepler
+    reRunnable = true
+    remoteGroup = s1089
+    remoteHost = pfe
+    remoteNodeArchitectures = ivy
+    remoteStateFilePath = /nobackupnfs2/kzamudio/kepler-soc/SPQ/state
+    remoteTaskFilePath = /nobackupnfs2/kzamudio/kepler-soc/SPQ/task-data
+    remoteUser = kzamudio
+    requestedWallTime = 10:00:00
+    symlinksEnabled = true
+    tasksPerCore = 6.0
+    useArcFourCiphers = true
+
+  Parameter Set: skyGroupIdLists (type=SkyGroupIdListsParameters, version=16)
+    (no parameters)
+
+
+Modules
+
+  Module Definition: tps, version=2
+    Java Classname: TpsPipelineModule
+    exe timeout seconds: 126000
+    exe name: tps
+    min memory MB: 0
+    # Tasks (total/completed/failed): 80/80/0
+    Software Revisions for node:[svn+ssh://murzim/repo/soc/tags/release/9.3.19@60029]
+    Parameter Set: bootstrap (type=BootstrapModuleParameters, version=2)
+      autoSkipCountEnabled = true
+      binsBelowSearchTransitThreshold = 0
+      bootstrapResolutionFactor = 256
+      convolutionMethodEnabled = true
+      deemphasizeQuartersWithoutTransits = true
+      histogramBinWidth = 0.1
+      maxAllowedMes = -1.0
+      maxAllowedTransitCount = -1
+      maxIterations = 2000000
+      maxNumberBins = 4096
+      nSesPeaksToRemove = 3
+      sesPeakRemovalFloor = 2.0
+      sesPeakRemovalThreshold = 7.1
+      sesZeroCrossingDensityFactor = 4.0
+      sesZeroCrossingWidthDays = 2.0
+      skipCount = 1
+      upperLimitFactor = 1
+      useTceTrialPulseOnly = true
+
+    Parameter Set: targetList (lite,2) (type=TargetListParameters, version=8)
+      chunkSize = 0
+      targetListNames = astero_lc_quarter9_spring2011_trimmed.txt,astrometry_quarter9_spring2011_trimmed.txt,cluster_quarter9_spring2011_trimmed.txt,eb_quarter9_spring2011_trimmed.txt,go_lc_quarter9_spring2011_trimmed.txt,include_quarter9_spring2011_trimmed.txt,lepine_quarter9_spring2011_trimmed.txt,planetary_quarter9_spring2011_trimmed.txt,ppa_stellar_quarter9_spring2011_trimmed.txt,unclassified_quarter9_spring2011_trimmed.txt
+
+    Parameter Set: cadenceRange (LC,2) (type=CadenceRangeParameters, version=13)
+      binByTargetTable = true
+      endCadence = 39004
+      excludeCadences = 11891:11913,34226:34236,48458:48472,61866:61885
+      minimumBinSize = 1
+      numberOfBins = 1
+      startCadence = 34237
+
+    Parameter Set: taskFileCopy (2) (type=TaskFileCopyParameters, version=13)
+      deleteAfterCopy = true
+      deleteWithoutCopy = false
+      destinationPath = /soc/nfs/production-nfs7/soc-9.3-reprocessing/pipeline_results/lc/tps-lite/q9/
+      enabled = true
+      excludeWildcards = *.bin
+      failTaskOnError = true
+      uowSymlinksEnabled = false
+      uowSymlinksIncludeCadenceRange = false
+      uowSymlinksIncludeMonths = false
+
+
+  Module Definition: tps, version=2
+    Java Classname: TpsPipelineModule
+    exe timeout seconds: 126000
+    exe name: tps
+    min memory MB: 0
+    # Tasks (total/completed/failed): 80/80/0
+    Software Revisions for node:[svn+ssh://murzim/repo/soc/tags/release/9.3.19@60029]
+    Parameter Set: bootstrap (type=BootstrapModuleParameters, version=2)
+      autoSkipCountEnabled = true
+      binsBelowSearchTransitThreshold = 0
+      bootstrapResolutionFactor = 256
+      convolutionMethodEnabled = true
+      deemphasizeQuartersWithoutTransits = true
+      histogramBinWidth = 0.1
+      maxAllowedMes = -1.0
+      maxAllowedTransitCount = -1
+      maxIterations = 2000000
+      maxNumberBins = 4096
+      nSesPeaksToRemove = 3
+      sesPeakRemovalFloor = 2.0
+      sesPeakRemovalThreshold = 7.1
+      sesZeroCrossingDensityFactor = 4.0
+      sesZeroCrossingWidthDays = 2.0
+      skipCount = 1
+      upperLimitFactor = 1
+      useTceTrialPulseOnly = true
+
+    Parameter Set: targetList (lite,3) (type=TargetListParameters, version=7)
+      chunkSize = 0
+      targetListNames = astero_lc_quarter10_summer2011_trimmed.txt,astrometry_quarter10_summer2011_trimmed.txt,cluster_quarter10_summer2011_trimmed.txt,eb_quarter10_summer2011_trimmed.txt,go_lc_quarter10_summer2011_trimmed.txt,include_quarter10_summer2011_trimmed.txt,lepine_quarter10_summer2011_trimmed.txt,planetary_quarter10_summer2011_trimmed.txt,ppa_stellar_quarter10_summer2011_trimmed.txt,unclassified_quarter10_summer2011_trimmed.txt
+
+    Parameter Set: cadenceRange (LC,3) (type=CadenceRangeParameters, version=11)
+      binByTargetTable = true
+      endCadence = 43621
+      excludeCadences = 11891:11913,34226:34236,48458:48472,61866:61885
+      minimumBinSize = 1
+      numberOfBins = 1
+      startCadence = 39049
+
+    Parameter Set: taskFileCopy (3) (type=TaskFileCopyParameters, version=11)
+      deleteAfterCopy = true
+      deleteWithoutCopy = false
+      destinationPath = /soc/nfs/production-nfs7/soc-9.3-reprocessing/pipeline_results/lc/tps-lite/q10/
+      enabled = true
+      excludeWildcards = *.bin
+      failTaskOnError = true
+      uowSymlinksEnabled = false
+      uowSymlinksIncludeCadenceRange = false
+      uowSymlinksIncludeMonths = false
+
+
+  Module Definition: tps, version=2
+    Java Classname: TpsPipelineModule
+    exe timeout seconds: 126000
+    exe name: tps
+    min memory MB: 0
+    # Tasks (total/completed/failed): 80/80/0
+    Software Revisions for node:[svn+ssh://murzim/repo/soc/tags/release/9.3.19@60029]
+    Parameter Set: bootstrap (type=BootstrapModuleParameters, version=2)
+      autoSkipCountEnabled = true
+      binsBelowSearchTransitThreshold = 0
+      bootstrapResolutionFactor = 256
+      convolutionMethodEnabled = true
+      deemphasizeQuartersWithoutTransits = true
+      histogramBinWidth = 0.1
+      maxAllowedMes = -1.0
+      maxAllowedTransitCount = -1
+      maxIterations = 2000000
+      maxNumberBins = 4096
+      nSesPeaksToRemove = 3
+      sesPeakRemovalFloor = 2.0
+      sesPeakRemovalThreshold = 7.1
+      sesZeroCrossingDensityFactor = 4.0
+      sesZeroCrossingWidthDays = 2.0
+      skipCount = 1
+      upperLimitFactor = 1
+      useTceTrialPulseOnly = true
+
+    Parameter Set: targetList (lite,4) (type=TargetListParameters, version=7)
+      chunkSize = 0
+      targetListNames = astero_lc_quarter11_fall2011_trimmed.txt,astrometry_quarter11_fall2011_trimmed.txt,cluster_quarter11_fall2011_trimmed.txt,eb_quarter11_fall2011_trimmed.txt,go_lc_quarter11_fall2011_trimmed.txt,include_quarter11_fall2011_trimmed.txt,lepine_quarter11_fall2011_trimmed.txt,planetary_quarter11_fall2011_trimmed.txt,ppa_stellar_quarter11_fall2011_trimmed.txt,unclassified_quarter11_fall2011_trimmed.txt
+
+    Parameter Set: cadenceRange (LC,4) (type=CadenceRangeParameters, version=11)
+      binByTargetTable = true
+      endCadence = 48420
+      excludeCadences = 11891:11913,34226:34236,48458:48472,61866:61885
+      minimumBinSize = 1
+      numberOfBins = 1
+      startCadence = 43667
+
+    Parameter Set: taskFileCopy (4) (type=TaskFileCopyParameters, version=11)
+      deleteAfterCopy = true
+      deleteWithoutCopy = false
+      destinationPath = /soc/nfs/production-nfs7/soc-9.3-reprocessing/pipeline_results/lc/tps-lite/q11/
+      enabled = true
+      excludeWildcards = *.bin
+      failTaskOnError = true
+      uowSymlinksEnabled = false
+      uowSymlinksIncludeCadenceRange = false
+      uowSymlinksIncludeMonths = false
+
+
+Data Model Registry
+version=139, locked=true, lockTimestamp=2015-07-17 09:23:50.0
+  type=BAD_PIXELS
+    importTime=2009-02-24 14:00:01.0
+    revision=svn+ssh://murzim/data-repo/trunk/data/flight/so/models/invalid-pixels/09054_01_tklaus_invalid_pixels (LCR=305)
+    description=Added as seed data during r6.2 migration
+    locked=true
+    lockTime=2016-03-16 14:03:15.0
+
+  type=DATA_ANOMALY_FLAGS
+    importTime=2015-07-17 09:07:41.0
+    revision=28
+    description=Default description
+    locked=true
+    lockTime=2016-03-16 14:03:15.0
+
+  type=EB_TRANSIT_PARAMETER
+    importTime=2015-07-15 11:19:18.0
+    revision=2
+    description=kplr20150714170000_ebham.txt: URL: svn+ssh://murzim/data-repo/trunk/data/flight/so/exo_archive/koi_tables/150714_ksop2203/kplr20150714170000_ebham.txt R7203 r9.3.16 KSOP-2203 EB Parameters Model import, kzamudio, 20150715
+    locked=true
+    lockTime=2016-03-16 14:03:15.0
+
+  type=EXTERNAL_TCE
+    importTime=2014-04-02 07:41:02.0
+    revision=2
+    description=r9.1.27: TCE Model import, KSOP-1970 svn+ssh://murzim/data-repo/trunk/data/flight/so/models/external-tce/140401_jlcoughl_q1q16_orphan_dvsuprun/Q16OrphanDVSuppInput.txt R6170 kzamudio 20140402
+    locked=true
+    lockTime=2016-03-16 14:03:15.0
+
+  type=GAIN
+    importTime=2009-02-24 13:59:55.0
+    revision=svn+ssh://murzim/data-repo/trunk/data/flight/so/models/gain/09054_01_tklaus_gain (LCR=299)
+    description=Added as seed data during r6.2 migration
+    locked=true
+    lockTime=2016-03-16 14:03:15.0
+
+  type=GEOMETRY
+    importTime=2009-06-04 20:02:48.0
+    revision=svn+ssh://murzim/data-repo/trunk/data/flight/so/models/geometry/09156_01_pt_geometry (LCR=700)
+    description=Added as seed data during r6.2 migration
+    locked=true
+    lockTime=2016-03-16 14:03:15.0
+
+  type=KIC_EXTENSION
+    importTime=2013-07-15 11:49:05.0
+    revision=1
+    description=r9.0.7: Import UKIRT KIC Extenstion KSOP-1662 svn+ssh://murzim/data-repo/trunk/data/flight/so/catalogs/kicExtensions/ukirt_kic_extension_full_fov.txt R4651, kibrahim, KSOP-1662, 20130715
+    locked=true
+    lockTime=2016-03-16 14:03:15.0
+
+  type=KIC_OVERRIDE
+    importTime=2014-07-01 11:08:39.0
+    revision=6
+    description=Importing the KOM file for Q0-Q17 KSOP-1927, svn+ssh://murzim/data-repo/trunk/data/flight/so/models/kic-overrides/14160_mergedHuberPropertiesBrysonMagnitudes_ksop-1927/mergedPropertiesKepmagsKom_20140609.txt R6318, kzamudio, 20140701
+    locked=true
+    lockTime=2015-09-08 16:23:13.0
+
+  type=LARGEFLATFIELD
+    importTime=2009-06-25 09:41:47.0
+    revision=svn+ssh://murzim/data-repo/trunk/data/flight/so/models/large-flat/09175_01_jvancleve_large-flat (LCR=771)
+    description=Added as seed data during r6.2 migration
+    locked=true
+    lockTime=2016-03-16 14:03:15.0
+
+  type=LEAP_SECONDS
+    importTime=2015-07-14 16:54:06.0
+    revision=svn+ssh://murzim/data-repo/trunk/data/flight/moc/leap-seconds/15162_01_jcampbell_leap_seconds/kplr2015160212506_senm.xml@7164
+    description=Adding the 2015 Leap Second update: naif0011.tls, KSOP-2336, jcampbell, 20150714
+    locked=true
+    lockTime=2016-03-16 14:03:15.0
+
+  type=LINEARITY
+    importTime=2009-06-10 14:37:13.0
+    revision=svn+ssh://murzim/data-repo/trunk/data/flight/so/models/linearity/09153_01_jvancleve_linearity (LCR=683)
+    description=Added as seed data during r6.2 migration
+    locked=true
+    lockTime=2016-03-16 14:03:15.0
+
+  type=OBS_LOG
+    importTime=2015-02-24 10:36:35.0
+    revision=4
+    description=r9.2.31: Importing the Observing Log XML KSOC-4609, svn+ssh://murzim/data-repo/trunk/data/flight/so/misc/data_observing_log/observing-log.xml R6845, kzamudio, 20150224
+    locked=true
+    lockTime=2016-03-16 14:03:15.0
+
+  type=PLANETARY_EPHEMERIS
+    importTime=2009-02-24 16:34:14.0
+    revision=svn+ssh://murzim/data-repo/trunk/data/flight/moc/planetary-ephemeris/09055_01_tklaus_planetary_ephemeris/kplr2009055103710_senm.xml (LCR=327)
+    description=Added as seed data during r6.2 migration
+    locked=true
+    lockTime=2016-03-16 14:03:15.0
+
+  type=POINTING
+    importTime=2015-07-15 10:32:35.0
+    revision=svn+ssh://kzamudio@murzim/data-repo/trunk/data/flight/so/models/pointing/15187_01_kzamudio_pointing_use15062roll_useL2276ephem (LCR=7189)
+    description=r9.3: KSOP-2313 K1+K2 model w/L2276ephem+15062roll svn+ssh://murzim/data-repo/trunk/data/flight/so/models/pointing/15187_01_kzamudio_pointing_use15062roll_useL2276ephem/kplr2015070608_pointing.txt R7189 kzamudio 150715 created by makeNextVersionHistory
+    locked=true
+    lockTime=2015-07-17 09:23:50.0
+
+  type=PRF
+    importTime=2009-05-29 16:26:43.0
+    revision=svn+ssh://murzim/data-repo/trunk/data/flight/so/models/prf/09146_01_sbryson_c039_prf_5prf_delivery (LCR=636)
+    description=Added as seed data during r6.2 migration
+    locked=true
+    lockTime=2016-03-16 14:03:15.0
+
+  type=READNOISE
+    importTime=2009-02-24 14:05:36.0
+    revision=svn+ssh://murzim/data-repo/trunk/data/flight/so/models/read-noise/09054_01_tklaus_read_noise (LCR=302)
+    description=Added as seed data during r6.2 migration
+    locked=true
+    lockTime=2016-03-16 14:03:15.0
+
+  type=ROLLTIME
+    importTime=2015-03-18 13:23:40.0
+    revision=svn+ssh://murzim/data-repo/trunk/data/flight/so/models/roll-time/15062_01_jcamp_roll_time_c6_to_c9_updates (LCR=6866)
+    description=r9.2.33 KSOP-2242 Roll-time update C6 to C9, svn+ssh://murzim/data-repo/trunk/data/flight/so/models/roll-time/15062_01_jcamp_roll_time_c6_to_c9_updates/kplr2015030314_rolltime.txt R6869, kzamudio, 20150318 created by makeNextVersionHistory
+    locked=true
+    lockTime=2015-07-17 09:23:50.0
+
+  type=SATURATION
+    importTime=2011-04-27 15:13:35.0
+    revision=svn+ssh://murzim/data-repo/trunk/data/flight/so/models/saturation/2011111_01_sbryson_saturation_model (LCR=2760)
+    description=r6.2v42444 svn+ssh://murzim/data-repo/trunk/data/flight/so/models/saturation/2011111_01_sbryson_saturation_model/kplr2011042115_saturation.txt R2760 kibrahim 110427 KSOP-844 created by makeNextVersionHistory
+    locked=true
+    lockTime=2016-03-16 14:03:15.0
+
+  type=SCLK
+    importTime=2015-07-15 10:19:23.0
+    revision=svn+ssh://murzim/data-repo/trunk/data/flight/moc/sclk/15138_01_kzamudio_sclk/kplr2015135192506_sknm.xml@7085
+    description=Adding new SCLK: kplr2015135185757.tsc, KSOP-2314, kzamudio, 20150715
+    locked=true
+    lockTime=2016-03-16 14:03:15.0
+
+  type=SMALLFLATFIELD
+    importTime=2009-06-25 10:23:25.0
+    revision=svn+ssh://murzim/data-repo/trunk/data/flight/so/models/small-flat/09174_01_dcaldwell_small_flat (LCR=772)
+    description=Added as seed data during r6.2 migration
+    locked=true
+    lockTime=2016-03-16 14:03:15.0
+
+  type=SPACECRAFT_EPHEMERIS
+    importTime=2015-07-15 10:31:26.0
+    revision=svn+ssh://murzim/data-repo/trunk/data/flight/moc/spacecraft-ephemeris/15156_01_kzamudio_spacecraft_ephemeris_L2276/kplr2015155202305_senm.xml@7155
+    description=Adding L+2276 ephemeris: spk_2015152000000_2015155195840_kplr.bsp, KSOP-2313, kzamudio, 20150715
+    locked=true
+    lockTime=2015-07-17 09:23:50.0
+
+  type=TRANSIT_NAME
+    importTime=2015-07-17 08:22:03.0
+    revision=3
+    description=keplernames_20150715210000.csv: svn+ssh://murzim/data-repo/trunk/data/flight/so/models/nexsci/20150715_jcoughlin_koi_and_kepler_names/keplernames_20150715210000.csv R7206 r9.3.16 KSOP-2202 Kepler Names Table import, kzamudio, 20150717
+    locked=true
+    lockTime=2015-09-08 16:23:13.0
+
+  type=TRANSIT_PARAMETER
+    importTime=2015-07-17 08:17:57.0
+    revision=4
+    description=cumulative_20150715210000.csv: URL: svn+ssh://murzim/data-repo/trunk/data/flight/so/models/nexsci/20150715_jcoughlin_koi_and_kepler_names/cumulative_20150715210000.csv R7206 r9.3.16 KSOP-2202 Cumulative Table import, kzamudio, 20150717
+    locked=true
+    lockTime=2015-09-08 16:23:13.0
+
+  type=TWODBLACK
+    importTime=2010-03-03 14:55:18.0
+    revision=svn+ssh://murzim/data-repo/trunk/data/flight/so/models/two-d-black/10062_01_kibrahim_combine_09165_02_pgazis_10042_01_dcaldwell_two_d_black (LCR=1240)
+    description=Added as seed data during r6.2 migration
+    locked=true
+    lockTime=2016-03-16 14:03:15.0
+
+  type=UNDERSHOOT
+    importTime=2009-02-24 14:11:02.0
+    revision=svn+ssh://murzim/data-repo/trunk/data/flight/so/models/undershoot/09054_01_tklaus_undershoot (LCR=304)
+    description=Added as seed data during r6.2 migration
+    locked=true
+    lockTime=2016-03-16 14:03:15.0
+
+

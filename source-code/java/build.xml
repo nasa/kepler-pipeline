@@ -1,0 +1,504 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Copyright 2017 United States Government as represented by the
+  Administrator of the National Aeronautics and Space Administration.
+  All Rights Reserved.
+  
+  This file is available under the terms of the NASA Open Source Agreement
+  (NOSA). You should have received a copy of this agreement with the
+  Kepler source code; see the file NASA-OPEN-SOURCE-AGREEMENT.doc.
+  
+  No Warranty: THE SUBJECT SOFTWARE IS PROVIDED "AS IS" WITHOUT ANY
+  WARRANTY OF ANY KIND, EITHER EXPRESSED, IMPLIED, OR STATUTORY,
+  INCLUDING, BUT NOT LIMITED TO, ANY WARRANTY THAT THE SUBJECT SOFTWARE
+  WILL CONFORM TO SPECIFICATIONS, ANY IMPLIED WARRANTIES OF
+  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, OR FREEDOM FROM
+  INFRINGEMENT, ANY WARRANTY THAT THE SUBJECT SOFTWARE WILL BE ERROR
+  FREE, OR ANY WARRANTY THAT DOCUMENTATION, IF PROVIDED, WILL CONFORM
+  TO THE SUBJECT SOFTWARE. THIS AGREEMENT DOES NOT, IN ANY MANNER,
+  CONSTITUTE AN ENDORSEMENT BY GOVERNMENT AGENCY OR ANY PRIOR RECIPIENT
+  OF ANY RESULTS, RESULTING DESIGNS, HARDWARE, SOFTWARE PRODUCTS OR ANY
+  OTHER APPLICATIONS RESULTING FROM USE OF THE SUBJECT SOFTWARE.
+  FURTHER, GOVERNMENT AGENCY DISCLAIMS ALL WARRANTIES AND LIABILITIES
+  REGARDING THIRD-PARTY SOFTWARE, IF PRESENT IN THE ORIGINAL SOFTWARE,
+  AND DISTRIBUTES IT "AS IS."
+
+  Waiver and Indemnity: RECIPIENT AGREES TO WAIVE ANY AND ALL CLAIMS
+  AGAINST THE UNITED STATES GOVERNMENT, ITS CONTRACTORS AND
+  SUBCONTRACTORS, AS WELL AS ANY PRIOR RECIPIENT. IF RECIPIENT'S USE OF
+  THE SUBJECT SOFTWARE RESULTS IN ANY LIABILITIES, DEMANDS, DAMAGES,
+  EXPENSES OR LOSSES ARISING FROM SUCH USE, INCLUDING ANY DAMAGES FROM
+  PRODUCTS BASED ON, OR RESULTING FROM, RECIPIENT'S USE OF THE SUBJECT
+  SOFTWARE, RECIPIENT SHALL INDEMNIFY AND HOLD HARMLESS THE UNITED
+  STATES GOVERNMENT, ITS CONTRACTORS AND SUBCONTRACTORS, AS WELL AS ANY
+  PRIOR RECIPIENT, TO THE EXTENT PERMITTED BY LAW. RECIPIENT'S SOLE
+  REMEDY FOR ANY SUCH MATTER SHALL BE THE IMMEDIATE, UNILATERAL
+  TERMINATION OF THIS AGREEMENT.
+-->
+
+<project name="java" default="build" basedir="." xmlns:jacoco="antlib:org.jacoco.ant">
+
+  <!-- ================== Global properties ====================== -->
+
+  <property name="build.top" value="${basedir}/.." />
+  <property name="soc.repo" value="svn+ssh://host/path/to/code" />
+
+  <import file="include/ant/standard.xml" />
+
+  <!-- The following project directories are disabled. -->
+  <property name="project.dirs.disabled" value=".*,db,jars,include" />
+
+  <property name="cluster.nodes" value="w[00-09]" />
+  <property name="cluster.user" value="test" />
+  <property name="cluster.ant.args" value="-version" />
+
+  <!-- ================== Published Targets ====================== -->
+
+  <target name="clean" depends="prep" description="Remove all compilation artifacts">
+    <delete dir="${dist}" failonerror="false" />
+    <delete dir="${build}" failonerror="false" />
+    <antcall target="call-projects">
+      <param name="target.name" value="clean" />
+    </antcall>
+  </target>
+
+  <target name="init" depends="prep">
+    <antcall target="call-projects">
+      <param name="target.name" value="init" />
+    </antcall>
+  </target>
+
+  <target name="dist" depends="prep" description="Copy the build products into the install image">
+
+    <!-- create the dist dir structure, copy the skel files -->
+    <antcall target="dist-setup" />
+
+    <!-- Set the release.version-->
+    <exec executable="${basedir}/include/ant/infer-release.pl">
+        <redirector outputproperty="release.version" />
+    </exec>
+
+    <!-- let projects contribute their files to dist -->
+    <antcall target="call-projects">
+      <param name="target.name" value="dist" />
+    </antcall>
+
+    <!-- copy the third-party jars, create the classpath jar -->
+    <antcall target="dist-finalize" />
+  </target>
+
+  <!-- This target is a subset of the full dist target.  It assumes that the dist
+       directory structure already exists, and that the files from skel have already
+       been copied into it.  This target is only intended to be used in a dev environment
+       where the developer simply wants to refresh the jars in dist/lib after making a
+       code change, without cleaning out and recreating the whole dist tree -->
+  <target name="dist-refresh" depends="prep" description="Refresh the install image (dev use only)">
+
+    <!-- let projects contribute their files to dist -->
+    <antcall target="call-projects">
+      <param name="target.name" value="dist" />
+    </antcall>
+  
+  </target>
+
+  <target name="build" depends="prep" description="Compile all projects">
+    <antcall target="call-projects">
+      <param name="target.name" value="build" />
+    </antcall>
+  </target>
+
+  <target name="findbugs" depends="prep"
+          description="Run FindBugs on all projects">
+    <antcall target="call-projects">
+      <param name="target.name" value="findbugs" />
+    </antcall>
+  </target>
+
+  <target name="javadoc" depends="prep"
+          description="Run Javadoc">
+    <antcall target="javadoc-all" />
+  </target>
+
+  <target name="jacoco" depends="prep"
+          description="Run unit tests with JaCoCo enabled">
+
+    <antcall target="call-projects">
+      <param name="target.name" value="jacoco" />
+    </antcall>
+
+    <delete dir="${jacoco.reports.dir}" />
+    <mkdir dir="${jacoco.reports.dir}" />
+
+    <delete dir="${jacoco.coverage.dir}" />
+    <mkdir dir="${jacoco.coverage.dir}" />
+
+    <jacoco:merge destfile="${jacoco.coverage.dir}/merged.exec">
+     <fileset dir="${build.top.java}" >
+       <include name="*/${jacoco.coverage.dir}/*.exec" />
+       <!-- We have no expectations that these projects will meet our coverage goals -->
+       <exclude name="mr/**" />
+       <exclude name="pig/**" />
+       <exclude name="systest/**" />
+       <exclude name="ui/**" />
+     </fileset>
+    </jacoco:merge>
+
+    <jacoco:report>
+      <executiondata>
+	<file file="${jacoco.coverage.dir}/merged.exec"/>
+      </executiondata>
+
+      <structure name="${ant.project.name} project">
+        <classfiles>
+	  <fileset dir="${build.top.java}">
+	    <include name="*/${classes.src.dir}/**/*.class"/>
+            <exclude name="mr/**" />
+            <exclude name="pig/**" />
+            <exclude name="systest/**" />
+            <exclude name="ui/**" />
+          </fileset>
+        </classfiles>
+        <sourcefiles encoding="UTF-8">
+	  <fileset dir="${build.top.java}">
+	    <include name="*/${src}/**/*.java"/>
+            <exclude name="mr/**" />
+            <exclude name="pig/**" />
+            <exclude name="systest/**" />
+            <exclude name="ui/**" />
+          </fileset>
+        </sourcefiles>
+      </structure>
+
+      <html destdir="${jacoco.reports.dir}"/>
+
+    </jacoco:report>
+  </target>
+
+  <target name="test" depends="prep" description="Run unit tests">
+    <delete dir="${reports}" />
+    <mkdir dir="${reports}" />
+    <mkdir dir="${reports.junit}" />
+    <property name="test.failed.file" value="/tmp/test.failed" />
+    <delete file="${test.failed.file}" />
+
+    <property name="test.target" value="test" />
+    <antcall target="call-projects">
+      <param name="target.name" value="${test.target}" />
+    </antcall>
+
+    <junitreport todir="${reports.junit}">
+      <fileset dir="${reports.junit}">
+        <include name="TEST-*.xml" />
+      </fileset>
+      <report format="frames" todir="${reports.junit}" />
+    </junitreport>
+
+    <available file="${test.failed.file}" property="test.failed" />
+    <if>
+      <isset property="test.failed" />
+      <then>
+        <fail message="Errors in unit tests" />
+      </then>
+    </if>
+  </target>
+
+  <target name="test-integration" description="Run integration tests">
+    <antcall target="test">
+      <param name="test.target" value="test-integration" />
+    </antcall>
+  </target>
+
+  <target name="logs-dir" 
+          description="Set logs.dir property value, creates dir if necessary" >
+    <if>
+      <not><isset property="logs.dir" /></not>
+      <then>
+        <if>
+          <isset property="socenv.LOGS_DIR" />
+          <then>
+            <property name="logs.dir" value="${socenv.LOGS_DIR}" />
+          </then>
+          <else>
+            <property name="logs.dir" value="${dist}/logs" />
+          </else>
+        </if>
+      </then>
+    </if>
+    <mkdir dir="${logs.dir}" />
+    <echo>logs.dir=${logs.dir}</echo>
+  </target>
+
+  <target name="code-svn" depends="logs-dir"
+          description="Capture svn version information for soc/code" >
+    <exec executable="svn" dir="${build.top}"
+          output="${logs.dir}/code-svn-info.out"
+          osfamily="unix" >
+      <arg line="info ." />
+    </exec>
+    <exec executable="svnversion" dir="${build.top}"
+          output="${logs.dir}/code-svnversion.out"
+          osfamily="unix" >
+    </exec>
+  </target>
+
+  <target name="vendor-svn" depends="logs-dir" 
+          description="Capture svn version information for vendor/{ant,c3}" >
+    <var name="svn.root" value="/path/to/vendor" />
+    <if>
+      <isset property="socenv.SOC_VENDOR_ROOT" />
+      <then>
+        <var name="svn.root" value="${socenv.SOC_VENDOR_ROOT}" />
+      </then>
+    </if>
+    <exec executable="svn" dir="${svn.root}/ant"
+          output="${logs.dir}/ant-svn-info.out"
+          osfamily="unix" >
+      <arg line="info ." />
+    </exec>
+    <exec executable="svnversion" dir="${svn.root}/ant"
+          output="${logs.dir}/ant-svnversion.out"
+          osfamily="unix" >
+    </exec>
+    <exec executable="svn" dir="${svn.root}/c3"
+          output="${logs.dir}/c3-svn-info.out"
+          osfamily="unix" >
+      <arg line="info ." />
+    </exec>
+    <exec executable="svnversion" dir="${svn.root}/c3"
+          output="${logs.dir}/c3-svnversion.out"
+          osfamily="unix" >
+    </exec>
+    <var name="svn.root" unset="true" />
+  </target>
+
+  <target name="data-svn" depends="logs-dir"
+          description="Capture svn version information for data" >
+    <var name="svn.root" value="/path/to/data" />
+    <if>
+      <isset property="socenv.SOC_DATA_ROOT" />
+      <then>
+        <var name="svn.root" value="${socenv.SOC_DATA_ROOT}" />
+      </then>
+    </if>
+    <exec executable="svn" dir="${svn.root}"
+          output="${logs.dir}/data-svn-info.out"
+          osfamily="unix" >
+      <arg line="info ." />
+    </exec>
+    <exec executable="svnversion" dir="${svn.root}"
+          output="${logs.dir}/data-svnversion.out"
+          osfamily="unix" >
+    </exec>
+    <var name="svn.root" unset="true" />
+  </target>
+
+  <target name="testdata-svn" depends="logs-dir"
+          description="Capture svn version information for test data" >
+    <var name="svn.root" value="/path/to/root" />
+    <if>
+      <isset property="socenv.SOC_TESTDATA_ROOT" />
+      <then>
+        <var name="svn.root" value="${socenv.SOC_TESTDATA_ROOT}" />
+      </then>
+    </if>
+    <exec executable="svn" dir="${svn.root}"
+          output="${logs.dir}/testdata-svn-info.out"
+          osfamily="unix" >
+      <arg line="info . " />
+    </exec>
+    <exec executable="svnversion" dir="${svn.root}"
+          output="${logs.dir}/data-svnversion.out"
+          osfamily="unix" >
+    </exec>
+    <var name="svn.root" unset="true" />
+  </target>
+
+  <target name="last-integ-rev" depends="logs-dir"
+          description="Determine the last integ branch revision" >
+    <if>
+      <not><isset property="socenv.LAST_INTEG_NUM" /></not>
+      <then>
+        <fail message="LAST_INTEG_NUM environment variable not set." />
+      </then>
+    </if>
+    <exec executable="svn" dir="${build.top}"
+          output="${logs.dir}/last-integ-rev.out"
+          osfamily="unix" >
+      <arg line="info ${soc.repo}/last/integ/${socenv.LAST_INTEG_NUM}" />
+    </exec>
+  </target>
+
+  <target name="last-release-rev" depends="logs-dir, last-integ-rev"
+          description="Determine the last release revision" >
+    <if>
+      <isset property="socenv.LAST_RELEASE_REV" />
+      <then>
+        <property name="last.release.rev" value="${socenv.LAST_RELEASE_REV}" />
+      </then>
+      <else>
+        <loadfile property="last.release.rev"
+                  srcFile="${logs.dir}/last-integ-rev.out" >
+          <filterchain>
+            <linecontainsregexp>
+              <regexp pattern="^Last Changed Rev:" />
+            </linecontainsregexp>
+            <replaceregex pattern="^Last Changed Rev: ([0-9]+)$"
+                          replace="\1" />
+            <striplinebreaks />
+          </filterchain>
+        </loadfile>
+      </else>
+    </if>
+    <echo>last.release.rev=${last.release.rev}</echo>
+  </target>
+
+  <target name="this-release-rev" depends="logs-dir, code-svn" 
+          description="Determine this release revision" >
+    <loadfile property="this.release.rev"
+              srcFile="${logs.dir}/code-svnversion.out" >
+      <filterchain>
+        <replaceregex pattern="^([0-9]+).*$" replace="\1" />
+        <striplinebreaks />
+      </filterchain>
+    </loadfile>
+    <echo>this.release.rev=${this.release.rev}</echo>
+  </target>
+
+  <target name="code-svn-diffs"
+          depends="logs-dir, last-release-rev, this-release-rev"
+          description="Capture svn diffs for current release" >
+    <exec executable="svn" dir="${build.top}"
+          output="${logs.dir}/code-svn-diff-r${last.release.rev}-${this.release.rev}.out"
+          osfamily="unix" >
+      <arg line="diff -r${last.release.rev}:${this.release.rev} ${build.top}" />
+    </exec>
+  </target>
+
+  <target name="package-type"
+	  depends="code-svn"
+          description="Determine package type: trunk, integ, or release" >
+    <if>
+      <not><isset property="package.type" /></not>
+      <then>
+        <loadfile property="package.type"
+                  srcFile="${logs.dir}/code-svn-info.out" >
+          <filterchain>
+            <linecontainsregexp>
+              <regexp pattern="^URL:" />
+            </linecontainsregexp>
+            <replaceregex
+	        pattern="^URL: svn\+ssh://host/path/to/code/(?:branches/)?([^/]+)/.*$"
+                replace="\1" />
+            <striplinebreaks />
+          </filterchain>
+        </loadfile>
+      </then>
+    </if>
+    <echo>package.type=${package.type}</echo>
+  </target>
+
+  <target name="release-package-name"
+          depends="uname-init, package-type, this-release-rev"
+          description="Determine the archive file name" >
+    <if>
+      <not><isset property="release.package.name" /></not>
+      <then>
+        <property name="release.package.name"
+                  value="kepler-soc-${package.type}-r${this.release.rev}-${uname.s.lowercase}" />
+      </then>
+    </if>
+    <echo>release.package.name=${release.package.name}</echo>
+  </target>
+
+  <target name="all-svn-info" 
+          depends="uname-init, code-svn, vendor-svn, data-svn, testdata-svn"
+          description="Capture subversion information" />
+
+  <target name="release"
+      depends="all-svn-info, code-svn-diffs, release-package-name"
+      description="Package SOC software release " >
+
+    <echo message="********************* java release **********************"/>
+    <tar basedir="${build.top}"
+         destfile="${dist}/${release.package.name}.tar.bz2"
+         longfile="gnu" compression="bzip2"
+         excludes="**/${release.package.name}.*" />
+  </target>
+
+  <!-- ================== Internal/Private Targets ====================== -->
+
+  <!-- Define all custom tasks. -->
+  <target name="prep">
+    <!-- Define ant4eclipse tasks. -->
+    <taskdef name="getBuildOrder" classname="net.sf.ant4eclipse.ant.task.projectset.GetBuildOrderTask" classpath="${build.top.java}/jars/dev/ant4eclipse/ant4eclipse-0.4.1.jar" />
+    <taskdef name="getReferencedProjects" classname="net.sf.ant4eclipse.ant.task.project.GetReferencedProjectsTask" classpath="${build.top.java}/jars/dev/ant4eclipse/ant4eclipse-0.4.1.jar" />
+  </target>
+
+  <!-- Call the named target on in each project's build file. -->
+  <target name="call-projects">
+    <!-- Get a project list either for all projects, or for one project. -->
+    <if>
+      <equals arg1="${build.single}" arg2="true" />
+      <then>
+        <antcall target="find-referenced-projects" inheritAll="true" />
+      </then>
+      <else>
+        <antcall target="find-all-projects" inheritAll="true" />
+      </else>
+    </if>
+    <property file=".project-list.properties" />
+
+    <getBuildOrder buildorderProperty="build.order" workspace="${basedir}" projectNames="${project.list}" />
+
+    <echo>Build order: ${build.order}</echo>
+
+    <!-- Call the build target for each project. -->
+    <!-- It is assumed that ${target.name} is already set by this point. -->
+    <foreach list="${build.order}" target="invoke-project" param="invoke.project.name" inheritAll="true" trim="yes" />
+  </target>
+
+  <target name="invoke-project">
+    <echo>======================== ${target.name} ${invoke.project.name} ========================</echo>
+    <!-- Set a property so project builds can know tasks are defined, etc. -->
+    <property name="build.top.level" value="true" />
+    <ant dir="${invoke.project.name}" target="${target.name}" inheritAll="true" />
+  </target>
+
+  <!-- Generate a list of all known projects (directories with a
+       .project directory), minus disabled projects. -->
+  <target name="find-all-projects">
+    <!-- Get a list of all absolute project dir paths. -->
+    <path id="project.dirs.path">
+      <dirset dir="${basedir}" excludes="${project.dirs.disabled}">
+	<present targetdir="${basedir}">
+	  <mapper type="glob" from="*" to="*/.project" />
+	</present>
+      </dirset>
+    </path>
+    <property name="project.absdirs" refid="project.dirs.path" />
+
+    <!-- Convert the absolute paths into a space-separated dir list. -->
+    <echo file=".project-list.properties" message="project.list=${project.absdirs}" />
+    <replaceregexp file=".project-list.properties" match="/[^:]*/" replace="" flags="g" />
+    <replaceregexp file=".project-list.properties" match=":" replace="," flags="g" />
+    <property file=".project-list.properties" />
+    <echo>All projects: ${project.list}</echo>
+  </target>
+
+  <!-- Generate a list of one project and its dependencies. -->
+  <target name="find-referenced-projects">
+    <getReferencedProjects property="project.list" workspace="." projectName="${project.name}" source="classpath" />
+    <echo file=".project-list.properties">project.list=${project.list}</echo>
+    <echo>Referenced projects: ${project.list}</echo>
+  </target>
+
+  <target name="assemble-reports">
+    <junitreport todir="${reports.junit}">
+      <fileset dir="${reports.junit}">
+        <include name="TEST-*.xml" />
+      </fileset>
+      <report format="frames" todir="${reports.junit}" />
+    </junitreport>
+  </target>
+
+</project>

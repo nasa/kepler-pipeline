@@ -1,0 +1,2 @@
+Main-Class: gov.nasa.kepler.ui.Ksoc
+Class-Path: swing-layout-1.0.jar gtk-icons.jar

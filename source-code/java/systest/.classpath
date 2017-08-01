@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Copyright 2017 United States Government as represented by the
+  Administrator of the National Aeronautics and Space Administration.
+  All Rights Reserved.
+  
+  This file is available under the terms of the NASA Open Source Agreement
+  (NOSA). You should have received a copy of this agreement with the
+  Kepler source code; see the file NASA-OPEN-SOURCE-AGREEMENT.doc.
+  
+  No Warranty: THE SUBJECT SOFTWARE IS PROVIDED "AS IS" WITHOUT ANY
+  WARRANTY OF ANY KIND, EITHER EXPRESSED, IMPLIED, OR STATUTORY,
+  INCLUDING, BUT NOT LIMITED TO, ANY WARRANTY THAT THE SUBJECT SOFTWARE
+  WILL CONFORM TO SPECIFICATIONS, ANY IMPLIED WARRANTIES OF
+  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, OR FREEDOM FROM
+  INFRINGEMENT, ANY WARRANTY THAT THE SUBJECT SOFTWARE WILL BE ERROR
+  FREE, OR ANY WARRANTY THAT DOCUMENTATION, IF PROVIDED, WILL CONFORM
+  TO THE SUBJECT SOFTWARE. THIS AGREEMENT DOES NOT, IN ANY MANNER,
+  CONSTITUTE AN ENDORSEMENT BY GOVERNMENT AGENCY OR ANY PRIOR RECIPIENT
+  OF ANY RESULTS, RESULTING DESIGNS, HARDWARE, SOFTWARE PRODUCTS OR ANY
+  OTHER APPLICATIONS RESULTING FROM USE OF THE SUBJECT SOFTWARE.
+  FURTHER, GOVERNMENT AGENCY DISCLAIMS ALL WARRANTIES AND LIABILITIES
+  REGARDING THIRD-PARTY SOFTWARE, IF PRESENT IN THE ORIGINAL SOFTWARE,
+  AND DISTRIBUTES IT "AS IS."
+
+  Waiver and Indemnity: RECIPIENT AGREES TO WAIVE ANY AND ALL CLAIMS
+  AGAINST THE UNITED STATES GOVERNMENT, ITS CONTRACTORS AND
+  SUBCONTRACTORS, AS WELL AS ANY PRIOR RECIPIENT. IF RECIPIENT'S USE OF
+  THE SUBJECT SOFTWARE RESULTS IN ANY LIABILITIES, DEMANDS, DAMAGES,
+  EXPENSES OR LOSSES ARISING FROM SUCH USE, INCLUDING ANY DAMAGES FROM
+  PRODUCTS BASED ON, OR RESULTING FROM, RECIPIENT'S USE OF THE SUBJECT
+  SOFTWARE, RECIPIENT SHALL INDEMNIFY AND HOLD HARMLESS THE UNITED
+  STATES GOVERNMENT, ITS CONTRACTORS AND SUBCONTRACTORS, AS WELL AS ANY
+  PRIOR RECIPIENT, TO THE EXTENT PERMITTED BY LAW. RECIPIENT'S SOLE
+  REMEDY FOR ANY SUCH MATTER SHALL BE THE IMMEDIATE, UNILATERAL
+  TERMINATION OF THIS AGREEMENT.
+-->
+
+<classpath>
+	<classpathentry kind="src" output="build/classes/src" path="src"/>
+	<classpathentry kind="src" output="build/classes/test" path="test"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="lib" path="/jars/runtime/commons/commons-lang-2.2.jar"/>
+	<classpathentry kind="lib" path="/jars/runtime/junit/junit-4.5.jar"/>
+	<classpathentry kind="lib" path="/jars/runtime/commons/commons-logging-1.1.1.jar"/>
+	<classpathentry kind="lib" path="/jars/runtime/log4j/log4j-1.2.17.jar"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/pi"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/ar"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/cal"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/cm"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/common"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/common-spiffy"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/debug"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/dr"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/dv"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/etem"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/fc"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/fs"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/gar"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/hibernate"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/mc"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/pa"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/pdc"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/pdq"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/ppa"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/services"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/tad"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/tps"/>
+	<classpathentry kind="lib" path="/jars/runtime/commons/commons-codec-1.6.jar"/>
+	<classpathentry kind="lib" path="/jars/runtime/commons/commons-collections-3.2.jar"/>
+	<classpathentry kind="lib" path="/jars/runtime/commons/commons-dbcp-1.2.1.jar"/>
+	<classpathentry kind="lib" path="/jars/runtime/commons/commons-digester-1.7.jar"/>
+	<classpathentry kind="lib" path="/jars/runtime/commons/commons-pool-1.2.jar"/>
+	<classpathentry kind="lib" path="/jars/runtime/fits/fits.jar" sourcepath="/jars/src/fits/fits_src.jar"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/mr"/>
+	<classpathentry kind="lib" path="/jars/runtime/xmlbeans/xmlpublic.jar"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/sggen"/>
+	<classpathentry kind="lib" path="/jars/runtime/java.net/AppFramework.jar" sourcepath="/jars/src/java.net/AppFramework-src.zip"/>
+	<classpathentry kind="lib" path="/jars/runtime/java.net/swing-worker.jar"/>
+	<classpathentry kind="lib" path="/dr/build/lib/dr-xmlbeans.jar"/>
+	<classpathentry kind="lib" path="/gar/build/lib/gar-xmlbeans.jar"/>
+	<classpathentry kind="lib" path="/jars/runtime/xmlbeans/jsr173_1.0_api.jar"/>
+	<classpathentry kind="lib" path="/jars/runtime/xmlbeans/resolver.jar"/>
+	<classpathentry kind="lib" path="/jars/runtime/xmlbeans/xbean_xpath.jar"/>
+	<classpathentry kind="lib" path="/jars/runtime/xmlbeans/xbean.jar"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/prf"/>
+	<classpathentry kind="lib" path="/pdq/build/lib/pdq-xmlbeans.jar"/>
+	<classpathentry kind="lib" path="/jars/dev/jmock-2/cglib-2.1_3-src.jar"/>
+	<classpathentry kind="lib" path="/jars/dev/jmock-2/cglib-nodep-2.1_3.jar"/>
+	<classpathentry kind="lib" path="/jars/dev/jmock-2/hamcrest-core-1.1.jar"/>
+	<classpathentry kind="lib" path="/jars/dev/jmock-2/hamcrest-library-1.1.jar"/>
+	<classpathentry kind="lib" path="/jars/dev/jmock-2/jmock-2.5.1.jar"/>
+	<classpathentry kind="lib" path="/jars/dev/jmock-2/jmock-junit3-2.5.1.jar"/>
+	<classpathentry kind="lib" path="/jars/dev/jmock-2/jmock-junit4-2.5.1.jar"/>
+	<classpathentry kind="lib" path="/jars/dev/jmock-2/jmock-legacy-2.5.1.jar"/>
+	<classpathentry kind="lib" path="/jars/dev/jmock-2/objenesis-1.0.jar"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/ui"/>
+	<classpathentry kind="lib" path="/tad/build/lib/tad-xmlbeans.jar"/>
+	<classpathentry kind="lib" path="/jars/runtime/commons/commons-cli-1.2.jar" sourcepath="/jars/src/commons/commons-cli-1.2-sources.jar"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/pig"/>
+	<classpathentry kind="lib" path="/jars/dev/findbugs/findbugs.jar"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/dynablack"/>
+	<classpathentry kind="lib" path="/jars/runtime/javamail/dsn.jar"/>
+	<classpathentry kind="lib" path="/jars/runtime/javamail/imap.jar"/>
+	<classpathentry kind="lib" path="/jars/runtime/javamail/mailapi.jar"/>
+	<classpathentry kind="lib" path="/jars/runtime/javamail/pop3.jar"/>
+	<classpathentry kind="lib" path="/jars/runtime/javamail/smtp.jar"/>
+	<classpathentry kind="lib" path="/jars/runtime/jmatio/jmatio-0.2-update-2.jar" sourcepath="/jars/src/jmatio/jmatio-0.2-update-2-src.jar"/>
+	<classpathentry kind="lib" path="/pi/build/lib/pi-xmlbeans.jar"/>
+	<classpathentry kind="lib" path="/jars/runtime/svnkit/svnkit-1.8.5.jar"/>
+	<classpathentry kind="lib" path="build/lib/systest-xmlbeans.jar"/>
+	<classpathentry kind="lib" path="/jars/runtime/guava/guava-10.0.1.jar" sourcepath="/jars/src/guava/guava-10.0.1-sources.jar"/>
+	<classpathentry kind="lib" path="/jars/runtime/jdom/jdom-1.1.jar"/>
+	<classpathentry kind="lib" path="/jars/runtime/hsqldb/hsqldb.jar"/>
+	<classpathentry kind="lib" path="/jars/runtime/commons/commons-compress-1.7.jar"/>
+	<classpathentry kind="lib" path="/jars/runtime/commons/commons-exec-1.1.jar"/>
+	<classpathentry kind="lib" path="/jars/runtime/commons/commons-beanutils-1.8.0.jar"/>
+	<classpathentry kind="lib" path="/jars/runtime/wrapper/wrapper.jar"/>
+	<classpathentry kind="output" path="build/classes"/>
+</classpath>

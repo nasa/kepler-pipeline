@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Copyright 2017 United States Government as represented by the
+  Administrator of the National Aeronautics and Space Administration.
+  All Rights Reserved.
+  
+  This file is available under the terms of the NASA Open Source Agreement
+  (NOSA). You should have received a copy of this agreement with the
+  Kepler source code; see the file NASA-OPEN-SOURCE-AGREEMENT.doc.
+  
+  No Warranty: THE SUBJECT SOFTWARE IS PROVIDED "AS IS" WITHOUT ANY
+  WARRANTY OF ANY KIND, EITHER EXPRESSED, IMPLIED, OR STATUTORY,
+  INCLUDING, BUT NOT LIMITED TO, ANY WARRANTY THAT THE SUBJECT SOFTWARE
+  WILL CONFORM TO SPECIFICATIONS, ANY IMPLIED WARRANTIES OF
+  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, OR FREEDOM FROM
+  INFRINGEMENT, ANY WARRANTY THAT THE SUBJECT SOFTWARE WILL BE ERROR
+  FREE, OR ANY WARRANTY THAT DOCUMENTATION, IF PROVIDED, WILL CONFORM
+  TO THE SUBJECT SOFTWARE. THIS AGREEMENT DOES NOT, IN ANY MANNER,
+  CONSTITUTE AN ENDORSEMENT BY GOVERNMENT AGENCY OR ANY PRIOR RECIPIENT
+  OF ANY RESULTS, RESULTING DESIGNS, HARDWARE, SOFTWARE PRODUCTS OR ANY
+  OTHER APPLICATIONS RESULTING FROM USE OF THE SUBJECT SOFTWARE.
+  FURTHER, GOVERNMENT AGENCY DISCLAIMS ALL WARRANTIES AND LIABILITIES
+  REGARDING THIRD-PARTY SOFTWARE, IF PRESENT IN THE ORIGINAL SOFTWARE,
+  AND DISTRIBUTES IT "AS IS."
+  
+  Waiver and Indemnity: RECIPIENT AGREES TO WAIVE ANY AND ALL CLAIMS
+  AGAINST THE UNITED STATES GOVERNMENT, ITS CONTRACTORS AND
+  SUBCONTRACTORS, AS WELL AS ANY PRIOR RECIPIENT. IF RECIPIENT'S USE OF
+  THE SUBJECT SOFTWARE RESULTS IN ANY LIABILITIES, DEMANDS, DAMAGES,
+  EXPENSES OR LOSSES ARISING FROM SUCH USE, INCLUDING ANY DAMAGES FROM
+  PRODUCTS BASED ON, OR RESULTING FROM, RECIPIENT'S USE OF THE SUBJECT
+  SOFTWARE, RECIPIENT SHALL INDEMNIFY AND HOLD HARMLESS THE UNITED
+  STATES GOVERNMENT, ITS CONTRACTORS AND SUBCONTRACTORS, AS WELL AS ANY
+  PRIOR RECIPIENT, TO THE EXTENT PERMITTED BY LAW. RECIPIENT'S SOLE
+  REMEDY FOR ANY SUCH MATTER SHALL BE THE IMMEDIATE, UNILATERAL
+  TERMINATION OF THIS AGREEMENT.
+-->
+
+<project name="pmd">
+
+  <!-- Default taskdef, properties, and targets for PMD -->
+  <!-- (static Java source-code analyzer). -->
+  <path id="pmd.classpath">
+    <fileset dir="${build.top.java}/jars/dev/pmd" >
+      <include name="*.jar"/>
+    </fileset>
+  </path>
+
+  <taskdef name="pmd"
+           classname="net.sourceforge.pmd.ant.PMDTask"
+           classpathref="pmd.classpath" />
+
+  <property name="pmd.home"
+            value="${socenv.SOC_VENDOR_ROOT}/pmd/latest" />
+  <property name="pmd.config"
+            value="${pmd.home}/etc" />
+  <property name="pmd.report.base"
+            value="build/reports/pmd/${ant.project.name}-pmd" />
+
+  <target name="pmd.init">
+    <mkdir dir="${reports}/pmd" />
+    <copy todir="${reports}/pmd">
+      <fileset dir="${pmd.config}/xslt">
+        <include name="**/*.css" />
+        <include name="**/*.js" />
+        <include name="**/*.gif" />
+        <include name="**/*.jpg" />
+        <include name="**/*.png" />
+      </fileset>
+    </copy>
+  </target>
+
+  <target name="pmd-xml" depends="pmd.init" >
+    <pmd rulesetfiles="${pmd.home}/rulesets/favorites.xml"
+         shortFilenames="true" >
+      <formatter type="xml"
+                 toFile="${pmd.report.base}.xml" toConsole="true" />
+      <fileset dir="src">
+        <include name="**/*.java"/>
+      </fileset>
+    </pmd>
+    <xslt in="${pmd.report.base}.xml" out="${pmd.report.base}.html"
+          style="${pmd.config}/xslt/wz-pmd-report.xslt" />
+  </target>
+
+  <target name="pmd-html" depends="pmd.init" >
+    <pmd rulesetfiles="${pmd.home}/rulesets/favorites.xml"
+         shortFilenames="true" >
+      <formatter type="html"
+	         toFile="${pmd.report.base}.html" toConsole="true"
+                 linkPrefix="file:///path/to/java/docs/api/" />
+      <fileset dir="src">
+        <include name="**/*.java"/>
+      </fileset>
+    </pmd>
+  </target>
+
+</project>

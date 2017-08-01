@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Copyright 2017 United States Government as represented by the
+  Administrator of the National Aeronautics and Space Administration.
+  All Rights Reserved.
+  
+  This file is available under the terms of the NASA Open Source Agreement
+  (NOSA). You should have received a copy of this agreement with the
+  Kepler source code; see the file NASA-OPEN-SOURCE-AGREEMENT.doc.
+  
+  No Warranty: THE SUBJECT SOFTWARE IS PROVIDED "AS IS" WITHOUT ANY
+  WARRANTY OF ANY KIND, EITHER EXPRESSED, IMPLIED, OR STATUTORY,
+  INCLUDING, BUT NOT LIMITED TO, ANY WARRANTY THAT THE SUBJECT SOFTWARE
+  WILL CONFORM TO SPECIFICATIONS, ANY IMPLIED WARRANTIES OF
+  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, OR FREEDOM FROM
+  INFRINGEMENT, ANY WARRANTY THAT THE SUBJECT SOFTWARE WILL BE ERROR
+  FREE, OR ANY WARRANTY THAT DOCUMENTATION, IF PROVIDED, WILL CONFORM
+  TO THE SUBJECT SOFTWARE. THIS AGREEMENT DOES NOT, IN ANY MANNER,
+  CONSTITUTE AN ENDORSEMENT BY GOVERNMENT AGENCY OR ANY PRIOR RECIPIENT
+  OF ANY RESULTS, RESULTING DESIGNS, HARDWARE, SOFTWARE PRODUCTS OR ANY
+  OTHER APPLICATIONS RESULTING FROM USE OF THE SUBJECT SOFTWARE.
+  FURTHER, GOVERNMENT AGENCY DISCLAIMS ALL WARRANTIES AND LIABILITIES
+  REGARDING THIRD-PARTY SOFTWARE, IF PRESENT IN THE ORIGINAL SOFTWARE,
+  AND DISTRIBUTES IT "AS IS."
+  
+  Waiver and Indemnity: RECIPIENT AGREES TO WAIVE ANY AND ALL CLAIMS
+  AGAINST THE UNITED STATES GOVERNMENT, ITS CONTRACTORS AND
+  SUBCONTRACTORS, AS WELL AS ANY PRIOR RECIPIENT. IF RECIPIENT'S USE OF
+  THE SUBJECT SOFTWARE RESULTS IN ANY LIABILITIES, DEMANDS, DAMAGES,
+  EXPENSES OR LOSSES ARISING FROM SUCH USE, INCLUDING ANY DAMAGES FROM
+  PRODUCTS BASED ON, OR RESULTING FROM, RECIPIENT'S USE OF THE SUBJECT
+  SOFTWARE, RECIPIENT SHALL INDEMNIFY AND HOLD HARMLESS THE UNITED
+  STATES GOVERNMENT, ITS CONTRACTORS AND SUBCONTRACTORS, AS WELL AS ANY
+  PRIOR RECIPIENT, TO THE EXTENT PERMITTED BY LAW. RECIPIENT'S SOLE
+  REMEDY FOR ANY SUCH MATTER SHALL BE THE IMMEDIATE, UNILATERAL
+  TERMINATION OF THIS AGREEMENT.
+-->
+
+<project name="doc">
+
+  <target name="doc" depends="javadoc"
+          description="Generate all developer documentation">
+  </target>
+
+  <!-- Generates the Javadoc API documentation for a single project. -->
+  <target name="javadoc" description="Generate Javadoc documentation">
+    <tstamp/>
+
+    <mkdir dir="${build.doc}/${ant.project.name}"/>
+    <javadoc sourcepath="${basedir}/src"
+             classpathref="classpath.buildtime"
+             destdir="${build.doc}/${ant.project.name}"
+             author="true"
+             version="true"
+             windowtitle="NASA Kepler SOC ${ant.project.name} Java API">
+      <packageset dir="src" defaultexcludes="yes">
+        <include name="*/**/*.java"/>
+      </packageset>
+      <doctitle>
+        <![CDATA[<h1>]]>Kepler Science Operations Center (SOC) ${ant.project.name} Java API Documentation<![CDATA[</h1>]]>
+        Generated ${TODAY}<![CDATA[<br/><br/]]>
+      </doctitle>
+      <bottom>
+        <![CDATA[<i>Copyright &#169; 2017 United States Government. All Rights Reserved.</i>]]>
+      </bottom>
+      <link href="http://java.sun.com/javase/6/docs/api/" />
+    </javadoc>
+
+    <echo/>
+    <echo>Javadoc for ${ant.project.name} can be viewed at:</echo>
+    <echo>file://${basedir}/${build.doc}/${ant.project.name}/index.html</echo>
+  </target>
+
+  <!-- Generates the Javadoc API documentation for all projects. -->
+  <target name="javadoc-all" description="Generate Javadoc documentation">
+    <tstamp/>
+
+    <delete dir="${build.doc}" />
+    <mkdir dir="${build.doc}" />
+    
+    <javadoc classpathref="classpath.buildtime"
+             destdir="${build.doc}"
+             author="true"
+             version="true"
+             windowtitle="NASA Kepler SOC Java API">
+      <fileset dir="." defaultexcludes="yes" >
+        <include name="*/src/gov/nasa/kepler/**/*.java"/>
+      </fileset>
+
+      <doctitle>
+        <![CDATA[<h1>]]>Kepler Science Operations Center (SOC) Java API Documentation<![CDATA[</h1>]]>
+        Generated ${TODAY}<![CDATA[<br/><br/]]>
+      </doctitle>
+      <bottom>
+        <![CDATA[<i>Copyright &#169; 2017 United States Government. All Rights Reserved.</i>]]>
+      </bottom>
+      <link href="http://java.sun.com/javase/6/docs/api/" />
+    </javadoc>
+
+    <echo/>
+    <echo>Javadoc for all SOC software can be viewed at:</echo>
+    <echo>file://${basedir}/${build.doc}/index.html</echo>
+  </target>
+
+  <!-- Write an href link to the global JavaDoc index page for this -->
+  <!-- project.                                                     -->
+  <target name="add-javadocs-href-link">
+    <property name="javadoc.dir"
+              value="build/doc/${ant.project.name}"/>
+
+    <!-- Echo an auto-generated href link into the doc index page. -->
+    <echo>Appending link to ${javadoc.dir}/index.html for project ${ant.project.name} in</echo>
+    <echo>${build.top}/${dist.doc}/index.html</echo>
+
+    <mkdir dir="${build.top}/${dist.doc}"/>
+    <touch file="${build.top}/${dist.doc}/index.html"/>
+    <property name="docpath" value="${ant.project.name}/index.html"/>
+    <echo file="${build.top}/${dist.doc}/index.html" append="true">
+            &lt;a href=&quot;${docpath}&quot;&gt;
+              ${ant.project.name}&lt;/a&gt;&lt;br&gt;
+    </echo>
+  </target>
+
+</project>

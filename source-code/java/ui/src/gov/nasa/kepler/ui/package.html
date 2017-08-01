@@ -1,0 +1,556 @@
+<!--
+  Copyright 2017 United States Government as represented by the
+  Administrator of the National Aeronautics and Space Administration.
+  All Rights Reserved.
+  
+  This file is available under the terms of the NASA Open Source Agreement
+  (NOSA). You should have received a copy of this agreement with the
+  Kepler source code; see the file NASA-OPEN-SOURCE-AGREEMENT.doc.
+  
+  No Warranty: THE SUBJECT SOFTWARE IS PROVIDED "AS IS" WITHOUT ANY
+  WARRANTY OF ANY KIND, EITHER EXPRESSED, IMPLIED, OR STATUTORY,
+  INCLUDING, BUT NOT LIMITED TO, ANY WARRANTY THAT THE SUBJECT SOFTWARE
+  WILL CONFORM TO SPECIFICATIONS, ANY IMPLIED WARRANTIES OF
+  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, OR FREEDOM FROM
+  INFRINGEMENT, ANY WARRANTY THAT THE SUBJECT SOFTWARE WILL BE ERROR
+  FREE, OR ANY WARRANTY THAT DOCUMENTATION, IF PROVIDED, WILL CONFORM
+  TO THE SUBJECT SOFTWARE. THIS AGREEMENT DOES NOT, IN ANY MANNER,
+  CONSTITUTE AN ENDORSEMENT BY GOVERNMENT AGENCY OR ANY PRIOR RECIPIENT
+  OF ANY RESULTS, RESULTING DESIGNS, HARDWARE, SOFTWARE PRODUCTS OR ANY
+  OTHER APPLICATIONS RESULTING FROM USE OF THE SUBJECT SOFTWARE.
+  FURTHER, GOVERNMENT AGENCY DISCLAIMS ALL WARRANTIES AND LIABILITIES
+  REGARDING THIRD-PARTY SOFTWARE, IF PRESENT IN THE ORIGINAL SOFTWARE,
+  AND DISTRIBUTES IT "AS IS."
+
+  Waiver and Indemnity: RECIPIENT AGREES TO WAIVE ANY AND ALL CLAIMS
+  AGAINST THE UNITED STATES GOVERNMENT, ITS CONTRACTORS AND
+  SUBCONTRACTORS, AS WELL AS ANY PRIOR RECIPIENT. IF RECIPIENT'S USE OF
+  THE SUBJECT SOFTWARE RESULTS IN ANY LIABILITIES, DEMANDS, DAMAGES,
+  EXPENSES OR LOSSES ARISING FROM SUCH USE, INCLUDING ANY DAMAGES FROM
+  PRODUCTS BASED ON, OR RESULTING FROM, RECIPIENT'S USE OF THE SUBJECT
+  SOFTWARE, RECIPIENT SHALL INDEMNIFY AND HOLD HARMLESS THE UNITED
+  STATES GOVERNMENT, ITS CONTRACTORS AND SUBCONTRACTORS, AS WELL AS ANY
+  PRIOR RECIPIENT, TO THE EXTENT PERMITTED BY LAW. RECIPIENT'S SOLE
+  REMEDY FOR ANY SUCH MATTER SHALL BE THE IMMEDIATE, UNILATERAL
+  TERMINATION OF THIS AGREEMENT.
+-->
+
+<html>
+  <body>
+    <h2>The Kepler Science Operations Console (KSOC)</h2>
+
+    <p>
+      This package holds the main methods and panels for the <i>Kepler
+      Science Operations Console</i>.
+    </p>
+
+    <p>
+      If you're not reading this in an editor instead of a browser,
+      try going to the top of this project and running:
+    </p>
+
+    <pre>
+      ant javadoc
+      firefox build/doc/ui/index.html?gov/nasa/kepler/ui/package-summary.html</pre>
+
+    <h3>Swing Application Framework</h3>
+
+    <p>
+      This application uses the
+      nascent <a href="https://appframework.dev.java.net/">Swing
+      Application Framework</a>. The framework covers lifecycle,
+      actions, and tasks.
+    </p>
+
+    <p>
+      Note that the framework uses its own copy of swing-worker.jar
+      instead of the one that is now in Java 6. Hopefully, this will
+      be fixed in the future.
+    </p>
+
+    <p>
+      At the moment, the src distribution is downloaded into
+      <code>/jars/src/java.net</code>. To
+      build <code>AppFramework.jar</code> (after downloading a new
+      distribution, for example), extract the zip file. For
+      convenience, maintain the <code>AppFramework-src.zip</code>
+      symbolic link to the zip file and the <code>AppFramework</code>
+      link to the extracted directory so that <code>.classpath</code>
+      files that reference the library's source doesn't have to change
+      with new releases. In the <code>AppFramework</code> directory,
+      run <code>ant jar</code>. Then copy
+      both <code>dist/AppFramework.jar</code>
+      and <code>lib/swing-worker.jar</code>
+      into <code>/jars/runtime/java.net</code>. Optionally,
+      run <code>ant javadoc</code> to build the documentation which
+      you can find in <code>dist/javadoc</code>.
+    </p>
+
+    <p>
+      For more information, please
+      read <a href="https://appframework.dev.java.net/intro/">An
+      Introduction to the Swing Application Framework API
+      (JSR-296)</a> and
+      the <a
+      href="https://appframework.dev.java.net/nonav/javadoc.html">Swing
+      Application Framework Javadoc</a>.
+    </p>
+
+    <h3>Templates</h3>
+
+    <p>
+      Most of your panels should be subclasses
+      of <a
+      href="common/KeplerPanel.html"><code>KeplerPanel</code></a>
+      which defines template methods to provide for a consistent
+      structure throughout the codebase. If the panel is intended to
+      be a top-level tab in the UI, then your panel should be a
+      subclass of
+      <a href="common/ToolPanel.html"><code>ToolPanel</code></a>,
+      which itself is a subclass
+      of <a
+      href="common/KeplerPanel.html"><code>KeplerPanel</code></a>.
+      You'll then
+      call <a
+      href="common/KeplerPanel.html#createUi()"><code>KeplerPanel.createUi()</code></a>
+      in your constructor and override a handful of other methods
+      from <a
+      href="common/KeplerPanel.html"><code>KeplerPanel</code></a>.
+    </p>
+
+    <h3>Actions and Resources</h3>
+
+    <p>
+      All buttons and menu items should be created with the
+      application framework's <code>@Action</code> annotation. This
+      annotation, added to methods, creates actions that can be
+      consumed by Swing components. These actions use specially named
+      resources (shown below) to initialize the action's properties
+      (like button text, tool tips, mnemonics, icons, and so on). If a
+      component will be enabled or disabled depending on the state of
+      the panel, then use the <code>enabledProperty</code> parameter.
+    </p>
+
+    <p>
+      Use resources for strings that a user may see on the screen, in
+      a dialog, or in log messages. For simplicity, do not use
+      resources in exceptions that result in programmer error where
+      the likelihood of a user seeing it is negligible. Use the
+      application framework to obtain resources. In the example below,
+      the first statement that obtains the <code>resourceMap</code> is
+      usually not necessary as it is already provided by
+      the <a
+      href="common/KeplerPanel.html"><code>KeplerPanel</code></a>
+      or <a href="common/ToolPanel.html"><code>ToolPanel</code></a>.
+    </p>
+    <p>
+      Here is some code that demonstrates these things as well as the
+      way that they are used in the codebase.
+    </p>
+
+    <pre>      private ResourceMap resourceMap = ApplicationContext.getInstance()
+          .getResourceMap(getClass());
+      <span style="color:red;font-style:italic">// Use for action name to avoid typos.</span>
+      private static final String FOO = "foo";
+      <span style="color:red;font-style:italic">// Avoid typos in @Action parameters and firePropertyChange calls.</span>
+      private static final String ENABLED = "Enabled";
+      <span style="color:red;font-style:italic">// Bound property, used by the @Action enabledProperty parameter.</span>
+      private boolean fooEnabled;
+      ...
+      protected initComponents() {
+          ...
+          JLabel fooLabel = new JLabel();
+          <span style="color:red;font-style:italic">// Feeds resource injection.</span>
+          fooLabel.setName("fooLabel");
+          <span style="color:red;font-style:italic">// Get action foo from framework.</span>
+          JButton fooButton = new JButton(actionMap.get(FOO));
+          ...
+      }
+      ...
+      &#64;Action(enabledProperty = FOO + ENABLED)
+      public void foo() {
+          log.info(resourceMap.getString(FOO, "bar")); <span style="color:red;font-style:italic">// get resources manually</span>
+          ...
+          handleError(this, e, FOO);
+      }
+
+      public boolean isFooEnabled() {
+          return fooEnabled;
+      }
+
+      public void setFooEnabled(boolean fooEnabled) {
+          boolean oldValue = this.fooEnabled;
+          this.fooEnabled = fooEnabled && <i>insert lots of conditions here</i>;
+          firePropertyChange(FOO + ENABLED, oldValue, this.fooEnabled);
+      }
+</pre>
+
+    <p>
+      Every class has its own resource bundle within
+      a <code>resource</code> sub-package, although the application
+      framework will fall back
+      to <code>gov.nasa.kepler.ui.resources.Ksoc.properties</code> if
+      a resource cannot be found locally. The resource files
+      themselves are organized by component and appear roughly in the
+      order that the components appear on the screen. Here's the
+      resource file for the example above.
+    </p>
+
+    <pre>      <span style="color:red;font-style:italic"># Text of JLabel which is injected in createUi().</span>
+      fooLabel.text=Foo
+      <span style="color:red;font-style:italic"># Properties for foo action.</span>
+      foo.Action.text=Foo
+      foo.Action.shortDescription=Foo
+      <span style="color:red;font-style:italic"># Resource used manually.</span>
+      foo=Fooing %s
+      <span style="color:red;font-style:italic"># Resources used by handleError.</span>
+      foo.failed=Could not foo %s
+      foo.failed.secondary=Please try something else.</pre>
+
+    <h3>Tasks</h3>
+
+    <p>
+      Use the application framework to carry out tasks. To launch a
+      task, use the following code as an example:
+    </p>
+
+    <pre>
+      &#64;Action(enabledProperty = RECALCULATE + ENABLED)
+      public Task recalculate() {
+          Task task = new QueryTask(constraintModel);
+          task.setInputBlocker(new KeplerInputBlocker(resourceMap, task,
+              BlockingScope.WINDOW, this));
+          return task;
+      }</pre>
+
+    <p>
+      If your task is sometimes measured in seconds instead of
+      milliseconds, consider using an input blocker as shown in the
+      example above.
+      The <a
+      href="common/KeplerInputBlocker.html"><code>KeplerInputBlocker</code></a>
+      displays an hourglass cursor and if the task takes more than 250
+      ms, displays a Kepler-standard dialog.
+
+    <p>
+      If you must run the task on the database thread, you need to
+      explicitly launch the task yourself as in the following example.
+      In the future, there may be a parameter for the @Action
+      annotation which can be used instead (see next section).
+    </p>
+
+    <pre>
+      &#64;Action(enabledProperty = RECALCULATE + ENABLED)
+      public void recalculate() {
+          Task task = new QueryTask(constraintModel);
+          task.setInputBlocker(new KeplerInputBlocker(resourceMap, task,
+              BlockingScope.WINDOW, this));
+          ApplicationContext.getInstance().getTaskService(
+              DatabaseTaskService.NAME).execute(task);
+      }</pre>
+
+    <p>
+      See the framework's Javadoc for information on writing a task
+      and existing code for examples.
+    </p>
+
+    <h3>Database Access</h3>
+
+    <p>
+      All database access <b>must</b> be performed on a single thread
+      since the database session in that thread keeps track of all of
+      the persistent objects. For now, this is done with the following
+      call:
+
+      <pre>      ApplicationContext.getInstance().getTaskService(
+          DatabaseTaskService.NAME).execute(new TargetListSetLoadTask());</pre>
+
+      Ultimately, it will also be possible to declare an Action as
+      returning a Task and using an annotation parameter that
+      indicates that
+      the <a
+      href="common/DatabaseTaskService.html#NAME"><code>DatabaseTaskService.NAME</code></a>
+      thread should be used.
+    </p>
+
+    <p>
+      Your <code>Task</code> implementation should be a subclass
+      of <a
+      href="common/DatabaseTask.html"><code>DatabaseTask</code></a>.
+      You only need to implement <code>doInBackground</code> (which
+      does the work) and <code>succeeded</code> (which updates a view
+      directly or dispatches messages for other views to update
+      themselves)
+      as <a
+      href="common/DatabaseTask.html"><code>DatabaseTask</code></a>
+      provides implementations
+      for <a
+      href="common/DatabaseTask.html#failed(java.lang.Throwable)"><code>failed</code></a>
+      and <a
+      href="common/DatabaseTask.html#interrupted(java.lang.InterruptedException)"><code>interrupted</code></a>.
+      Optionally, implement <code>cancelled</code> if your code allows
+      the user to cancel the task and <code>finished</code> to perform
+      work regardless if the task succeeded or not.
+    </p>
+
+    <h3>EventBus</h3>
+
+    <p>
+      Rather than couple components together, use the <b>EventBus</b>
+      package. Components should register their interest in particular
+      events by implementing <code>EventSubscriber</code>
+      or <code>EventTopicSubscriber</code> and calling, for example:
+    </p>
+
+    <pre>
+      <span style="color:red;font-style:italic">// Standard event. </span>
+      EventBus.subscribe(StatusEvent.class, support);
+
+      <span style="color:red;font-style:italic">// Topic-based event. </span>
+      EventBus.subscribe(targetListTable.getSelectionTopic(), support);
+
+      <span style="color:red;font-style:italic">// Parameterized event. </span>
+      EventBus.subscribe(new TypeReference&lt;UpdateEvent&lt;TargetList&gt;&gt;() {
+      }.getType(), targetListUpdateHandler);</pre>
+
+    <p>
+      To push the event on the bus, use:
+    </p>
+
+    <pre>
+      <span style="color:red;font-style:italic">// Standard event. </span>
+      EventBus.publish(new StatusEvent(TargetListSetsPanel.this).done());
+
+      <span style="color:red;font-style:italic">// Topic-based event. </span>
+      EventBus.publish(getSelectionTopic(), selection);
+
+      <span style="color:red;font-style:italic">// Parameterized event. </span>
+      EventBus.publish(new TypeReference&lt;UpdateEvent&lt;TargetList&gt;&gt;() {
+      }.getType(), new UpdateEvent&lt;TargetList&gt;(
+          UpdateEvent.Function.ADD_OR_UPDATE, targetList));</pre>
+
+    <p>
+      The documentation for the EventBus package can be downloaded
+      from <a
+      href="https://eventbus.dev.java.net/">https://eventbus.dev.java.net/</a>.
+      The package documentation has an excellent description and
+      examples.
+    </p>
+
+    <h3>Error Handling</h3>
+
+    <p>
+      Try to only print one stack trace in the log
+      (with <code>log.error(message, e)</code>) for a particular
+      error. This makes the log easier to read and it faster to
+      diagnosis problems as there is less duplication to filter out.
+    </p>
+    
+    <p>
+      A good rule of thumb is to use the form
+      of <code>log.error</code> that prints a stack trace as soon as
+      the exception is detected, typically when calling an API
+      external to the <code>ui</code> project, unless the foreign
+      method is known to already print a stack trace. Having logged
+      the stack trace, the exception can then be percolated up,
+      optionally logging new contextual information, but not
+      displaying the stack, until a dialog is shown to the user. The
+      exception should nearly always be wrapped in
+      a <a href="common/UiException.html"><code>UiException</code></a>
+      too, which plays well with
+      the <a
+      href="common/KeplerPanel.html"><code>KeplerPanel</code></a>
+      templates. Most panel constructors and factory methods should
+      throw
+      an <a
+      href="common/UiException.html"><code>UiException</code></a>.
+    </p>
+
+    <p>
+      When adding code that throws exceptions, explicitly throw these
+      exceptions with expected message strings to see how those
+      strings appear in the error dialog. Ensure the messages make
+      sense, are helpful, and don't contain duplicate strings (which
+      can happen if several callers wrap an exception and
+      use <code>e.getMessage()</code> as the message).
+    </p> 
+
+    <p>
+      Use <code>.failed</code> and <code>.failed.secondary</code>
+      suffixes in the resource files for error messages that are
+      displayed in dialogs
+      with <a
+      href="common/KeplerPanel.html#handleError(java.awt.Container,%20java.lang.Throwable,%20java.lang.String,%20java.lang.Object...)"><code>KeplerPanel.handleError()</code></a>.
+      The former is used for the primary message and the latter is
+      used for the secondary message as defined by section
+      <a href="http://developer.gnome.org/hig-book/2.32/windows-alert.html">
+        Alerts
+      </a>
+      in the HIG.
+    </p>
+
+    <h3>Jigloo GUI Builder</h3>
+    
+    <p>
+      The Jigloo Eclipse plug-in is used to create all of the panels
+      in the KSOC. The software can be downloaded
+      from <a
+      href="http://www.cloudgarden.com/jigloo/">Cloudgarden</a>. Check
+      out
+      the <a href="http://www.cloudgarden.com/forums.html">forums</a>
+      too. If you use the evaluation copy, please don't check in the
+      warning text that it inserts into your code. It might be
+      expedient and helpful for you to bring your back-of-the-envelope
+      design into my office so that we can lay out the components
+      together with my licensed copy.
+    </p>
+
+    <p>
+      Here are a few tips when creating components.
+    </p>
+
+    <ul>
+      <li>
+        By default, Jigloo creates an <code>initGUI</code> method;
+        please rename it
+        to <a
+        href="common/KeplerPanel.html#initComponents()"><code>initComponents</code></a>
+        (NetBeans style) in order to conform with our naming
+        conventions.
+      </li>
+      <li>
+        The current version hard-codes lots of widths and gaps.
+        Using <code>GroupLayout</code>'s defaults, and calling the
+        layout's <code>setAutoCreateContainerGaps(true)</code>, 
+        <code>setAutoCreateGaps(true)</code>
+        and <code>linkSize()</code> methods makes the components
+        resizable and produces a more pleasing display.
+      </li>
+      <li>
+        Other than that, try to avoid
+        touching <a
+        href="common/KeplerPanel.html#initComponents()"><code>initComponents</code></a>
+        since it will make it harder to go back into Jigloo. Instead,
+        add customization code to
+        the <a
+        href="common/KeplerPanel.html#configureComponents()"><code>configureComponents</code></a>
+        method, defined by
+        the <a
+        href="common/KeplerPanel.html#createUi()"><code>KeplerPanel.createUi</code></a>
+        template. See <code>TargetEditor</code> for a complex
+        example.
+      </li>
+    </ul>
+
+    <h3>Look and Feel</h3>
+
+    <p>
+      We're currently using the native look and feel in order to blend
+      in with the GNOME desktop on the operator's consoles. This
+      setting is controlled by
+      the <code>Application.lookAndFeel</code> property in
+      in <code>gov.nasa.kepler.ui.resources.Ksoc.properties</code>
+    </p>
+
+    <p>
+      The <a
+      href="http://developer.gnome.org/hig-book/2.32/">GNOME
+      Human Interface Guidelines 2.0</a> is required reading. It is
+      chock full of excellent advice and guidelines. At the very
+      least, skim the sample dialogs to see how panels should be
+      generally laid out, and read the section
+      on <a
+      href="http://developer.gnome.org/hig-book/2.32/design-text-labels.html#layout-capitalization">capitalization</a>.
+      The goal is for your panel to be usable and fit in with the rest
+      of the application as well as the desktop.
+    </p>
+
+    <h3>Icons</h3>
+
+    <p>
+      We're currently using the default GTK icons
+      (see <code>ksoc.properties</code>
+      and <code>jars/gtk/gtk-icons.jar</code>). It would be nice to
+      use the GTK names when accessing icons so that we can switch GTK
+      themes and the icons would follow. However, we'd still need to
+      fall back to alternative icons on other platforms that don't
+      support GTK.
+    </p>
+
+    <h3>What Next</h3>
+
+    <p>
+      You can start the application by running <code>ant ksoc</code>
+      at the top of the project.
+    </p>
+    <p>
+      To start the application in Eclipse,
+      visit <a href="Ksoc.html"><code>Ksoc.java</code></a>. This is
+      the main class and contains the application framework's
+      lifecycle methods such as <code>startup</code>. Run the Run As >
+      Java Application command. You'll probably get complaints about
+      properties and from log4j. To fix these, run the Run > Run
+      command and edit the Ksoc configuration. Select the Arguments
+      tab and add the following VM arguments:
+    </p>
+
+    <pre>
+      -Dlog4j.configuration=file:etc/log4j.xml
+      -Dconfig.propfile=etc/ui-dev.properties</pre>
+
+    <p>
+      If you need to add new panels to the KSOC, you have to consider
+      whether the panel will have its own tab or will be just one pane
+      of many in an existing tab.
+    </p>
+    <p>
+      Typically, each tab will get its own sub-package here, but that
+      is only a guideline. For example, the Target Management tab is
+      implemented by
+      the <a
+      href="cm/TargetManagementPanel.html"><code>TargetManagementPanel</code></a>
+      class (a sub-class
+      of <a href="common/ToolPanel.html"><code>ToolPanel</code></a>)
+      and is found in
+      the <a href="cm/package-summary.html"><code>cm</code></a>
+      package. To see how a tab is inserted into the application,
+      search for <code>targetmanagement</code> (ignoring case)
+      in <a href="Ksoc.html"><code>Ksoc.java</code>
+      and <code>Ksoc.properties</code></a>.
+    </p>
+
+    <p>
+      For other panels,
+      see <a href="cm/TargetEditor.html"><code>TargetEditor</code></a>
+      for an example of
+      a <a
+      href="common/KeplerPanel.html"><code>KeplerPanel</code></a>.
+    </p>
+
+    <h3>Odds & Ends</h3>
+
+    <p>
+      You can seed the database for the UI by running <code>ant
+      seed-data</code> at the top of the project, but only after
+      editing <code>etc/ui-dev.properties</code> and replacing my name
+      with yours! If you want to seed the database with your own data,
+      simply edit the <code>SeedData</code> class
+      (in <code>test</code>), add your own <code>seedFoo</code> method
+      at the end and call that method
+      from <code>initializeTestDb</code>.
+    </p>
+    <p>
+      In general, I like to keep the public APIs as clean as possible
+      and avoid anonymous inner classes to keep code readable. To
+      achieve both of these goals at the same time, I typically create
+      an inner class called <code>Support</code> which implements
+      various interfaces. If you think that this pattern would be
+      useful in your code, I'd suggest naming your inner
+      class <code>Support</code> as well and cut and paste the leading
+      Javadoc from another <code>Support</code> inner class (they are
+      all the same) to tell others not in the know what the class is
+      for.
+    </p>
+      
+  </body>
+</html>

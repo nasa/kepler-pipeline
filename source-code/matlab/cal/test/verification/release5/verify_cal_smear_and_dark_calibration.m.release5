@@ -1,0 +1,302 @@
+function verify_cal_smear_and_dark_calibration(dataLocationStr)
+% function verify_cal_smear_and_dark_calibration(dataLocationStr)
+%
+% function to verify the CAL CSCI smear and dark estimates and corrections
+% using ETEM2 output data
+%
+%  ex: verify_cal_smear_and_dark_calibration('/path/to/matlab/cal/')
+%
+%
+%--------------------------------------------------------------------------
+%
+%  Requirement:     
+%                   SOC999      The SOC shall provide pixel level calibrations 
+%                               to remove smear and dark current for both
+%                               short and long cadence photometric data
+%
+%                   999.CAL.1   CAL shall estimate dark current and smear values 
+%                               from collateral data on a per module/output basis
+%
+%  Test Data Sets:  
+%                   ETEM2 output with all motion, noise sources, and 
+%                   (1) 2Dblack, stars, smear, and dark on (for dark level estimate)
+%                   (1) 2Dblack, stars, smear ON, and dark off (for smear level estimate)
+%                                   
+%
+%
+%  Test Data Sets ID:
+%                   calIntermedStructs_2D_ST_SM_DC_nl_lu_ff_rn_qn_sn_RQ_cr.mat
+%                   ccdObject_params_2D_ST_SM_DC_nl_lu_ff_rn_qn_sn.mat
+%                   cal_dark_current_metric_calETEM_2D_ST_SM_DC_nl_lu_ff_rn_qn_sn.fig
+%
+%                   runParamsObject_calETEM_2D_ST_SM_dc_nl_lu_ff_rn_qn_sn.mat
+%                   rawSmearData_calETEM_2D_ST_SM_dc_nl_lu_ff_rn_qn_sn.mat
+%                   calIntermedStructs_2D_ST_SM_dc_nl_lu_ff_rn_qn_sn_rq_cr
+%
+%
+%  Verification Method: Manual Inspection
+%
+%
+%  Verification Process: 
+%                   Run verify_cal_smear_and_dark_estimation.m:
+%
+%                   (1) Compare the dark current estimated by CAL to the
+%                       ETEM2 input dark current value (figure 1).  Examine
+%                       the dark current metric created in CAL (figure 2)
+%
+%                   (2) Compare the smear level estimated by CAL to the 
+%                       ETEM2 injected smear
+%
+%
+%       Output
+%                   dataLocationStr/CAL_verification_figures/cal_dark_current_estimate.fig
+%                   dataLocationStr/CAL_verification_figures/cal_smear_level_estimate.fig
+%
+%--------------------------------------------------------------------------
+%
+%  Requirement:     
+%                   999.CAL.2   CAL shall calibrate target and background pixel 
+%                               data by removing smear estimates on a per
+%                               module/output basis
+%
+%                   999.CAL.3   CAL shall calibrate target and background pixel 
+%                               data by removing dark current estimates on a per
+%                               module/output basis
+%
+%  Test Data Sets:  
+%                   ETEM2 output with all motion, noise sources OFF, and 
+%                   (1) 2Dblack, stars, smear, and dark on
+%                   (1) 2Dblack and stars on, smear/dark off
+%
+%
+%  Test Data Sets ID:
+%                   cal_smear_and_dark_levels_calETEM_2D_ST_SM_DC_nl_lu_ff_rn_qn_sn.mat
+%                   calOutputs_calETEM_2D_ST_SM_DC_nl_lu_ff_rn_qn_sn_rq_cr
+%                   calOutputs_calETEM_2D_ST_sm_dc_nl_lu_ff_rn_qn_sn_rq_cr
+%
+%
+%  Verification Method: Manual Inspection
+%
+%
+%  Verification Process: 
+%                   Run verify_cal_smear_and_dark_estimation.m:
+% 
+%                   (1) Load and examine smear and dark levels that were saved 
+%                   to matfile during CAL run
+%
+%                   (2) Compare and plot smear/dark calibrated pixels
+%                   to ETEM2 output from run without smear/dark (both with
+%                   2D black and stars)
+%
+%
+%       Output
+%                   dataLocationStr/CAL_verification_figures/cal_smear_and_dark_calibrated_pixels
+%
+%
+%
+%--------------------------------------------------------------------------
+% Notes on smear/dark correction:
+%
+% Masked smear collects dark current during ccd exposure + read time
+% Virtual smear collects dark current during read time only
+%            
+% 
+% darkCurrent       = (mSmear - vSmear) ./ (numExposures * ccdExposureTime); % in e-/sec, per read
+%
+% darkLevelEstimate = darkCurrent * numExposures * (ccdExposureTime + ccdReadTime);  % photoelectrons
+%
+% darkLevelEstimate  = (mSmear - vSmear) * ((ccdExposureTime + ccdReadTime)/ (ccdExposureTime));  % photoelectrons
+%--------------------------------------------------------------------------
+% 
+% Copyright 2017 United States Government as represented by the
+% Administrator of the National Aeronautics and Space Administration.
+% All Rights Reserved.
+% 
+% NASA acknowledges the SETI Institute's primary role in authoring and
+% producing the Kepler Data Processing Pipeline under Cooperative
+% Agreement Nos. NNA04CC63A, NNX07AD96A, NNX07AD98A, NNX11AI13A,
+% NNX11AI14A, NNX13AD01A & NNX13AD16A.
+% 
+% This file is available under the terms of the NASA Open Source Agreement
+% (NOSA). You should have received a copy of this agreement with the
+% Kepler source code; see the file NASA-OPEN-SOURCE-AGREEMENT.doc.
+% 
+% No Warranty: THE SUBJECT SOFTWARE IS PROVIDED "AS IS" WITHOUT ANY
+% WARRANTY OF ANY KIND, EITHER EXPRESSED, IMPLIED, OR STATUTORY,
+% INCLUDING, BUT NOT LIMITED TO, ANY WARRANTY THAT THE SUBJECT SOFTWARE
+% WILL CONFORM TO SPECIFICATIONS, ANY IMPLIED WARRANTIES OF
+% MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, OR FREEDOM FROM
+% INFRINGEMENT, ANY WARRANTY THAT THE SUBJECT SOFTWARE WILL BE ERROR
+% FREE, OR ANY WARRANTY THAT DOCUMENTATION, IF PROVIDED, WILL CONFORM
+% TO THE SUBJECT SOFTWARE. THIS AGREEMENT DOES NOT, IN ANY MANNER,
+% CONSTITUTE AN ENDORSEMENT BY GOVERNMENT AGENCY OR ANY PRIOR RECIPIENT
+% OF ANY RESULTS, RESULTING DESIGNS, HARDWARE, SOFTWARE PRODUCTS OR ANY
+% OTHER APPLICATIONS RESULTING FROM USE OF THE SUBJECT SOFTWARE.
+% FURTHER, GOVERNMENT AGENCY DISCLAIMS ALL WARRANTIES AND LIABILITIES
+% REGARDING THIRD-PARTY SOFTWARE, IF PRESENT IN THE ORIGINAL SOFTWARE,
+% AND DISTRIBUTES IT "AS IS."
+% 
+% Waiver and Indemnity: RECIPIENT AGREES TO WAIVE ANY AND ALL CLAIMS
+% AGAINST THE UNITED STATES GOVERNMENT, ITS CONTRACTORS AND
+% SUBCONTRACTORS, AS WELL AS ANY PRIOR RECIPIENT. IF RECIPIENT'S USE OF
+% THE SUBJECT SOFTWARE RESULTS IN ANY LIABILITIES, DEMANDS, DAMAGES,
+% EXPENSES OR LOSSES ARISING FROM SUCH USE, INCLUDING ANY DAMAGES FROM
+% PRODUCTS BASED ON, OR RESULTING FROM, RECIPIENT'S USE OF THE SUBJECT
+% SOFTWARE, RECIPIENT SHALL INDEMNIFY AND HOLD HARMLESS THE UNITED
+% STATES GOVERNMENT, ITS CONTRACTORS AND SUBCONTRACTORS, AS WELL AS ANY
+% PRIOR RECIPIENT, TO THE EXTENT PERMITTED BY LAW. RECIPIENT'S SOLE
+% REMEDY FOR ANY SUCH MATTER SHALL BE THE IMMEDIATE, UNILATERAL
+% TERMINATION OF THIS AGREEMENT.
+%
+
+%close all;
+cd (dataLocationStr);
+
+nLeadingBlack   = 12;
+nMaskedSmear    = 20;
+nRowsImaging    = 1024;
+nColsImaging    = 1100;
+
+
+%--------------------------------------------------------------------------
+% Compare the dark current estimated by CAL to the ETEM2 input dark current 
+% value (= 2)
+%--------------------------------------------------------------------------
+
+load calIntermedStructs_2D_ST_SM_DC_nl_lu_ff_rn_qn_sn_rq_cr.mat
+load ccdObject_calETEM_2D_ST_SM_DC_nl_lu_ff_rn_qn_sn.mat
+
+figure;
+plot(mean(calCollateralIntermediateStruct.darkCurrent, 2))  % 1132 x 5
+
+etem2Dark = dataUsedByEtemStruct.etem2_darkCurrentValue;
+
+title(['ETEM2 injected dark current = ' num2str(etem2Dark) '   (2Dblack, stars, smear, dark ON)']);
+xlabel('Smear Column');
+ylabel('Mean dark current (e-/sec/exposure) ');
+
+fileNameStr = [dataLocationStr 'CAL_verification_figures/cal_dark_current_estimate'];
+paperOrientationFlag = false;
+includeTimeFlag      = false;
+printJpgFlag         = false;
+
+plot_to_file(fileNameStr, paperOrientationFlag, includeTimeFlag, printJpgFlag);
+
+% open dark current metric
+open cal_dark_current_metric_calETEM_2D_ST_SM_DC_nl_lu_ff_rn_qn_sn.fig
+
+
+%--------------------------------------------------------------------------
+% Compare the smear level estimated by CAL to the ETEM2 injected smear
+%--------------------------------------------------------------------------
+
+% load etem2 data struct that contains the smear row indices that were spatially coadded
+warning off all
+load runParamsObject_calETEM_2D_ST_SM_DC_nl_lu_ff_rn_qn_sn.mat
+warning on all
+
+maskedSmearCoAddRows    = runParamsObject.keplerData.maskedSmearCoAddRows(:);   % = 7:19;
+virtualSmearCoAddRows   = runParamsObject.keplerData.virtualSmearCoAddRows(:);  % = 1046:1059;
+
+% load smear data that was injected into etem2 run
+load rawSmearData_calETEM_2D_ST_SM_DC_nl_lu_ff_rn_qn_sn.mat maskedSmearArray virtualSmearArray
+
+% maskedSmearArray is [20 x 1100 x nCadences]
+mSmearAllSpatialCoadds = sum(maskedSmearArray(maskedSmearCoAddRows, :, 1));                
+mSmearOneCoadd  = mSmearAllSpatialCoadds / length(maskedSmearCoAddRows);
+
+% virtualSmearArray is [26 x 1100 x nCadences]
+vSmearAllSpatialCoadds = sum(virtualSmearArray(virtualSmearCoAddRows - nRowsImaging - nMaskedSmear, :, 1));        
+vSmearOneCoadd  = vSmearAllSpatialCoadds / length(virtualSmearCoAddRows);
+
+
+
+load calIntermedStructs_2D_ST_SM_DC_nl_lu_ff_rn_qn_sn_rq_cr.mat
+smearEstimate = calCollateralIntermediateStruct.smearLevels(:, 1);  % 1132 x 1
+
+figure;
+
+subplot(3, 1, 1)
+plot(nLeadingBlack+1:nLeadingBlack+nColsImaging, mSmearOneCoadd - vSmearOneCoadd, 'b.');
+
+title('ETEM2 injected Msmear minus Vsmear (2Dblack, stars, smear ON, dark= 2 e-)');
+xlabel('Smear column');
+ylabel('ETEM2 (masked - virtual) smear (e-)');
+
+meanInjectedSmear = (mSmearOneCoadd + vSmearOneCoadd)/2;
+
+subplot(3, 1, 2)
+h1 = plot(nLeadingBlack+1:nLeadingBlack+nColsImaging, meanInjectedSmear, 'bo');
+hold on
+h2 = plot(nLeadingBlack+1:nLeadingBlack+nColsImaging, smearEstimate(nLeadingBlack+1 : nLeadingBlack+nColsImaging), 'r.');
+
+title('CAL smear level estimate (2Dblack, stars, smear, and dark ON)');
+xlabel('Smear column');
+ylabel('Smear (e-)');
+
+legend([h1 h2], {'ETEM2 mean smear', 'CAL estim. smear'}, 'Location', 'Best');
+
+
+subplot(3 , 1, 3)
+
+% plot difference
+smearEstimateDelta = meanInjectedSmear(:) - smearEstimate(nLeadingBlack+1 : nLeadingBlack+nColsImaging);
+
+plot(nLeadingBlack+1:nLeadingBlack+nColsImaging, smearEstimateDelta, 'm.');
+
+
+xlabel('Smear column');
+ylabel('Smear difference (e-)');
+title('CAL est. smear - ETEM2 smear');
+
+fileNameStr = [dataLocationStr 'CAL_verification_figures/cal_smear_level_estimate'];
+paperOrientationFlag = false;
+includeTimeFlag      = false;
+printJpgFlag         = false;
+
+plot_to_file(fileNameStr, paperOrientationFlag, includeTimeFlag, printJpgFlag);
+
+
+%--------------------------------------------------------------------------
+% Examine smear and dark levels that are estimated and saved to matfile for
+% target pixel calibration
+%--------------------------------------------------------------------------
+
+%load cal_smear_and_dark_levels_calETEM_2D_ST_SM_DC_nl_lu_ff_rn_qn_sn.mat
+
+% calSmearAndDarkOutputStruct = 
+%           smearLevels: [1132x5 double]
+%     darkCurrentLevels: [3.5090e+03 3.5090e+03 3.5090e+03 3.5090e+03 3.5090e+03]
+%     validSmearColumns: [1132x5 logical]
+
+
+%--------------------------------------------------------------------------
+% Plot the input and output (calibrated) target pixels for runs with and 
+% without smear and dark
+%--------------------------------------------------------------------------
+load calOutputs_calETEM_2D_ST_SM_DC_nl_lu_ff_rn_qn_sn_rq_cr.mat
+calibratedTargetPix_2D_ST_SM_DC = [calPhotometricOutputs.targetAndBackgroundPixels.values]';  % nPixels x nCadences
+
+load calOutputs_calETEM_2D_ST_sm_dc_nl_lu_ff_rn_qn_sn_rq_cr.mat
+calibratedTargetPix_2D_ST = [calPhotometricOutputs.targetAndBackgroundPixels.values]';  % nPixels x nCadences
+
+figure;
+
+plot(calibratedTargetPix_2D_ST, ...
+    calibratedTargetPix_2D_ST_SM_DC - calibratedTargetPix_2D_ST, 'c.')
+
+
+ylabel('Target pix ratio (SM and DC on/off)');
+xlabel('Target pixels');
+title('CAL out[ut target pixels ratio of SMandDCon/SMandDCoff (2Dblack, stars on)');
+
+fileNameStr = [dataLocationStr 'CAL_verification_figures/cal_smear_and_dark_calibrated_pixels'];
+paperOrientationFlag = false;
+includeTimeFlag      = false;
+printJpgFlag         = false;
+
+plot_to_file(fileNameStr, paperOrientationFlag, includeTimeFlag, printJpgFlag);
+
+
+return;
+

@@ -1,0 +1,86 @@
+<!--
+  Copyright 2017 United States Government as represented by the
+  Administrator of the National Aeronautics and Space Administration.
+  All Rights Reserved.
+  
+  This file is available under the terms of the NASA Open Source Agreement
+  (NOSA). You should have received a copy of this agreement with the
+  Kepler source code; see the file NASA-OPEN-SOURCE-AGREEMENT.doc.
+  
+  No Warranty: THE SUBJECT SOFTWARE IS PROVIDED "AS IS" WITHOUT ANY
+  WARRANTY OF ANY KIND, EITHER EXPRESSED, IMPLIED, OR STATUTORY,
+  INCLUDING, BUT NOT LIMITED TO, ANY WARRANTY THAT THE SUBJECT SOFTWARE
+  WILL CONFORM TO SPECIFICATIONS, ANY IMPLIED WARRANTIES OF
+  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, OR FREEDOM FROM
+  INFRINGEMENT, ANY WARRANTY THAT THE SUBJECT SOFTWARE WILL BE ERROR
+  FREE, OR ANY WARRANTY THAT DOCUMENTATION, IF PROVIDED, WILL CONFORM
+  TO THE SUBJECT SOFTWARE. THIS AGREEMENT DOES NOT, IN ANY MANNER,
+  CONSTITUTE AN ENDORSEMENT BY GOVERNMENT AGENCY OR ANY PRIOR RECIPIENT
+  OF ANY RESULTS, RESULTING DESIGNS, HARDWARE, SOFTWARE PRODUCTS OR ANY
+  OTHER APPLICATIONS RESULTING FROM USE OF THE SUBJECT SOFTWARE.
+  FURTHER, GOVERNMENT AGENCY DISCLAIMS ALL WARRANTIES AND LIABILITIES
+  REGARDING THIRD-PARTY SOFTWARE, IF PRESENT IN THE ORIGINAL SOFTWARE,
+  AND DISTRIBUTES IT "AS IS."
+
+  Waiver and Indemnity: RECIPIENT AGREES TO WAIVE ANY AND ALL CLAIMS
+  AGAINST THE UNITED STATES GOVERNMENT, ITS CONTRACTORS AND
+  SUBCONTRACTORS, AS WELL AS ANY PRIOR RECIPIENT. IF RECIPIENT'S USE OF
+  THE SUBJECT SOFTWARE RESULTS IN ANY LIABILITIES, DEMANDS, DAMAGES,
+  EXPENSES OR LOSSES ARISING FROM SUCH USE, INCLUDING ANY DAMAGES FROM
+  PRODUCTS BASED ON, OR RESULTING FROM, RECIPIENT'S USE OF THE SUBJECT
+  SOFTWARE, RECIPIENT SHALL INDEMNIFY AND HOLD HARMLESS THE UNITED
+  STATES GOVERNMENT, ITS CONTRACTORS AND SUBCONTRACTORS, AS WELL AS ANY
+  PRIOR RECIPIENT, TO THE EXTENT PERMITTED BY LAW. RECIPIENT'S SOLE
+  REMEDY FOR ANY SUCH MATTER SHALL BE THE IMMEDIATE, UNILATERAL
+  TERMINATION OF THIS AGREEMENT.
+-->
+
+<div id="lselect">
+	<h3 class="select"><span>Resources:</span></h3>
+	<ul>
+	  #foreach ( $child in $linktree.getLinkChildren("index") )
+		<li>
+			<a href="$home$child.url" title="$child.text" accesskey="$!child.accessKey" #if( $child.isChildSelected() ) class="lselected" #end>$child.text</a> 
+			#if( $child.hasChildren() )
+				<ul>
+					#foreach( $subchild in $child.children )
+						<li><a href="$home$subchild.url" title="$subchild.text" accesskey="$!subchild.accessKey" #if( $subchild.isChildSelected() ) class="lselected" #end>$subchild.text</a></li>
+					#end
+					<li>
+				</ul>
+			#end
+		</li>
+      #end
+	</ul>
+</div>
+
+<br>
+
+#if ( $user.userName )
+
+<div style="margin: 10px; font-style: italic; font-weight: bold;">
+  Logged in as user:
+  <br>
+  &nbsp;$user.userName
+  <br>
+  <br>
+
+  <a href="/openedit/authentication/logout.html">
+    Log out<img src="/images/gtk-quit.png"
+                style="border: 0px; margin-left: .5em; vertical-align: middle" /></a>
+</div>
+
+#else
+
+<div id="lresources" style="margin: 15px; height: auto;">
+
+<FORM name="login"  action="$home/openedit/authentication/logon.html" method="POST">
+<label>Login:</label><BR /><INPUT id="accountname" name="accountname" value="$!user.userName"  /> 
+<label>Password:</label><BR /><INPUT name="password" type="password" /> 
+<input type="hidden" name="loginokpage" value="$content.path" />
+<div><INPUT name="submit" type="submit" value="Login" /> </div>
+</FORM>
+
+</div>
+
+#end

@@ -1,0 +1,3 @@
+options.localOnly = true
+mfiles/debug_matlab_controller.m
+mfiles/@debugClassA [root = true]

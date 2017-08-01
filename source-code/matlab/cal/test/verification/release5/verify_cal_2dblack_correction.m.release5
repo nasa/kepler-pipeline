@@ -1,0 +1,321 @@
+function verify_cal_2dblack_correction(dataLocationStr)
+%function verify_cal_2dblack_correction(dataLocationStr)
+%
+% function to verify the CAL CSCI 2D black correction using ETEM2 data
+%
+% verify_cal_2dblack_correction('/path/to/matlab/cal/')    
+%
+%--------------------------------------------------------------------------
+%
+%  Requirement:     
+%                   CAL1        The SOC shall remove black on a per mod/out basis.
+%
+%                   CAL1.CAL.3  CAL shall remove 2-D black level using FC's
+%                               2-D black model.
+%
+%  Test Data Sets:       
+%                   ETEM2 runs with all motion and noise sources turned off, and 
+%                       (1) 2Dblack ON, pixels requantized 
+%                       (2) 2Dblack ON, pixels NOT requantized
+%
+%                                             
+%  Test Data Sets ID:
+%                   runParamsObject_calETEM_2D_st_sm_dc_nl_lu_ff_rn_qn_sn.mat
+%                   ccdObject_calETEM_2D_st_sm_dc_nl_lu_ff_rn_qn_sn.mat
+%
+%                   calIntermedStructs_2D_st_sm_dc_nl_lu_ff_rn_qn_sn_RQ_cr.mat
+%                   calIntermedStructs_2D_st_sm_dc_nl_lu_ff_rn_qn_sn_rq_cr.mat
+%                   quantizationStepSizeInADUforBlack_2D_st_sm_dc_nl_lu_ff_rn_qn_sn_RQ_cr.mat
+%
+%                   calOutputs_calETEM_2D_st_sm_dc_nl_lu_ff_rn_qn_sn_rq_cr.mat
+%                   calOutputs_calETEM_2D_st_sm_dc_nl_lu_ff_rn_qn_sn_RQ_cr.mat
+%
+%
+%  Verification Method: Manual Inspection
+%
+%
+%  Verification Process: 
+%                   Run verify_cal_2dblack_correction.m:
+%
+%                   (1) Load pixel data for ETEM run with only 2D black on,
+%                   for both requantized and non-requantized data.
+%
+%                   (2) Plot the difference in requantized minus non-requantized
+%                   (RQ - rq) 2D black-corrected black pixels, and show that the 
+%                   difference is bounded by the quantization step size error (figure 1)
+%
+%                   (3) Plot the 2D black-corrected masked/virtual smear pixels
+%                   and show that the residuals are close to zero (figure 2)
+%
+%                   (4) Plot the 2D black-corrected target pixels
+%                   and show that the residuals are close to zero (figure 2)
+%
+%                   (5) Plot the black fit-corrected black (residual) that is
+%                   an output of CAL for both requantized and non-requantized 
+%                   pixels.  These residuals should be even closer to zero
+%                   that the 2D black-corrected black pixels from figure 1.
+%
+%
+%       Output
+%                   dataLocationStr/CAL_verification_figures/cal_2Dblack_correction_I.fig
+%                   dataLocationStr/CAL_verification_figures/cal_2Dblack_correction_II.fig
+%                   dataLocationStr/CAL_verification_figures/cal_2Dblack_correction_III.fig
+%                   dataLocationStr/CAL_verification_figures/cal_2Dblack_correction_IV.fig
+%--------------------------------------------------------------------------
+% 
+% Copyright 2017 United States Government as represented by the
+% Administrator of the National Aeronautics and Space Administration.
+% All Rights Reserved.
+% 
+% NASA acknowledges the SETI Institute's primary role in authoring and
+% producing the Kepler Data Processing Pipeline under Cooperative
+% Agreement Nos. NNA04CC63A, NNX07AD96A, NNX07AD98A, NNX11AI13A,
+% NNX11AI14A, NNX13AD01A & NNX13AD16A.
+% 
+% This file is available under the terms of the NASA Open Source Agreement
+% (NOSA). You should have received a copy of this agreement with the
+% Kepler source code; see the file NASA-OPEN-SOURCE-AGREEMENT.doc.
+% 
+% No Warranty: THE SUBJECT SOFTWARE IS PROVIDED "AS IS" WITHOUT ANY
+% WARRANTY OF ANY KIND, EITHER EXPRESSED, IMPLIED, OR STATUTORY,
+% INCLUDING, BUT NOT LIMITED TO, ANY WARRANTY THAT THE SUBJECT SOFTWARE
+% WILL CONFORM TO SPECIFICATIONS, ANY IMPLIED WARRANTIES OF
+% MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, OR FREEDOM FROM
+% INFRINGEMENT, ANY WARRANTY THAT THE SUBJECT SOFTWARE WILL BE ERROR
+% FREE, OR ANY WARRANTY THAT DOCUMENTATION, IF PROVIDED, WILL CONFORM
+% TO THE SUBJECT SOFTWARE. THIS AGREEMENT DOES NOT, IN ANY MANNER,
+% CONSTITUTE AN ENDORSEMENT BY GOVERNMENT AGENCY OR ANY PRIOR RECIPIENT
+% OF ANY RESULTS, RESULTING DESIGNS, HARDWARE, SOFTWARE PRODUCTS OR ANY
+% OTHER APPLICATIONS RESULTING FROM USE OF THE SUBJECT SOFTWARE.
+% FURTHER, GOVERNMENT AGENCY DISCLAIMS ALL WARRANTIES AND LIABILITIES
+% REGARDING THIRD-PARTY SOFTWARE, IF PRESENT IN THE ORIGINAL SOFTWARE,
+% AND DISTRIBUTES IT "AS IS."
+% 
+% Waiver and Indemnity: RECIPIENT AGREES TO WAIVE ANY AND ALL CLAIMS
+% AGAINST THE UNITED STATES GOVERNMENT, ITS CONTRACTORS AND
+% SUBCONTRACTORS, AS WELL AS ANY PRIOR RECIPIENT. IF RECIPIENT'S USE OF
+% THE SUBJECT SOFTWARE RESULTS IN ANY LIABILITIES, DEMANDS, DAMAGES,
+% EXPENSES OR LOSSES ARISING FROM SUCH USE, INCLUDING ANY DAMAGES FROM
+% PRODUCTS BASED ON, OR RESULTING FROM, RECIPIENT'S USE OF THE SUBJECT
+% SOFTWARE, RECIPIENT SHALL INDEMNIFY AND HOLD HARMLESS THE UNITED
+% STATES GOVERNMENT, ITS CONTRACTORS AND SUBCONTRACTORS, AS WELL AS ANY
+% PRIOR RECIPIENT, TO THE EXTENT PERMITTED BY LAW. RECIPIENT'S SOLE
+% REMEDY FOR ANY SUCH MATTER SHALL BE THE IMMEDIATE, UNILATERAL
+% TERMINATION OF THIS AGREEMENT.
+%
+
+cd(dataLocationStr);
+
+
+% FC model parameters
+nColsImaging    = 1100;
+nLeadingBlack   = 12;
+
+%--------------------------------------------------------------------------
+% load data for etem run with 2D black only
+%--------------------------------------------------------------------------
+
+% load etem raw data runParamsObject and ccdObject
+warning off all
+load runParamsObject_calETEM_2D_st_sm_dc_nl_lu_ff_rn_qn_sn.mat
+load ccdObject_calETEM_2D_st_sm_dc_nl_lu_ff_rn_qn_sn.mat
+warning on all
+
+% extract etem2 data struct with the black column indices that were spatially coadded
+blackCoAddCols = runParamsObject.keplerData.blackCoAddCols(:);        % = 1116:1132;
+
+%--------------------------------------------------------------------------
+% load the 2D black corrected pixels for requantized data
+%--------------------------------------------------------------------------
+load calIntermedStructs_2D_st_sm_dc_nl_lu_ff_rn_qn_sn_RQ_cr.mat
+
+blackPixels2DblackCorrected_RQ  = calCollateralIntermediateStruct.blackPixels2DblackCorrected;
+mSmearPixels2DblackCorrected_RQ = calCollateralIntermediateStruct.mSmearPixels2DblackCorrected;
+vSmearPixels2DblackCorrected_RQ = calCollateralIntermediateStruct.vSmearPixels2DblackCorrected;
+
+photometricPixels2DblackCorrected_RQ = calPhotometricIntermediateStruct_1.photometricPixels2DblackCorrected;
+
+%blackCorrection_rq              = calCollateralIntermediateStruct.blackCorrection;
+
+%--------------------------------------------------------------------------
+% load the 2D black corrected pixels for non-requantized data
+%--------------------------------------------------------------------------
+load calIntermedStructs_2D_st_sm_dc_nl_lu_ff_rn_qn_sn_rq_cr.mat
+
+blackPixels2DblackCorrected_rq  = calCollateralIntermediateStruct.blackPixels2DblackCorrected;
+mSmearPixels2DblackCorrected_rq = calCollateralIntermediateStruct.mSmearPixels2DblackCorrected;
+vSmearPixels2DblackCorrected_rq = calCollateralIntermediateStruct.vSmearPixels2DblackCorrected;
+
+photometricPixels2DblackCorrected_rq = calPhotometricIntermediateStruct_1.photometricPixels2DblackCorrected;
+
+%blackCorrection_RQ              = calCollateralIntermediateStruct.blackCorrection;
+
+%--------------------------------------------------------------------------
+% plot 2D black-corrected black pixels
+%--------------------------------------------------------------------------
+load quantizationStepSizeInADUforBlack_2D_st_sm_dc_nl_lu_ff_rn_qn_sn_RQ_cr.mat quantizationStepSizeInADUforBlack
+
+figure;
+plot([length(blackCoAddCols)*(blackPixels2DblackCorrected_RQ(:) - blackPixels2DblackCorrected_rq(:)), ...
+    quantizationStepSizeInADUforBlack(:)/2*[-1,1]],'.')
+
+xlabel('Black row');
+ylabel(['Flux (ADU) for all ' num2str(length(blackCoAddCols))  ' coadds']);
+title('Difference in RQ/rq 2Dblack-corrected black (with step size uncertainties)');
+
+fileNameStr = [dataLocationStr 'CAL_verification_figures/cal_2Dblack_correction_I.fig'];
+paperOrientationFlag = false;
+includeTimeFlag      = false;
+printJpgFlag         = false;
+
+plot_to_file(fileNameStr, paperOrientationFlag, includeTimeFlag, printJpgFlag);
+
+
+%--------------------------------------------------------------------------
+% plot 2D black-corrected masked/virtual smear pixels
+%--------------------------------------------------------------------------
+validCols = (nLeadingBlack+1:nLeadingBlack+nColsImaging)';
+
+figure;
+subplot(2, 1, 1)
+plot(validCols, mSmearPixels2DblackCorrected_RQ(validCols, :), 'c.')
+hold on
+plot(validCols, vSmearPixels2DblackCorrected_RQ(validCols, :), 'b.')
+
+xlabel('Smear Column');
+ylabel('Flux (ADU)');
+title('Requantized 2Dblack-corrected smear  (2Dblack on, stars off)');
+
+subplot(2, 1, 2)
+
+plot(validCols, mSmearPixels2DblackCorrected_rq(validCols, :), 'c.')
+hold on
+plot(validCols, vSmearPixels2DblackCorrected_rq(validCols, :), 'b.')
+
+xlabel('Smear Column');
+ylabel('Flux (ADU)');
+title('Non-requantized 2Dblack-corrected smear (2Dblack on, stars off)');
+
+fileNameStr = [dataLocationStr 'CAL_verification_figures/cal_2Dblack_correction_II.fig'];
+paperOrientationFlag = false;
+includeTimeFlag      = false;
+printJpgFlag         = false;
+
+plot_to_file(fileNameStr, paperOrientationFlag, includeTimeFlag, printJpgFlag);
+
+
+
+%--------------------------------------------------------------------------
+% plot 2D black-corrected target pixels
+%--------------------------------------------------------------------------
+figure;
+subplot(2, 1, 1)
+plot(photometricPixels2DblackCorrected_RQ, 'r.')
+xlabel('Photometric linear idx');
+ylabel('Flux (ADU)');
+title('Requantized 2Dblack-corrected photometric pixels (2Dblack on, stars off)');
+
+subplot(2, 1, 2)
+plot(photometricPixels2DblackCorrected_rq, 'b.')
+xlabel('Photometric linear idx');
+ylabel('Flux (ADU)');
+title('Non-requantized 2Dblack-corrected photometric pixels (2Dblack on, stars off)');
+
+fileNameStr = [dataLocationStr 'CAL_verification_figures/cal_2Dblack_correction_III.fig'];
+paperOrientationFlag = false;
+includeTimeFlag      = false;
+printJpgFlag         = false;
+
+plot_to_file(fileNameStr, paperOrientationFlag, includeTimeFlag, printJpgFlag);
+
+
+%--------------------------------------------------------------------------
+% plot the black residual (black fit-corrected black) for 
+% for both requantized and non-requantized pixels
+%--------------------------------------------------------------------------
+
+% load the non-requantized pixels
+load calOutputs_calETEM_2D_st_sm_dc_nl_lu_ff_rn_qn_sn_rq_cr.mat
+% rename output pixel structs
+calibratedBlackPix_2D_rq    = [calCollateralOutputs.calibratedCollateralPixels.blackResidual.values]'; % nPixels x nCadences
+
+% load the requantized pixels
+load calOutputs_calETEM_2D_st_sm_dc_nl_lu_ff_rn_qn_sn_RQ_cr.mat
+% rename output pixel structs
+calibratedBlackPix_2D_RQ    = [calCollateralOutputs.calibratedCollateralPixels.blackResidual.values]'; % nPixels x nCadences
+
+meanBlackResidual_rq = mean(mean(calibratedBlackPix_2D_rq));
+meanBlackResidual_RQ = mean(mean(calibratedBlackPix_2D_RQ));
+
+figure;
+subplot(2, 1, 1)
+
+plot(calibratedBlackPix_2D_RQ, 'b.')
+xlabel('Black row');
+ylabel(['Flux (ADU), Mean = ' num2str(meanBlackResidual_RQ)]);
+title('Requantized black-fit corrected black (residual) (2Dblack on, stars off)');
+
+
+subplot(2, 1, 2)
+
+plot(calibratedBlackPix_2D_rq, 'r.')
+xlabel('Black row');
+ylabel(['Flux (ADU), Mean = ' num2str(meanBlackResidual_rq)]);
+title('Non-requantized black-fit corrected black (residual) (2Dblack on, stars off)');
+
+
+fileNameStr = [dataLocationStr 'CAL_verification_figures/cal_2Dblack_correction_IV.fig'];
+paperOrientationFlag = false;
+includeTimeFlag      = false;
+printJpgFlag         = false;
+
+plot_to_file(fileNameStr, paperOrientationFlag, includeTimeFlag, printJpgFlag);
+
+
+
+%--------------------------------------------------------------------------
+% validate that the 2D black model retrieved for CAL is consistent with the
+% ETEM2 injected 2D black
+%--------------------------------------------------------------------------
+% load 2D black array that was injected into etem2 run
+etem2_2DblackArrayInAdu = dataUsedByEtemStruct.etem2_2DBlackArrayInAdu;    % nCcdRows x nCcdCols,  1070 x 1132
+
+% load 2D black array used in CAL
+load calInputs_calETEM_2D_st_sm_dc_nl_lu_ff_rn_qn_sn_RQ_cr.mat
+twoDBlackModel = calCollateralInputs.twoDBlackModel;
+
+% create the 2D black object
+twoDBlackObject = twoDBlackClass(twoDBlackModel);
+
+% get twoDBlack pixels for this cadence
+twoDBlackArray = get_two_d_black(twoDBlackObject, runParamsObject.simulationData.runStartTime);   %1070x1132
+
+% multiply by number of exposures per long cadence
+twoDBlackArray = twoDBlackArray*270;
+
+if ~isequal(twoDBlackArray, etem2_2DblackArrayInAdu)
+    display('The 2D black model used for calibration IS NOT EQUAL to the ETEM2 injected 2D black model!')
+else
+    display('The 2D black model used for calibration IS CONSISTENT with the ETEM2 injected 2D black model.')
+end
+
+figure;
+imagesc(twoDBlackArray - etem2_2DblackArrayInAdu)
+
+meanDelta = mean(mean(twoDBlackArray - etem2_2DblackArrayInAdu));
+
+title(['CAL 2D black model minus ETEM2 injected model, mean diff = ' num2str(meanDelta)]);
+xlabel('CCD column');
+ylabel('CCD row');
+colorbar
+fileNameStr = [dataLocationStr 'CAL_verification_figures/cal_2Dblack_correction_V.fig'];
+paperOrientationFlag = false;
+includeTimeFlag      = false;
+printJpgFlag         = false;
+
+plot_to_file(fileNameStr, paperOrientationFlag, includeTimeFlag, printJpgFlag);
+
+clear twoDBlackModel twoDBlackArray etem2_2DblackArrayInAdu
+
+return;
+

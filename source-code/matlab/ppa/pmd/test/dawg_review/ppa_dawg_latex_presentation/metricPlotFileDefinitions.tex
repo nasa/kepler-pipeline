@@ -1,0 +1,87 @@
+
+% attitude comparison
+% 
+% Copyright 2017 United States Government as represented by the
+% Administrator of the National Aeronautics and Space Administration.
+% All Rights Reserved.
+% 
+% NASA acknowledges the SETI Institute's primary role in authoring and
+% producing the Kepler Data Processing Pipeline under Cooperative
+% Agreement Nos. NNA04CC63A, NNX07AD96A, NNX07AD98A, NNX11AI13A,
+% NNX11AI14A, NNX13AD01A & NNX13AD16A.
+% 
+% This file is available under the terms of the NASA Open Source Agreement
+% (NOSA). You should have received a copy of this agreement with the
+% Kepler source code; see the file NASA-OPEN-SOURCE-AGREEMENT.doc.
+% 
+% No Warranty: THE SUBJECT SOFTWARE IS PROVIDED "AS IS" WITHOUT ANY
+% WARRANTY OF ANY KIND, EITHER EXPRESSED, IMPLIED, OR STATUTORY,
+% INCLUDING, BUT NOT LIMITED TO, ANY WARRANTY THAT THE SUBJECT SOFTWARE
+% WILL CONFORM TO SPECIFICATIONS, ANY IMPLIED WARRANTIES OF
+% MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, OR FREEDOM FROM
+% INFRINGEMENT, ANY WARRANTY THAT THE SUBJECT SOFTWARE WILL BE ERROR
+% FREE, OR ANY WARRANTY THAT DOCUMENTATION, IF PROVIDED, WILL CONFORM
+% TO THE SUBJECT SOFTWARE. THIS AGREEMENT DOES NOT, IN ANY MANNER,
+% CONSTITUTE AN ENDORSEMENT BY GOVERNMENT AGENCY OR ANY PRIOR RECIPIENT
+% OF ANY RESULTS, RESULTING DESIGNS, HARDWARE, SOFTWARE PRODUCTS OR ANY
+% OTHER APPLICATIONS RESULTING FROM USE OF THE SUBJECT SOFTWARE.
+% FURTHER, GOVERNMENT AGENCY DISCLAIMS ALL WARRANTIES AND LIABILITIES
+% REGARDING THIRD-PARTY SOFTWARE, IF PRESENT IN THE ORIGINAL SOFTWARE,
+% AND DISTRIBUTES IT "AS IS."
+% 
+% Waiver and Indemnity: RECIPIENT AGREES TO WAIVE ANY AND ALL CLAIMS
+% AGAINST THE UNITED STATES GOVERNMENT, ITS CONTRACTORS AND
+% SUBCONTRACTORS, AS WELL AS ANY PRIOR RECIPIENT. IF RECIPIENT'S USE OF
+% THE SUBJECT SOFTWARE RESULTS IN ANY LIABILITIES, DEMANDS, DAMAGES,
+% EXPENSES OR LOSSES ARISING FROM SUCH USE, INCLUDING ANY DAMAGES FROM
+% PRODUCTS BASED ON, OR RESULTING FROM, RECIPIENT'S USE OF THE SUBJECT
+% SOFTWARE, RECIPIENT SHALL INDEMNIFY AND HOLD HARMLESS THE UNITED
+% STATES GOVERNMENT, ITS CONTRACTORS AND SUBCONTRACTORS, AS WELL AS ANY
+% PRIOR RECIPIENT, TO THE EXTENT PERMITTED BY LAW. RECIPIENT'S SOLE
+% REMEDY FOR ANY SUCH MATTER SHALL BE THE IMMEDIATE, UNILATERAL
+% TERMINATION OF THIS AGREEMENT.
+%
+\newcommand{\RaAttitudePlot}{\reportgraphicspath pad_pdq_attitude_ra.png}
+\newcommand{\DecAttitudePlot}{\reportgraphicspath pad_pdq_attitude_dec.png}
+\newcommand{\RollAttitudePlot}{\reportgraphicspath pad_pdq_attitude_roll.png}
+\newcommand{\MarAttitudePlot}{\reportgraphicspath pad_pdq_attitude_mar.png}
+
+% focal plane metrics
+\newcommand{\BlackPlot}{\reportgraphicspath blackLevel.png}
+\newcommand{\BackgroundPlot}{\reportgraphicspath backgroundLevel.png}
+\newcommand{\BrightnessPlot}{\reportgraphicspath brightness.png}
+
+\newcommand{\EncircledEnergyPlot}{\reportgraphicspath encircledEnergy.png}
+\newcommand{\PlateScalePlot}{\reportgraphicspath plateScale.png}
+
+% pointing metrics
+\newcommand{\RowCentroidPlot}{\reportgraphicspath centroidsMeanRow.png}
+\newcommand{\ColCentroidPlot}{\reportgraphicspath centroidsMeanColumn.png}
+
+% cdpp metrics 9th, 12th, 15th; 6 hour
+\newcommand{\cdppExpectedNinePlot}{\reportgraphicspath cdppExpected_mag9_sixHour.png}
+\newcommand{\cdppMeasuredNinePlot}{\reportgraphicspath cdppMeasured_mag9_sixHour.png}
+\newcommand{\cdppRatioNinePlot}{\reportgraphicspath cdppRatio_mag9_sixHour.png}
+\newcommand{\cdppExpectedTwelvePlot}{\reportgraphicspath cdppExpected_mag12_sixHour.png}
+\newcommand{\cdppMeasuredTwelvePlot}{\reportgraphicspath cdppMeasured_mag12_sixHour.png}
+\newcommand{\cdppRatioTwelvePlot}{\reportgraphicspath cdppRatio_mag12_sixHour.png}
+\newcommand{\cdppExpectedFifteenPlot}{\reportgraphicspath cdppExpected_mag15_sixHour.png}
+\newcommand{\cdppMeasuredFifteenPlot}{\reportgraphicspath cdppMeasured_mag15_sixHour.png}
+\newcommand{\cdppRatioFifteenPlot}{\reportgraphicspath cdppRatio_mag15_sixHour.png}
+
+% seasonal CDPP comparision plots
+\newcommand{\deltaCdppNinePlot}{\reportgraphicspath delta_cdpp_6hr_9mag.png}
+\newcommand{\deltaCdppTwelvePlot}{\reportgraphicspath delta_cdpp_6hr_12mag.png}
+\newcommand{\deltaCdppFourteenPlot}{\reportgraphicspath delta_cdpp_6hr_14mag.png}
+\newcommand{\cdppCompChanNinePlot}{\reportgraphicspath cdpp_channel_6hr_9mag.png}
+\newcommand{\cdppCompChanTwelvePlot}{\reportgraphicspath cdpp_channel_6hr_12mag.png}
+\newcommand{\cdppCompChanFourteenPlot}{\reportgraphicspath cdpp_channel_6hr_14mag.png}
+
+% compression metrics
+%%%% need to fix these so that they don't have to be edited for each run!
+\newcommand{\TheoreticalCompressionPlot}{\reportgraphicspath pag_theoretical_compression_efficiency.png}
+\newcommand{\AchievedCompressionPlot}{\reportgraphicspath pag_achieved_compression_efficiency.png}
+\newcommand{\TheoreticalCompressionChannelPlot}{\reportgraphicspath theoreticalCompressionEfficiency.png}
+\newcommand{\AchievedCompressionChannelPlot}{\reportgraphicspath achievedCompressionEfficiency.png}
+\newcommand{\TheoreticalCompressionChannelPlotZoom}{\reportgraphicspath theoreticalCompressionEfficiencyZoom.png}
+\newcommand{\AchievedCompressionChannelPlotZoom}{\reportgraphicspath achievedCompressionEfficiencyZoom.png}

@@ -1,0 +1,357 @@
+function verify_cal_undershoot_calibration(dataLocationStr)
+% function verify_cal_undershoot_calibration(dataLocationStr)
+%
+% function to validate the CAL CSCI undershoot correction using ETEM2
+% output data
+%
+%  ex: verify_cal_undershoot_calibration('/path/to/matlab/cal/')
+%
+%   dataLocationStr = '/path/to/matlab/cal/'
+%
+%--------------------------------------------------------------------------
+%
+%       Requirement:                CAL2
+%
+%
+%       Validate:                   The SOC shall remove LDE undershoot
+%                                   from long cadence and short cadence data 
+%                                   on a per module/output basis
+% 
+%                                   CAL2.CAL.1   [verify by inspection]
+%                                   CAL shall be capable of
+%                                   enabling/disabling LDE undershoot removal
+%                                   
+%                                   
+%  Test Data Sets:  
+%                   ETEM2 runs with all motion and noise sources turned off, and 
+%                       (1) 2Dblack, stars, and undershoot on (non-requantized data)
+%                       (2) 2Dblack and stars only  (non-requantized data)
+%
+%
+%  Test Data Sets ID:    calOutputs_calETEM_2D_ST_sm_dc_nl_lu_ff_rn_qn_sn_rq_cr.mat
+%                        calOutputs_calETEM_2D_ST_sm_dc_nl_LU_ff_rn_qn_sn_rq_cr.mat
+%                                    (non-requantized data)
+%
+%  Verification Method: Manual Inspection
+%
+%
+%  Verification Process: 
+%                   Run verify_cal_undershoot_calibration.m:
+%
+%                   (1) Load the collateral and target pixels for data with
+%                   and without lde undershoot
+%
+%                   (2) Plot the calibrated masked/virtual smear and target
+%                   pixels, displayed in figure 1
+%
+%                   (3) Plot the differences (normalized) for masked/virtual 
+%                   smear and target pixels, displayed in figure 2, which should 
+%                   be close to zero
+%
+%
+%  Output:          dataLocationStr/CAL_validation_figures/cal_undershoot_validation_I
+%                   dataLocationStr/CAL_validation_figures/cal_undershoot_validation_II
+%
+%--------------------------------------------------------------------------
+% Additional validation (sanity checks) 
+%
+%       Validate:                   Inputs for above data set with undershoot
+%                                   are different from data inputs without
+%
+%       Test Data Description:      ETEM2 data with 2Dblack and stars ON, and  
+%                                   all motion/noise sources OFF:
+%                                     (a) with undershoot
+%                                     (b) without undershoot
+%       Test Data:
+%                                   calInputs_calETEM_2D_ST_sm_dc_nl_lu_ff_rn_qn_sn_rq_cr.mat
+%                                   calInputs_calETEM_2D_ST_sm_dc_nl_LU_ff_rn_qn_sn_rq_cr.mat
+%                                    (non-requantized data)
+%
+%       Location:                   dataLocationStr
+%
+%       Test Plan:                  Compare CAL inputs constructed from
+%                                   ETEM2 runs with/without lde undershoot
+%
+%       Output:                     dataLocationStr/CAL_validation_figures/cal_undershoot_validation_III.fig
+%
+%
+%       -------------------------------------------------------------------
+%
+%       Validate:                   CAL undershoot model is consistent with
+%                                   ETEM2 injected undershoot
+%
+%       Test Data Description:      (a) ETEM2 data with 2Dblack, stars, and undershoot ON,   
+%                                       and all motion/noise sources OFF.
+%                                   (b) LDE undershoot model retrieved from FC for CAL
+%                                       using the ETEM2 run start date
+%       Test Data:
+%                                   ccdObject_calETEM_2D_ST_sm_dc_nl_LU_ff_rn_qn_sn.mat
+%                                   calInputs_calETEM_2D_ST_sm_dc_nl_LU_ff_rn_qn_sn_rq_cr.mat
+%                                    (non-requantized data)
+%
+%       Location:                   dataLocationStr
+%
+%       Test Plan:                  Compare undershoot used by ETEM2 to the
+%                                   model retrieved for CAL inputs
+%
+%       Output                      text display
+%
+%--------------------------------------------------------------------------
+% 
+% Copyright 2017 United States Government as represented by the
+% Administrator of the National Aeronautics and Space Administration.
+% All Rights Reserved.
+% 
+% NASA acknowledges the SETI Institute's primary role in authoring and
+% producing the Kepler Data Processing Pipeline under Cooperative
+% Agreement Nos. NNA04CC63A, NNX07AD96A, NNX07AD98A, NNX11AI13A,
+% NNX11AI14A, NNX13AD01A & NNX13AD16A.
+% 
+% This file is available under the terms of the NASA Open Source Agreement
+% (NOSA). You should have received a copy of this agreement with the
+% Kepler source code; see the file NASA-OPEN-SOURCE-AGREEMENT.doc.
+% 
+% No Warranty: THE SUBJECT SOFTWARE IS PROVIDED "AS IS" WITHOUT ANY
+% WARRANTY OF ANY KIND, EITHER EXPRESSED, IMPLIED, OR STATUTORY,
+% INCLUDING, BUT NOT LIMITED TO, ANY WARRANTY THAT THE SUBJECT SOFTWARE
+% WILL CONFORM TO SPECIFICATIONS, ANY IMPLIED WARRANTIES OF
+% MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, OR FREEDOM FROM
+% INFRINGEMENT, ANY WARRANTY THAT THE SUBJECT SOFTWARE WILL BE ERROR
+% FREE, OR ANY WARRANTY THAT DOCUMENTATION, IF PROVIDED, WILL CONFORM
+% TO THE SUBJECT SOFTWARE. THIS AGREEMENT DOES NOT, IN ANY MANNER,
+% CONSTITUTE AN ENDORSEMENT BY GOVERNMENT AGENCY OR ANY PRIOR RECIPIENT
+% OF ANY RESULTS, RESULTING DESIGNS, HARDWARE, SOFTWARE PRODUCTS OR ANY
+% OTHER APPLICATIONS RESULTING FROM USE OF THE SUBJECT SOFTWARE.
+% FURTHER, GOVERNMENT AGENCY DISCLAIMS ALL WARRANTIES AND LIABILITIES
+% REGARDING THIRD-PARTY SOFTWARE, IF PRESENT IN THE ORIGINAL SOFTWARE,
+% AND DISTRIBUTES IT "AS IS."
+% 
+% Waiver and Indemnity: RECIPIENT AGREES TO WAIVE ANY AND ALL CLAIMS
+% AGAINST THE UNITED STATES GOVERNMENT, ITS CONTRACTORS AND
+% SUBCONTRACTORS, AS WELL AS ANY PRIOR RECIPIENT. IF RECIPIENT'S USE OF
+% THE SUBJECT SOFTWARE RESULTS IN ANY LIABILITIES, DEMANDS, DAMAGES,
+% EXPENSES OR LOSSES ARISING FROM SUCH USE, INCLUDING ANY DAMAGES FROM
+% PRODUCTS BASED ON, OR RESULTING FROM, RECIPIENT'S USE OF THE SUBJECT
+% SOFTWARE, RECIPIENT SHALL INDEMNIFY AND HOLD HARMLESS THE UNITED
+% STATES GOVERNMENT, ITS CONTRACTORS AND SUBCONTRACTORS, AS WELL AS ANY
+% PRIOR RECIPIENT, TO THE EXTENT PERMITTED BY LAW. RECIPIENT'S SOLE
+% REMEDY FOR ANY SUCH MATTER SHALL BE THE IMMEDIATE, UNILATERAL
+% TERMINATION OF THIS AGREEMENT.
+%
+
+%close all;
+
+nColsImaging    = 1100;
+nLeadingBlack   = 12;
+
+
+%--------------------------------------------------------------------------
+% Test I: LDE undershoot-corrected pixels from ETEM2 run with 2Dblack, stars, 
+% and undershoot should be consistent with output from ETEM2 run with 2Dblack 
+% and stars only
+%--------------------------------------------------------------------------
+cd(dataLocationStr);
+
+% read in outputs from CAL run with undershoot
+load calOutputs_calETEM_2D_ST_sm_dc_nl_LU_ff_rn_qn_sn_rq_cr.mat
+
+% rename pixel structs
+calCollateral_2D_ST_LU  = calCollateralOutputs;
+calPhotometric_2D_ST_LU = calPhotometricOutputs;
+clear calCollateralOutputs calPhotometricOutputs
+
+calibratedMsmearPix_2D_ST_LU  = [calCollateral_2D_ST_LU.calibratedCollateralPixels.maskedSmear.values]';   % nPixels x nCadences
+calibratedVsmearPix_2D_ST_LU  = [calCollateral_2D_ST_LU.calibratedCollateralPixels.virtualSmear.values]';  % nPixels x nCadences
+calibratedTargetPix_2D_ST_LU  = [calPhotometric_2D_ST_LU.targetAndBackgroundPixels.values]';      % nPixels x nCadences
+
+validCols = (nLeadingBlack+1:nLeadingBlack+nColsImaging)';
+
+% read in outputs from CAL run without undershoot 
+load calOutputs_calETEM_2D_ST_sm_dc_nl_lu_ff_rn_qn_sn_rq_cr.mat
+
+% rename pixel structs
+calCollateral_2D_ST  = calCollateralOutputs;
+calPhotometric_2D_ST = calPhotometricOutputs;
+clear calCollateralOutputs calPhotometricOutputs
+
+calibratedMsmearPix_2D_ST  = [calCollateral_2D_ST.calibratedCollateralPixels.maskedSmear.values]';   % nPixels x nCadences
+calibratedVsmearPix_2D_ST  = [calCollateral_2D_ST.calibratedCollateralPixels.virtualSmear.values]';  % nPixels x nCadences
+calibratedTargetPix_2D_ST  = [calPhotometric_2D_ST.targetAndBackgroundPixels.values]';      % nPixels x nCadences
+
+
+
+%--------------------------------------------------------------------------
+% plot the pixels for runs with and without LU
+%--------------------------------------------------------------------------
+figure;
+subplot(3, 1, 1)
+plot(validCols, calibratedMsmearPix_2D_ST(validCols, :), 'r.')
+hold on
+plot(validCols, calibratedMsmearPix_2D_ST_LU(validCols, :), 'b.')
+xlabel('Msmear pixel column');
+ylabel('Flux (e-)');
+title('CAL output pixels for run with LU (blue) and without (red)  (ETEM2: 2Dblack/stars on)');
+
+subplot(3, 1, 2)
+plot(validCols, calibratedVsmearPix_2D_ST(validCols, :), 'r.')
+hold on
+plot(validCols, calibratedVsmearPix_2D_ST_LU(validCols, :), 'b.')
+xlabel('Vsmear pixel column');
+ylabel('Flux (e-)');
+
+subplot(3, 1, 3)
+plot(calibratedTargetPix_2D_ST, 'r.')
+hold on
+plot(calibratedTargetPix_2D_ST_LU, 'b.')
+xlabel('Photometric pixel linear idx');
+ylabel('Flux (e-)');
+
+fileNameStr = [dataLocationStr 'CAL_validation_figures/cal_undershoot_validation_I'];
+paperOrientationFlag = false;
+includeTimeFlag      = false;
+printJpgFlag         = false;
+plot_to_file(fileNameStr, paperOrientationFlag, includeTimeFlag, printJpgFlag);
+
+
+
+%--------------------------------------------------------------------------
+% plot differences (normalized)
+%--------------------------------------------------------------------------
+
+figure;
+subplot(3, 1, 1)
+plot(calibratedMsmearPix_2D_ST(validCols, :), ...
+    (calibratedMsmearPix_2D_ST_LU(validCols, :) - calibratedMsmearPix_2D_ST(validCols, :))./calibratedMsmearPix_2D_ST(validCols, :), 'r.')
+ylabel('Msmear fractional diff');
+xlabel('Msmear pixels');
+title('Ratio of CAL output pixels with/without LU, normalized (ETEM2:  2Dblack, stars on)');
+
+subplot(3, 1, 2)
+plot(calibratedVsmearPix_2D_ST(validCols, :), ...
+    (calibratedVsmearPix_2D_ST_LU(validCols, :) - calibratedVsmearPix_2D_ST(validCols, :))./calibratedVsmearPix_2D_ST(validCols, :), 'r.')
+ylabel('Vsmear fractional diff');
+xlabel('Vsmear pixels');
+
+subplot(3, 1, 3)
+plot(calibratedTargetPix_2D_ST, ...
+    (calibratedTargetPix_2D_ST_LU - calibratedTargetPix_2D_ST)./calibratedTargetPix_2D_ST, 'r.')
+
+ylabel('Target pixel fractional diff');
+xlabel('Target pixels');
+
+
+fileNameStr = [dataLocationStr 'CAL_validation_figures/cal_undershoot_validation_II'];
+paperOrientationFlag = false;
+includeTimeFlag      = false;
+printJpgFlag         = false;
+
+plot_to_file(fileNameStr, paperOrientationFlag, includeTimeFlag, printJpgFlag);
+
+
+
+%--------------------------------------------------------------------------
+% Test II: Compare the inputs from above data sets (sanity check)
+%--------------------------------------------------------------------------
+load calInputs_calETEM_2D_ST_sm_dc_nl_LU_ff_rn_qn_sn_rq_cr.mat
+
+% rename pixel structs
+calPhotometricInputs_2D_ST_LU = calPhotometricInputs;
+clear calCollateralInputs calPhotometricInputs
+
+inputTargetPix_2D_ST_LU  = [calPhotometricInputs_2D_ST_LU.targetAndBkgPixels.values]';      % nPixels x nCadences
+
+
+% read in inputs from CAL run without undershoot
+load calInputs_calETEM_2D_ST_sm_dc_nl_lu_ff_rn_qn_sn_rq_cr.mat
+
+% rename pixel structs
+calPhotometricInputs_2D_ST = calPhotometricInputs;
+clear calCollateralInputs calPhotometricInputs
+
+inputTargetPix_2D_ST  = [calPhotometricInputs_2D_ST.targetAndBkgPixels.values]';      % nPixels x nCadences
+
+
+%--------------------------------------------------------------------------
+% plot the pixel inputs for runs with and without LU
+%--------------------------------------------------------------------------
+figure;
+plot(inputTargetPix_2D_ST, inputTargetPix_2D_ST_LU - inputTargetPix_2D_ST, 'r.')
+xlabel('Photometric pixels (without LU)');
+ylabel('Difference (LUon - LUoff)  (e-)');
+title('Difference of target INPUT pixels for run with/without LU  (ETEM2:  2Dblack/stars ON)');
+
+fileNameStr = [dataLocationStr 'CAL_validation_figures/cal_flat_field_validation_III'];
+paperOrientationFlag = false;
+includeTimeFlag      = false;
+printJpgFlag         = false;
+
+plot_to_file(fileNameStr, paperOrientationFlag, includeTimeFlag, printJpgFlag);
+
+
+%--------------------------------------------------------------------------
+% Test III: Validate undershoot model used in ETEM2 run and retrieved for
+% CAL are consistent
+%--------------------------------------------------------------------------
+
+% load nonlinearity model that was injected into etem2 run
+load ccdObject_calETEM_2D_ST_sm_dc_nl_LU_ff_rn_qn_sn.mat
+
+etem2_undershootCoeffs = dataUsedByEtemStruct.etem2_undershootCoeffs;
+
+% =
+%     1.0015
+%    -0.0006
+%    -0.0005
+%    -0.0001
+%    -0.0000
+%    -0.0000
+%    -0.0000
+%    -0.0000
+%    -0.0000
+%    -0.0000
+%    -0.0000
+%    -0.0000
+%    -0.0000
+%    -0.0000
+%    -0.0000
+%    -0.0000
+%    -0.0000
+%    -0.0000
+%    -0.0000
+%    -0.0000
+
+% load undershoot model that was retrieved for and used by CAL
+load calInputs_calETEM_2D_ST_sm_dc_nl_LU_ff_rn_qn_sn_rq_cr.mat
+
+
+cal_undershootCoeffs = calCollateralInputs.undershootModel.constants(2).array(convert_from_module_output(7, 3)).array;
+% cal_undershootCoeffs =
+%     1.0015
+%    -0.0006
+%    -0.0005
+%    -0.0001
+%    -0.0000
+%    -0.0000
+%    -0.0000
+%    -0.0000
+%    -0.0000
+%    -0.0000
+%    -0.0000
+%    -0.0000
+%    -0.0000
+%    -0.0000
+%    -0.0000
+%    -0.0000
+%    -0.0000
+%    -0.0000
+%    -0.0000
+%    -0.0000
+
+
+if ~isequal(etem2_undershootCoeffs(:), cal_undershootCoeffs(:))
+    display('The undershoot filter coeffs. used for calibration are not equal to the ETEM2 injected undershoot coeffs!')
+else
+    display('The undershoot filter coeffs. used for calibration are consistent with the ETEM2 injected undershoot coeffs.')
+end
+
+return;

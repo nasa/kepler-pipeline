@@ -1,0 +1,136 @@
+\ProvidesPackage{mission-reports}
+
+% Mission report style sheet.
+%
+% This style sheet includes the following packages, so you don't have
+% to: alltt, forarray, graphicx, ifthen.
+% 
+% Copyright 2017 United States Government as represented by the
+% Administrator of the National Aeronautics and Space Administration.
+% All Rights Reserved.
+% 
+% This file is available under the terms of the NASA Open Source Agreement
+% (NOSA). You should have received a copy of this agreement with the
+% Kepler source code; see the file NASA-OPEN-SOURCE-AGREEMENT.doc.
+% 
+% No Warranty: THE SUBJECT SOFTWARE IS PROVIDED "AS IS" WITHOUT ANY
+% WARRANTY OF ANY KIND, EITHER EXPRESSED, IMPLIED, OR STATUTORY,
+% INCLUDING, BUT NOT LIMITED TO, ANY WARRANTY THAT THE SUBJECT SOFTWARE
+% WILL CONFORM TO SPECIFICATIONS, ANY IMPLIED WARRANTIES OF
+% MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, OR FREEDOM FROM
+% INFRINGEMENT, ANY WARRANTY THAT THE SUBJECT SOFTWARE WILL BE ERROR
+% FREE, OR ANY WARRANTY THAT DOCUMENTATION, IF PROVIDED, WILL CONFORM
+% TO THE SUBJECT SOFTWARE. THIS AGREEMENT DOES NOT, IN ANY MANNER,
+% CONSTITUTE AN ENDORSEMENT BY GOVERNMENT AGENCY OR ANY PRIOR RECIPIENT
+% OF ANY RESULTS, RESULTING DESIGNS, HARDWARE, SOFTWARE PRODUCTS OR ANY
+% OTHER APPLICATIONS RESULTING FROM USE OF THE SUBJECT SOFTWARE.
+% FURTHER, GOVERNMENT AGENCY DISCLAIMS ALL WARRANTIES AND LIABILITIES
+% REGARDING THIRD-PARTY SOFTWARE, IF PRESENT IN THE ORIGINAL SOFTWARE,
+% AND DISTRIBUTES IT "AS IS."
+%
+% Waiver and Indemnity: RECIPIENT AGREES TO WAIVE ANY AND ALL CLAIMS
+% AGAINST THE UNITED STATES GOVERNMENT, ITS CONTRACTORS AND
+% SUBCONTRACTORS, AS WELL AS ANY PRIOR RECIPIENT. IF RECIPIENT'S USE OF
+% THE SUBJECT SOFTWARE RESULTS IN ANY LIABILITIES, DEMANDS, DAMAGES,
+% EXPENSES OR LOSSES ARISING FROM SUCH USE, INCLUDING ANY DAMAGES FROM
+% PRODUCTS BASED ON, OR RESULTING FROM, RECIPIENT'S USE OF THE SUBJECT
+% SOFTWARE, RECIPIENT SHALL INDEMNIFY AND HOLD HARMLESS THE UNITED
+% STATES GOVERNMENT, ITS CONTRACTORS AND SUBCONTRACTORS, AS WELL AS ANY
+% PRIOR RECIPIENT, TO THE EXTENT PERMITTED BY LAW. RECIPIENT'S SOLE
+% REMEDY FOR ANY SUCH MATTER SHALL BE THE IMMEDIATE, UNILATERAL
+% TERMINATION OF THIS AGREEMENT.
+%
+
+% Override default margins to use as much of the paper that we can.
+\RequirePackage[margin=1cm,footskip=0cm]{geometry}
+
+% Standard width for full-page images.
+\newlength{\imagewidth}
+\setlength{\imagewidth}{\textwidth}
+
+% Standard width for tables.
+\newlength{\tablewidth}
+\setlength{\tablewidth}{\textwidth}
+
+% Add R & C to tabularx column type for centered and right-justified
+% information.
+\newcolumntype{C}{>{\centering\arraybackslash}X}
+\newcolumntype{R}{>{\raggedleft\arraybackslash}X}
+
+% TODO Define san serif font for titles.
+%\renewcommand{\familydefault}{\sfdefault}
+
+%% includeSingleGraphics
+%
+% includeSingleGraphics[opt_includegraphics_args]{image}
+%
+% Include a graphics file with caption that has been created with the
+% report_add_figure function.
+%
+% The first argument contains a macro that was returned by the
+% report_add_figure function. This macro is used to obtain the actual
+% basename of the image file. A caption is also obtained by
+% concatenating the macro with ``Caption''.
+%
+% If the image file is not present, the message ``The figure #2.png is
+% not available.''
+%
+% The optional argument is used to override the default argument of
+% width=\imagewidth to the call to includegraphics.
+%
+\RequirePackage{alltt}
+\RequirePackage{graphicx}
+
+\newcommand{\includeSingleGraphics}[2][width=\imagewidth] {%
+  \IfFileExists{\csname#2\endcsname.png}{%
+    \begin{center}
+      \includegraphics[#1]{\csname#2\endcsname.png}
+    \end{center}
+    \csname#2Caption\endcsname\\
+    Open \url{./\csname#2\endcsname.fig}
+  }{%
+    \begin{alltt}
+      The figure \csname#2\endcsname.png is not available.
+    \end{alltt}
+  }%
+}%
+
+%% includeMultipleGraphics
+%
+% includeMultipleGraphics[opt_includegraphics_args]{images}{pattern}
+%
+% Include a number of graphics files with captions that have been
+% created with the report_add_figure function.
+%
+% The first argument contains a comma-separated list of macros that
+% were returned by the report_add_figure function. These macros are
+% used to obtain the actual basename of the image file. A caption is
+% also obtained by concatenating the macro with ``Caption''.
+%
+% The second argument contains the name of the pattern that was used
+% to ascertain the image filenames. This is used to display a message
+% ``No figures named #2 are available.'' if the first argument is
+% empty. If several patterns were used, ensure that the resulting
+% sentence is grammatically correct (for example, the second argument
+% could be 'foo*, bar*, and baz*').
+%
+% The optional argument is used to override the default argument of
+% width=\imagewidth to the call to includegraphics.
+%
+\RequirePackage{forarray}
+\RequirePackage{ifthen}
+
+\newcommand{\includeMultipleGraphics}[3][width=\imagewidth] {%
+  \ifthenelse{\equal{#2}{}}{%
+    \begin{alltt}
+      No figures named #3 are available.
+    \end{alltt}
+  }{%
+    \ForEachX
+        {,}
+        {%
+          \includeSingleGraphics[#1]{\thislevelitem}
+        }%
+        {#2}
+  }%
+}

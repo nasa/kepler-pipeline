@@ -1,0 +1,152 @@
+% This generates the CAL DAWG presentation for a quarter of data
+% Version: 09/27/2010; Jessie Christiansen
+%
+% Modified 5/23/11 to remove quarter references in figure filenames and to 
+% include new figures for 1D black
+% 
+% Copyright 2017 United States Government as represented by the
+% Administrator of the National Aeronautics and Space Administration.
+% All Rights Reserved.
+% 
+% NASA acknowledges the SETI Institute's primary role in authoring and
+% producing the Kepler Data Processing Pipeline under Cooperative
+% Agreement Nos. NNA04CC63A, NNX07AD96A, NNX07AD98A, NNX11AI13A,
+% NNX11AI14A, NNX13AD01A & NNX13AD16A.
+% 
+% This file is available under the terms of the NASA Open Source Agreement
+% (NOSA). You should have received a copy of this agreement with the
+% Kepler source code; see the file NASA-OPEN-SOURCE-AGREEMENT.doc.
+% 
+% No Warranty: THE SUBJECT SOFTWARE IS PROVIDED "AS IS" WITHOUT ANY
+% WARRANTY OF ANY KIND, EITHER EXPRESSED, IMPLIED, OR STATUTORY,
+% INCLUDING, BUT NOT LIMITED TO, ANY WARRANTY THAT THE SUBJECT SOFTWARE
+% WILL CONFORM TO SPECIFICATIONS, ANY IMPLIED WARRANTIES OF
+% MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, OR FREEDOM FROM
+% INFRINGEMENT, ANY WARRANTY THAT THE SUBJECT SOFTWARE WILL BE ERROR
+% FREE, OR ANY WARRANTY THAT DOCUMENTATION, IF PROVIDED, WILL CONFORM
+% TO THE SUBJECT SOFTWARE. THIS AGREEMENT DOES NOT, IN ANY MANNER,
+% CONSTITUTE AN ENDORSEMENT BY GOVERNMENT AGENCY OR ANY PRIOR RECIPIENT
+% OF ANY RESULTS, RESULTING DESIGNS, HARDWARE, SOFTWARE PRODUCTS OR ANY
+% OTHER APPLICATIONS RESULTING FROM USE OF THE SUBJECT SOFTWARE.
+% FURTHER, GOVERNMENT AGENCY DISCLAIMS ALL WARRANTIES AND LIABILITIES
+% REGARDING THIRD-PARTY SOFTWARE, IF PRESENT IN THE ORIGINAL SOFTWARE,
+% AND DISTRIBUTES IT "AS IS."
+% 
+% Waiver and Indemnity: RECIPIENT AGREES TO WAIVE ANY AND ALL CLAIMS
+% AGAINST THE UNITED STATES GOVERNMENT, ITS CONTRACTORS AND
+% SUBCONTRACTORS, AS WELL AS ANY PRIOR RECIPIENT. IF RECIPIENT'S USE OF
+% THE SUBJECT SOFTWARE RESULTS IN ANY LIABILITIES, DEMANDS, DAMAGES,
+% EXPENSES OR LOSSES ARISING FROM SUCH USE, INCLUDING ANY DAMAGES FROM
+% PRODUCTS BASED ON, OR RESULTING FROM, RECIPIENT'S USE OF THE SUBJECT
+% SOFTWARE, RECIPIENT SHALL INDEMNIFY AND HOLD HARMLESS THE UNITED
+% STATES GOVERNMENT, ITS CONTRACTORS AND SUBCONTRACTORS, AS WELL AS ANY
+% PRIOR RECIPIENT, TO THE EXTENT PERMITTED BY LAW. RECIPIENT'S SOLE
+% REMEDY FOR ANY SUCH MATTER SHALL BE THE IMMEDIATE, UNILATERAL
+% TERMINATION OF THIS AGREEMENT.
+%
+
+\documentclass{article}
+
+\usepackage[landscape]{geometry}
+\usepackage{dawgpresentation}
+\usepackage{report-inputs}
+%\usepackage{report-inputs_k2}
+\usepackage{scalefnt}
+\usepackage{subfigure}
+\usepackage{amsfonts}
+
+%\graphicspath{/path/to/autogen_latex/}
+
+\usepackage[pdftex]{graphicx} % must come before epstopdf
+\usepackage{epstopdf}
+\graphicspath{\reportgraphicspath}
+
+\begin{document}
+
+\scalefont{1.5}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%% TITLE SLIDE %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\include{DAWGTitleSlide}
+
+%%%%%%%%%%%%%%%%%%%% CONTENTS SUMMARY SLIDE %%%%%%%%%%%%%%%%%%%%%%%%%
+
+%\newcommand{\slideTitle}{{\Huge {\bf CAL \quarter\ LC/SC Data}}}
+\newcommand{\slideTitle}{{\Huge {\bf CAL \quarter\ LC Data}}}
+\input{slideHeader}
+\input{DAWGIntroSlides}
+
+%%%%%%%%%%%%%%%%% START THE LC SET OF SLIDES %%%%%%%%%%%%%%%%%%%%%%%%
+
+%% Start Section title slide
+\cleardoublepage
+\renewcommand{\slideTitle}{{\Huge {\bf \quarter\ LC}}}
+\include{slideHeader}
+%% End Section title slide
+
+%\input{channel19LCDefinitions}
+\input{channel39LCDefinitions}
+%\input{channel67LCDefinitions}
+\input{newLCChannelSlidesM1-M3}
+
+\input{channel58LCDefinitions}
+\input{newLCChannelSlides}
+
+\input{channel41LCDefinitions}
+\input{newLCChannelSlides}
+
+%\input{channel10LCDefinitions}
+\input{channel12LCDefinitions}
+\input{newLCChannelSlides}
+
+\input{channel46LCDefinitions}
+\input{newLCChannelSlides}
+
+\input{LCCollateralDefinitions}
+\input{newCollateralSlides}
+
+%%%%%%%%%%%%%%%%% START THE SC SET OF SLIDES %%%%%%%%%%%%%%%%%%%%%%%%
+
+%% Start Section title slide
+\cleardoublepage
+\renewcommand{\slideTitle}{{\Huge {\bf \quarter\ SC}}}
+\include{slideHeader}
+% End Section title slide
+
+%\input{channel19SCDefinitions}
+\input{channel39SCDefinitions}
+%\input{channel67SCDefinitions}
+%\input{channel46SCDefinitions}
+%\input{newSCChannelSlidesU1-U3}
+
+%j\input{channel58SCDefinitions}
+%\input{channel16SCDefinitions}
+%j\input{newSCChannelSlides}
+
+%j\input{channel41SCDefinitions}
+%\input{channel43SCDefinitions}
+%j\input{newSCChannelSlides}
+
+%\input{channel10SCDefinitions}
+%j\input{channel12SCDefinitions}
+%\input{channel9SCDefinitions}
+%j\input{newSCChannelSlides}
+
+%\include{channel46SCDefinitions}
+%\include{channel77SCDefinitions}
+%\include{newSCChannelSlides}
+
+\input{SCCollateralDefinitions}
+\input{newCollateralSlides}
+
+%%%%%%%%%%%%%%%%% START THE SUMMARY SLIDES %%%%%%%%%%%%%%%%%%
+
+\cleardoublepage
+\renewcommand{\slideTitle}{{\Huge {\bf DAWG \quarter\ Summary}}}
+\input{slideHeader}
+\input{DAWGSummarySlides}
+
+%%%%%%%%%%%%%%%% END STANDARD SLIDES %%%%%%%%%%%%%%%%%%%%%%
+
+
+\end{document}

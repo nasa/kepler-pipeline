@@ -1,0 +1,114 @@
+<!--
+  Copyright 2017 United States Government as represented by the
+  Administrator of the National Aeronautics and Space Administration.
+  All Rights Reserved.
+  
+  This file is available under the terms of the NASA Open Source Agreement
+  (NOSA). You should have received a copy of this agreement with the
+  Kepler source code; see the file NASA-OPEN-SOURCE-AGREEMENT.doc.
+  
+  No Warranty: THE SUBJECT SOFTWARE IS PROVIDED "AS IS" WITHOUT ANY
+  WARRANTY OF ANY KIND, EITHER EXPRESSED, IMPLIED, OR STATUTORY,
+  INCLUDING, BUT NOT LIMITED TO, ANY WARRANTY THAT THE SUBJECT SOFTWARE
+  WILL CONFORM TO SPECIFICATIONS, ANY IMPLIED WARRANTIES OF
+  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, OR FREEDOM FROM
+  INFRINGEMENT, ANY WARRANTY THAT THE SUBJECT SOFTWARE WILL BE ERROR
+  FREE, OR ANY WARRANTY THAT DOCUMENTATION, IF PROVIDED, WILL CONFORM
+  TO THE SUBJECT SOFTWARE. THIS AGREEMENT DOES NOT, IN ANY MANNER,
+  CONSTITUTE AN ENDORSEMENT BY GOVERNMENT AGENCY OR ANY PRIOR RECIPIENT
+  OF ANY RESULTS, RESULTING DESIGNS, HARDWARE, SOFTWARE PRODUCTS OR ANY
+  OTHER APPLICATIONS RESULTING FROM USE OF THE SUBJECT SOFTWARE.
+  FURTHER, GOVERNMENT AGENCY DISCLAIMS ALL WARRANTIES AND LIABILITIES
+  REGARDING THIRD-PARTY SOFTWARE, IF PRESENT IN THE ORIGINAL SOFTWARE,
+  AND DISTRIBUTES IT "AS IS."
+
+  Waiver and Indemnity: RECIPIENT AGREES TO WAIVE ANY AND ALL CLAIMS
+  AGAINST THE UNITED STATES GOVERNMENT, ITS CONTRACTORS AND
+  SUBCONTRACTORS, AS WELL AS ANY PRIOR RECIPIENT. IF RECIPIENT'S USE OF
+  THE SUBJECT SOFTWARE RESULTS IN ANY LIABILITIES, DEMANDS, DAMAGES,
+  EXPENSES OR LOSSES ARISING FROM SUCH USE, INCLUDING ANY DAMAGES FROM
+  PRODUCTS BASED ON, OR RESULTING FROM, RECIPIENT'S USE OF THE SUBJECT
+  SOFTWARE, RECIPIENT SHALL INDEMNIFY AND HOLD HARMLESS THE UNITED
+  STATES GOVERNMENT, ITS CONTRACTORS AND SUBCONTRACTORS, AS WELL AS ANY
+  PRIOR RECIPIENT, TO THE EXTENT PERMITTED BY LAW. RECIPIENT'S SOLE
+  REMEDY FOR ANY SUCH MATTER SHALL BE THE IMMEDIATE, UNILATERAL
+  TERMINATION OF THIS AGREEMENT.
+-->
+
+#set ($editPath = $context.getRequestParameter('path'))
+#set ($targetListSetUtil = $classtool.newInstance("gov.nasa.kepler.mr.webui.TargetListSetUtil"))
+#set ($targetListSets = "$targetListSetUtil.retrieveTargetListSets()")
+
+#if ($editPath)       
+  #set ($editPage = $pageManager.getPage("$editPath"))
+  
+  $!newcontext.putPageValue("editPage",$editPage)
+  $!newcontext.putPageValue("originalPage", $editPage)
+
+  #if (!$request.getParameter("format"))
+
+    <form method="get" name="params" id="params">
+
+      <fieldset class="report-parameters">
+        <legend>Target and Aperture Definition CCD Module Output
+        Report Parameters</legend>
+
+        <h2>Format</h2>
+
+        <input type="radio" name="format" value="html" checked />HTML
+        <br/>
+        <input type="radio" name="format" value="pdf" />PDF
+
+        <table class="standard-table">
+          <tr>
+            <td>
+              <h2>Target List Set</h2>
+            </td>
+            <td style="padding-left:4em;">
+              <h2>Module Output</h2>
+            </td>
+          </tr>
+          <tr>
+            <td valign="top">
+              <select name="targetListSet" id="targetListSet" size="10"
+                      title="Select a target list set"
+                      onChange="document.forms['params'].elements['submit'].disabled=false;">
+                $targetListSets
+              </select>
+            </td>
+
+            <td valign="top" style="padding-left:4em;">
+              <select name="moduleOutput" size="10" onchange="">
+                #set($list = ["02/1", "02/2", "02/3", "02/4", "03/1", "03/2", "03/3", "03/4", "04/1", "04/2", "04/3", "04/4", "06/1", "06/2", "06/3", "06/4", "07/1", "07/2", "07/3", "07/4", "08/1", "08/2", "08/3", "08/4", "09/1", "09/2", "09/3", "09/4", "10/1", "10/2", "10/3", "10/4", "11/1", "11/2", "11/3", "11/4", "12/1", "12/2", "12/3", "12/4", "13/1", "13/2", "13/3", "13/4", "14/1", "14/2", "14/3", "14/4", "15/1", "15/2", "15/3", "15/4", "16/1", "16/2", "16/3", "16/4", "17/1", "17/2", "17/3", "17/4", "18/1", "18/2", "18/3", "18/4", "19/1", "19/2", "19/3", "19/4", "20/1", "20/2", "20/3", "20/4", "22/1", "22/2", "22/3", "22/4", "23/1", "23/2", "23/3", "23/4", "24/1", "24/2", "24/3", "24/4"])
+                #foreach($moduleOutput in $list)
+                <option value="$moduleOutput"
+                        #if ($moduleOutput == "02/1")
+                        selected
+                        #end
+                        >$moduleOutput</option>
+                #end
+              </select>
+            </td>
+          </tr>
+        </table>
+
+        <input type="hidden" name="path" value="/view$editPath"/>
+        <input type="submit" name="submit" value="View Report"
+               class="submit-button"/>
+      </fieldset>
+
+    </form>
+
+    <script>
+      // If a target list set isn't selected, disable the submit button.
+      if (document.forms['params'].targetListSet.options.length == 0) {
+          document.forms['params'].submit.disabled = true;
+      }
+    </script>
+
+  #else
+    #parse("reportal/viewReport.vm")
+  #end
+#else
+  Please select an item             
+#end

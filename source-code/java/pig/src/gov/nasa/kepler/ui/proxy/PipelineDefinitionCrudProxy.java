@@ -1,0 +1,221 @@
+/*
+ * Copyright 2017 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ * 
+ * This file is available under the terms of the NASA Open Source Agreement
+ * (NOSA). You should have received a copy of this agreement with the
+ * Kepler source code; see the file NASA-OPEN-SOURCE-AGREEMENT.doc.
+ * 
+ * No Warranty: THE SUBJECT SOFTWARE IS PROVIDED "AS IS" WITHOUT ANY
+ * WARRANTY OF ANY KIND, EITHER EXPRESSED, IMPLIED, OR STATUTORY,
+ * INCLUDING, BUT NOT LIMITED TO, ANY WARRANTY THAT THE SUBJECT SOFTWARE
+ * WILL CONFORM TO SPECIFICATIONS, ANY IMPLIED WARRANTIES OF
+ * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, OR FREEDOM FROM
+ * INFRINGEMENT, ANY WARRANTY THAT THE SUBJECT SOFTWARE WILL BE ERROR
+ * FREE, OR ANY WARRANTY THAT DOCUMENTATION, IF PROVIDED, WILL CONFORM
+ * TO THE SUBJECT SOFTWARE. THIS AGREEMENT DOES NOT, IN ANY MANNER,
+ * CONSTITUTE AN ENDORSEMENT BY GOVERNMENT AGENCY OR ANY PRIOR RECIPIENT
+ * OF ANY RESULTS, RESULTING DESIGNS, HARDWARE, SOFTWARE PRODUCTS OR ANY
+ * OTHER APPLICATIONS RESULTING FROM USE OF THE SUBJECT SOFTWARE.
+ * FURTHER, GOVERNMENT AGENCY DISCLAIMS ALL WARRANTIES AND LIABILITIES
+ * REGARDING THIRD-PARTY SOFTWARE, IF PRESENT IN THE ORIGINAL SOFTWARE,
+ * AND DISTRIBUTES IT "AS IS."
+ * 
+ * Waiver and Indemnity: RECIPIENT AGREES TO WAIVE ANY AND ALL CLAIMS
+ * AGAINST THE UNITED STATES GOVERNMENT, ITS CONTRACTORS AND
+ * SUBCONTRACTORS, AS WELL AS ANY PRIOR RECIPIENT. IF RECIPIENT'S USE OF
+ * THE SUBJECT SOFTWARE RESULTS IN ANY LIABILITIES, DEMANDS, DAMAGES,
+ * EXPENSES OR LOSSES ARISING FROM SUCH USE, INCLUDING ANY DAMAGES FROM
+ * PRODUCTS BASED ON, OR RESULTING FROM, RECIPIENT'S USE OF THE SUBJECT
+ * SOFTWARE, RECIPIENT SHALL INDEMNIFY AND HOLD HARMLESS THE UNITED
+ * STATES GOVERNMENT, ITS CONTRACTORS AND SUBCONTRACTORS, AS WELL AS ANY
+ * PRIOR RECIPIENT, TO THE EXTENT PERMITTED BY LAW. RECIPIENT'S SOLE
+ * REMEDY FOR ANY SUCH MATTER SHALL BE THE IMMEDIATE, UNILATERAL
+ * TERMINATION OF THIS AGREEMENT.
+ */
+
+package gov.nasa.kepler.ui.proxy;
+
+import gov.nasa.kepler.hibernate.dbservice.DatabaseService;
+import gov.nasa.kepler.hibernate.dbservice.DatabaseServiceFactory;
+import gov.nasa.kepler.hibernate.pi.PipelineDefinition;
+import gov.nasa.kepler.hibernate.pi.PipelineDefinitionCrud;
+import gov.nasa.kepler.hibernate.pi.PipelineDefinitionName;
+import gov.nasa.kepler.hibernate.pi.PipelineDefinitionNode;
+import gov.nasa.kepler.hibernate.services.Privilege;
+import gov.nasa.kepler.ui.PipelineConsole;
+
+import java.util.List;
+import java.util.concurrent.Callable;
+
+public class PipelineDefinitionCrudProxy extends CrudProxy{
+
+    public PipelineDefinitionCrudProxy() {
+    }
+
+    public void save(final PipelineDefinition pipeline) {
+        verifyPrivileges(Privilege.PIPELINE_CONFIG);
+        PipelineConsole.crudProxyExecutor.executeSynchronous(new Runnable(){
+            public void run() {
+                DatabaseService databaseService = DatabaseServiceFactory.getInstance();
+                PipelineDefinitionCrud crud = new PipelineDefinitionCrud(databaseService);
+
+                databaseService.beginTransaction();
+                
+                updateAuditInfo(pipeline.getAuditInfo());
+
+                crud.create(pipeline);
+                
+                databaseService.flush();
+                databaseService.commitTransaction();
+            }
+        });
+    }
+
+    public void rename(final PipelineDefinition pipeline, final String newName){
+        verifyPrivileges(Privilege.PIPELINE_CONFIG);
+        PipelineConsole.crudProxyExecutor.executeSynchronous(new Runnable(){
+            public void run() {
+                DatabaseService databaseService = DatabaseServiceFactory.getInstance();
+                PipelineDefinitionCrud crud = new PipelineDefinitionCrud(databaseService);
+
+                databaseService.beginTransaction();
+                
+                updateAuditInfo(pipeline.getAuditInfo());
+
+                crud.rename(pipeline, newName);
+                
+                databaseService.flush();
+                databaseService.commitTransaction();
+            }
+        });
+    }
+
+    public void deletePipeline(final PipelineDefinition pipeline) {
+        verifyPrivileges(Privilege.PIPELINE_CONFIG);
+        PipelineConsole.crudProxyExecutor.executeSynchronous(new Runnable(){
+            public void run() {
+                DatabaseService databaseService = DatabaseServiceFactory.getInstance();
+                PipelineDefinitionCrud crud = new PipelineDefinitionCrud(databaseService);
+
+                databaseService.beginTransaction();
+                
+                crud.deletePipeline(pipeline);
+                
+                databaseService.flush();
+                databaseService.commitTransaction();
+            }
+        });
+    }
+
+    public void deletePipelineNode(final PipelineDefinitionNode pipelineNode) {
+        verifyPrivileges(Privilege.PIPELINE_CONFIG);
+        PipelineConsole.crudProxyExecutor.executeSynchronous(new Runnable(){
+            public void run() {
+                DatabaseService databaseService = DatabaseServiceFactory.getInstance();
+                PipelineDefinitionCrud crud = new PipelineDefinitionCrud(databaseService);
+
+                databaseService.beginTransaction();
+                
+                crud.deletePipelineNode(pipelineNode);
+                
+                databaseService.flush();
+                databaseService.commitTransaction();
+            }
+        });
+    }
+
+    /* (non-Javadoc)
+     * @see gov.nasa.kepler.hibernate.pi.PipelineDefinitionCrud#retrieveLatestVersionForName(java.lang.String)
+     */
+    public PipelineDefinition retrieveLatestVersionForName(final String name) {
+        verifyPrivileges(Privilege.PIPELINE_CONFIG);
+        PipelineDefinition result = (PipelineDefinition) PipelineConsole.crudProxyExecutor.executeSynchronous(new Callable<PipelineDefinition>(){
+            public PipelineDefinition call() {
+                DatabaseService databaseService = DatabaseServiceFactory.getInstance();
+                PipelineDefinitionCrud crud = new PipelineDefinitionCrud(databaseService);
+
+                databaseService.beginTransaction();
+                
+                PipelineDefinition result = crud.retrieveLatestVersionForName(name);
+                result.buildPaths();
+                
+                databaseService.flush();
+                databaseService.commitTransaction();
+                
+                return result;
+            }
+        });
+        return result;
+    }
+
+    /* (non-Javadoc)
+     * @see gov.nasa.kepler.hibernate.pi.PipelineDefinitionCrud#retrieveLatestVersionForName(PipelineDefinitionName)
+     */
+    public PipelineDefinition retrieveLatestVersionForName(final PipelineDefinitionName name) {
+        verifyPrivileges(Privilege.PIPELINE_CONFIG);
+        PipelineDefinition result = (PipelineDefinition) PipelineConsole.crudProxyExecutor.executeSynchronous(new Callable<PipelineDefinition>(){
+            public PipelineDefinition call() {
+                DatabaseService databaseService = DatabaseServiceFactory.getInstance();
+                PipelineDefinitionCrud crud = new PipelineDefinitionCrud(databaseService);
+
+                databaseService.beginTransaction();
+                
+                PipelineDefinition result = crud.retrieveLatestVersionForName(name);
+                result.buildPaths();
+                
+                databaseService.flush();
+                databaseService.commitTransaction();
+                
+                return result;
+            }
+        });
+        return result;
+    }
+
+    public List<PipelineDefinition> retrieveLatestVersions() {
+        verifyPrivileges(Privilege.PIPELINE_MONITOR);
+        List<PipelineDefinition> result = (List<PipelineDefinition>) PipelineConsole.crudProxyExecutor.executeSynchronous(new Callable<List<PipelineDefinition>>(){
+            public List<PipelineDefinition> call() {
+                PipelineDefinitionCrud crud = new PipelineDefinitionCrud();
+
+                List<PipelineDefinition> result = crud.retrieveLatestVersions();
+
+                for (PipelineDefinition pipelineDefinition : result) {
+                    pipelineDefinition.buildPaths();
+                }
+                
+                return result;
+            }
+        });
+        return result;
+    }
+    
+    /* (non-Javadoc)
+     * @see gov.nasa.kepler.hibernate.pi.PipelineDefinitionCrud#retrieveAll()
+     */
+    public List<PipelineDefinition> retrieveAll() {
+        verifyPrivileges(Privilege.PIPELINE_MONITOR);
+        List<PipelineDefinition> result = (List<PipelineDefinition>) PipelineConsole.crudProxyExecutor.executeSynchronous(new Callable<List<PipelineDefinition>>(){
+            public List<PipelineDefinition> call() {
+                PipelineDefinitionCrud crud = new PipelineDefinitionCrud();
+
+                List<PipelineDefinition> result = crud.retrieveAll();
+                
+                for (PipelineDefinition pipelineDefinition : result) {
+                    pipelineDefinition.buildPaths();
+                }
+
+                return result;
+            }
+        });
+        return result;
+    }
+
+    public void saveChanges(PipelineDefinition pipelineDefinition) {
+        verifyPrivileges(Privilege.PIPELINE_CONFIG);
+        updateAuditInfo(pipelineDefinition.getAuditInfo());
+        super.saveChanges();
+    }
+}

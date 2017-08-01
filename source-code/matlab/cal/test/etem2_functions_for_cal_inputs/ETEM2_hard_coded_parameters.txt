@@ -1,0 +1,78 @@
+Copyright 2017 United States Government as represented by the
+Administrator of the National Aeronautics and Space Administration.
+All Rights Reserved.
+
+NASA acknowledges the SETI Institute's primary role in authoring and
+producing the Kepler Data Processing Pipeline under Cooperative
+Agreement Nos. NNA04CC63A, NNX07AD96A, NNX07AD98A, NNX11AI13A,
+NNX11AI14A, NNX13AD01A & NNX13AD16A.
+
+This file is available under the terms of the NASA Open Source Agreement
+(NOSA). You should have received a copy of this agreement with the
+Kepler source code; see the file NASA-OPEN-SOURCE-AGREEMENT.doc.
+
+No Warranty: THE SUBJECT SOFTWARE IS PROVIDED "AS IS" WITHOUT ANY
+WARRANTY OF ANY KIND, EITHER EXPRESSED, IMPLIED, OR STATUTORY,
+INCLUDING, BUT NOT LIMITED TO, ANY WARRANTY THAT THE SUBJECT SOFTWARE
+WILL CONFORM TO SPECIFICATIONS, ANY IMPLIED WARRANTIES OF
+MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, OR FREEDOM FROM
+INFRINGEMENT, ANY WARRANTY THAT THE SUBJECT SOFTWARE WILL BE ERROR
+FREE, OR ANY WARRANTY THAT DOCUMENTATION, IF PROVIDED, WILL CONFORM
+TO THE SUBJECT SOFTWARE. THIS AGREEMENT DOES NOT, IN ANY MANNER,
+CONSTITUTE AN ENDORSEMENT BY GOVERNMENT AGENCY OR ANY PRIOR RECIPIENT
+OF ANY RESULTS, RESULTING DESIGNS, HARDWARE, SOFTWARE PRODUCTS OR ANY
+OTHER APPLICATIONS RESULTING FROM USE OF THE SUBJECT SOFTWARE.
+FURTHER, GOVERNMENT AGENCY DISCLAIMS ALL WARRANTIES AND LIABILITIES
+REGARDING THIRD-PARTY SOFTWARE, IF PRESENT IN THE ORIGINAL SOFTWARE,
+AND DISTRIBUTES IT "AS IS."
+
+Waiver and Indemnity: RECIPIENT AGREES TO WAIVE ANY AND ALL CLAIMS
+AGAINST THE UNITED STATES GOVERNMENT, ITS CONTRACTORS AND
+SUBCONTRACTORS, AS WELL AS ANY PRIOR RECIPIENT. IF RECIPIENT'S USE OF
+THE SUBJECT SOFTWARE RESULTS IN ANY LIABILITIES, DEMANDS, DAMAGES,
+EXPENSES OR LOSSES ARISING FROM SUCH USE, INCLUDING ANY DAMAGES FROM
+PRODUCTS BASED ON, OR RESULTING FROM, RECIPIENT'S USE OF THE SUBJECT
+SOFTWARE, RECIPIENT SHALL INDEMNIFY AND HOLD HARMLESS THE UNITED
+STATES GOVERNMENT, ITS CONTRACTORS AND SUBCONTRACTORS, AS WELL AS ANY
+PRIOR RECIPIENT, TO THE EXTENT PERMITTED BY LAW. RECIPIENT'S SOLE
+REMEDY FOR ANY SUCH MATTER SHALL BE THE IMMEDIATE, UNILATERAL
+TERMINATION OF THIS AGREEMENT.
+
+runParamsData.simulationData.numberOfTargetsRequested = 2000;	% Number of target stars before downselect
+runParamsData.simulationData.initialScienceRun	    = -1;       % if positive, indicates a previous run to use as base
+runParamsData.simulationData.firstExposureStartDate = '1-Mar-2009 17:29:36.8448'; % Date of a roll near launch.
+
+runParamsData.keplerData.pixelWidth        	= 27;       %microns
+runParamsData.keplerData.boresiteDec        	= 44.5;     %degrees
+runParamsData.keplerData.boresiteRa         	= 290.67;   %degrees
+
+runParamsData.keplerData.intrapixWavelength 	= 800; % wavelength in nm
+runParamsData.keplerData.nSubPixelLocations     = 10;      % # of sub-pixel locations on a side of  a pixel
+runParamsData.keplerData.prfDesignRangeBuffer   = 1.25;    % amount to expand prf design rangef
+
+runParamsData.keplerData.integrationTime          = 6.01982;  
+runParamsData.keplerData.transferTime             = 0.51895; 
+runParamsData.keplerData.wellCapacity             = 1.30E+06; 
+runParamsData.keplerData.numMemoryBits            = 23;      
+
+runParamsData.keplerData.adcGuardBandFractionLow  = 0.05;    % 5% guard band on low end of A/D converter
+runParamsData.keplerData.adcGuardBandFractionHigh = 0.05;    % 5% guard band on high end of A/D converter
+runParamsData.keplerData.chargeDiffusionSigma     = 1;       % charge diffusion coefficient in microns
+runParamsData.keplerData.chargeDiffusionArraySize = 51;      % size of super-resolution grid for charge diffusion kernel, must be odd
+
+runParamsData.keplerData.simulationFramesPerExposure = 5;   % # of simulation frames per integration
+runParamsData.keplerData.numChains                = 5;      % not entirely sure what this is - fixed by hardware?
+runParamsData.keplerData.motionPolyOrder          = 6;      % order of the motion polynomial
+runParamsData.keplerData.dvaMeshOrder             = 3;      % order of the dva motion interpolation polynomial
+
+runParamsData.keplerData.motionGridResolution     = 5;      % number of points on a side for motion grid
+runParamsData.keplerData.numCadencesPerChunk      = 100;    % number of cadences to work with for memory management
+runParamsData.keplerData.targetImageSize          = 11;     % size on a side of a target image in pixels.  Must be odd.
+runParamsData.keplerData.badFitTolerance          = 6;      % allowed error before a pixel is considered badly fit
+runParamsData.keplerData.saturationBoxSize        = 7;      % box to put around saturated pixels
+
+runParamsData.keplerData.transitTimeBuffer        = 4;      % cadences to add to each side of a transit
+runParamsData.keplerData.rowCorrection            = 0;      % offset to add to tad target definitions.
+runParamsData.keplerData.colCorrection            = 0;      % offset to add to tad target definitions.
+runParamsData.keplerData.refPixCadenceInterval    = 48;     % how often to save reference pixels (in cadences)
+runParamsData.keplerData.refPixCadenceOffset      = 0;      % offset to add to reference pixel cadence interval.

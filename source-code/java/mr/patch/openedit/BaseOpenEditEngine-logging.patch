@@ -1,0 +1,20 @@
+Index: com/openedit/servlet/BaseOpenEditEngine.java
+===================================================================
+RCS file: /src/openedit/src/java/com/openedit/servlet/BaseOpenEditEngine.java,v
+retrieving revision 1.23
+diff -u -r1.23 BaseOpenEditEngine.java
+--- com/openedit/servlet/BaseOpenEditEngine.java	2007/02/12 22:50:51	1.23
++++ com/openedit/servlet/BaseOpenEditEngine.java	2007/04/18 20:50:30
+@@ -132,8 +132,10 @@
+ 		}
+ 		catch( Exception e )
+ 		{
+-			log.error(e);
+-			e.printStackTrace();
++            String message = e.getMessage();
++            if (message.indexOf("Insufficient permissions: ") == -1) {
++                log.info(e);
++            }
+ 			boolean ok = getErrorHandler().handleError( e, pageRequest );
+ 			
+ 			if(!ok )

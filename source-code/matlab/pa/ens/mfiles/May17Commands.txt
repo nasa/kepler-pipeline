@@ -1,0 +1,1308 @@
+Copyright 2017 United States Government as represented by the
+Administrator of the National Aeronautics and Space Administration.
+All Rights Reserved.
+
+NASA acknowledges the SETI Institute's primary role in authoring and
+producing the Kepler Data Processing Pipeline under Cooperative
+Agreement Nos. NNA04CC63A, NNX07AD96A, NNX07AD98A, NNX11AI13A,
+NNX11AI14A, NNX13AD01A & NNX13AD16A.
+
+This file is available under the terms of the NASA Open Source Agreement
+(NOSA). You should have received a copy of this agreement with the
+Kepler source code; see the file NASA-OPEN-SOURCE-AGREEMENT.doc.
+
+No Warranty: THE SUBJECT SOFTWARE IS PROVIDED "AS IS" WITHOUT ANY
+WARRANTY OF ANY KIND, EITHER EXPRESSED, IMPLIED, OR STATUTORY,
+INCLUDING, BUT NOT LIMITED TO, ANY WARRANTY THAT THE SUBJECT SOFTWARE
+WILL CONFORM TO SPECIFICATIONS, ANY IMPLIED WARRANTIES OF
+MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, OR FREEDOM FROM
+INFRINGEMENT, ANY WARRANTY THAT THE SUBJECT SOFTWARE WILL BE ERROR
+FREE, OR ANY WARRANTY THAT DOCUMENTATION, IF PROVIDED, WILL CONFORM
+TO THE SUBJECT SOFTWARE. THIS AGREEMENT DOES NOT, IN ANY MANNER,
+CONSTITUTE AN ENDORSEMENT BY GOVERNMENT AGENCY OR ANY PRIOR RECIPIENT
+OF ANY RESULTS, RESULTING DESIGNS, HARDWARE, SOFTWARE PRODUCTS OR ANY
+OTHER APPLICATIONS RESULTING FROM USE OF THE SUBJECT SOFTWARE.
+FURTHER, GOVERNMENT AGENCY DISCLAIMS ALL WARRANTIES AND LIABILITIES
+REGARDING THIRD-PARTY SOFTWARE, IF PRESENT IN THE ORIGINAL SOFTWARE,
+AND DISTRIBUTES IT "AS IS."
+
+Waiver and Indemnity: RECIPIENT AGREES TO WAIVE ANY AND ALL CLAIMS
+AGAINST THE UNITED STATES GOVERNMENT, ITS CONTRACTORS AND
+SUBCONTRACTORS, AS WELL AS ANY PRIOR RECIPIENT. IF RECIPIENT'S USE OF
+THE SUBJECT SOFTWARE RESULTS IN ANY LIABILITIES, DEMANDS, DAMAGES,
+EXPENSES OR LOSSES ARISING FROM SUCH USE, INCLUDING ANY DAMAGES FROM
+PRODUCTS BASED ON, OR RESULTING FROM, RECIPIENT'S USE OF THE SUBJECT
+SOFTWARE, RECIPIENT SHALL INDEMNIFY AND HOLD HARMLESS THE UNITED
+STATES GOVERNMENT, ITS CONTRACTORS AND SUBCONTRACTORS, AS WELL AS ANY
+PRIOR RECIPIENT, TO THE EXTENT PERMITTED BY LAW. RECIPIENT'S SOLE
+REMEDY FOR ANY SUCH MATTER SHALL BE THE IMMEDIATE, UNILATERAL
+TERMINATION OF THIS AGREEMENT.
+
+ %-- Unknown date --%
+differentialLightCurveEns = newEnsemble;
+clc
+whos
+[Xout] = Aprilensemble_matlab_controller(Xin)
+ls *.mat
+ls -l *.mat
+Xin
+Xout
+ls
+size(Xout.targetOutputStruct.relFlux)
+plot(Xout.targetOutputStruct.relFlux(:,999),'m+')
+hold on
+plot(Xin.targetInputStruct.flux(:,999),'co')
+plot(Xin.targetInputStruct(999).flux,'co')
+clf
+plot(Xin.targetInputStruct(999).flux,'co')
+figure
+plot(Xout.targetOutputStruct.relFlux(:,999),'m+')
+figure
+plot(std(Xin.targetInputStruct.fluxOriginal)./mean(Xin.targetInputStruct.fluxOriginal),'rx')
+Xin
+whos
+nStars
+Xout
+Xin
+size(Xout.targetOutputStruct.relFlux)
+nStars = 1000
+whos
+%concatenate flux structures into array
+Xin.flux = cat(2, Xin.targetInputStruct.flux);
+%convert flux to units of electrons
+Xin.flux = Xin.flux .* Xin.gain;
+%%%TMP
+Xin.flux = Xin.flux(1:4464, 1:1000);
+%concatenate flux uncertainties structures into array
+Xin.uncertainties = cat(2, Xin.targetInputStruct.uncertainties);
+%convert flux uncertainties to units of electrons
+Xin.uncertainties = Xin.uncertainties .* Xin.gain;
+%%%TMP
+Xin.uncertainties = Xin.uncertainties(1:4464, 1:1000);
+Xin.fluxOriginal = cat(2, Xin.targetInputStruct.fluxOriginal);
+Xin.fluxOriginal = Xin.fluxOriginal .* Xin.gain;
+Xin.fluxOriginal = Xin.fluxOriginal(1:4464, 1:1000);
+whos
+Xin
+Xout.relFlux = cat(2, Xout.targetOutputStruct.relFlux);
+Xout
+Xout.targetOutputStruct
+Xout.relFluxUncert = cat(2, Xout.targetOutputStruct.relFluxUncert);
+whos
+clear ans
+whos
+save May8.mat
+plot(std(Xin.fluxOriginal)./mean(Xin.fluxOriginal),'rx')
+hold on
+plot(std(Xin.flux)./mean(Xin.flux),'bx')
+hold on
+plot(std(Xout.relFlux)./mean(Xout.relFlux),'cs')
+hold on
+plot(mean(Xout.relFluxUncert)./mean(Xout.relFlux),'yo')
+hold on
+plot(mean(Xin.uncertainties)./mean(Xin.flux),'m+')
+figure
+semilogy(std(Xin.fluxOriginal)./mean(Xin.fluxOriginal),'rx')
+hold on
+semilogy(std(Xin.flux)./mean(Xin.flux),'bx')
+hold on
+semilogy(std(Xout.relFlux)./mean(Xout.relFlux),'cs')
+hold on
+semilogy(mean(Xin.uncertainties)./mean(Xin.flux),'m+')
+hold on
+semilogy(mean(Xout.relFluxUncert)./mean(Xout.relFlux),'yo')
+figure
+plot(Xin.fluxOriginal,'rx')
+plot(Xin.fluxOriginal(:,999),'rx')
+clf
+plot(Xin.fluxOriginal(:,999),'rx')
+hold on
+plot(Xin.flux(:,999),'bx')
+hold on
+plot(Xout.relFlux(:,999),'mo')
+figure
+plot(Xin.fluxOriginal(:,101),'rx')
+holdon
+hold on
+plot(Xin.flux(:,101),'bx')
+hold on
+plot(Xout.relFlux(:,101),'mo')
+figure
+plot(Xin.fluxOriginal(:,100),'rx')
+hold on
+plot(Xin.flux(:,100),'bx')
+hold on
+plot(Xout.relFlux(:,100),'mo')
+clf
+plot(Xin.fluxOriginal(:,100),'r.')
+hold on
+plot(Xin.flux(:,100),'b.')
+hold on
+plot(Xout.relFlux(:,100),'m.')
+fstd = movstd(Xout.relFlux(:,999),20); favg=movavg(Xout.relFlux(:,999),20);
+fstd = movstd(Xout.relFlux(:,999),21); favg=movavg(Xout.relFlux(:,999),21);
+fstd = movstd(Xout.relFlux(:,999),21)
+fstd = movstd(Xout.relFlux(:,999),21);
+favg=movavg(Xout.relFlux(:,999),21);
+ls *.m
+ls
+whos
+plot(fstd,'bx')
+figure
+plot(fstd,'bx')
+plot(Xin.fluxOriginal(:,999),'rx')
+figure
+plot(Xin.fluxOriginal(:,999),'rx')
+hold on
+plot(Xin.flux(:,999),'bx')
+hold on
+plot(Xout.relFlux(:,999),'mo')
+fstd = movstd(Xout.relFlux(:,999),21);
+fstd999 = movstd(Xout.relFlux(:,999),21);
+fstd999raw = movstd(Xin.flux(:,999),21);
+figure
+plot(fstd999,'mo')
+hold on
+plot(fstd999raw,'b+')
+figure
+favg999 = movavg(Xin.uncertainties(:,999),21);
+favg999rel = movavg(Xout.relFluxUncert(:,999),21);
+plot(favg999,'yo')
+plot(favg999rel,'yo')
+plot(favg999rel,'co')
+plot(favg999rel,'c.')
+favg999rel = movavg(Xout.relFluxUncert(:,999),11);
+plot(favg999rel,'c.')
+favg999rel = movavg(Xout.relFluxUncert(:,999),21);
+plot(favg999rel,'c.')
+plot(fstd999./favg999rel,'co')
+clf
+plot(fstd999./favg999rel,'c+')
+fstd999rel = movstd(Xout.relFlux(:,999),21);
+fstd999raw = movstd(Xin.flux(:,999),21);
+favg999rel = movavg(Xout.relFlux(:,999),21);
+favg999raw = movavg(Xin.flux(:,999),21);
+favg999relUncert = movavg(Xout.relFluxUncert(:,999),21);
+favg999rawUncert = movavg(Xin.uncertainties(:,999),21);
+figure
+plot(fstd999raw ./ favg999raw,'rx')
+hold on
+plot(fstd999rel ./ favg999rel,'bo')
+whos
+clear favg999
+clear fstd
+whos
+clc
+whos
+figure
+clear fstd999
+whos
+figure
+plot(favg999rawUncert ./ favg999raw , 'mo')
+figure
+plot(favg999relUncert ./ favg999rel , 'mo')
+figure
+plot(favg999relUncert ./ favg999rel , 'mo')
+hold on
+plot(favg999rawUncert ./ favg999raw , 'c+')
+figure
+plot(mean(Xin.uncertainties(:,999))./mean(Xin.flux(:,999)),'cs')
+plot(mean(Xin.uncertainties)./mean(Xin.flux),'cs')
+semilogy(mean(Xin.uncertainties)./mean(Xin.flux),'cs')
+tmpstd = movstd(Xout.relFlux,21)
+size(Xout.relFlux)
+tmpstd = movstd(Xout.relFlux,21);
+figure
+plot(tmpstd,'c+')
+clear tmpstd
+whos
+figure
+semilogy(std(Xin.fluxOriginal)./mean(Xin.fluxOriginal),'rx')
+hold on
+semilogy(std(Xin.flux)./mean(Xin.flux),'bx')
+hold on
+semilogy(std(Xout.relFlux)./mean(Xout.relFlux),'cs')
+figure
+semilogy(mean(Xout.relFluxUncert)./mean(Xin.flux),'co')
+hold on
+semilogy(mean(Xout.relFluxUncert)./mean(Xout.relFlux),'b+')
+hold on
+semilogy(mean(Xin.uncertainties) ./mean(Xin.flux),'mx')
+semilogy(mean(Xout.relFluxUncert)./mean(Xout.relFlux),'yx')
+hold on
+semilogy(mean(Xin.uncertainties) ./mean(Xin.flux),'ms')
+semilogy(mean(Xin.uncertainties) ./mean(Xin.flux),'mo')
+hold on
+semilogy(mean(Xout.relFluxUncert)./mean(Xout.relFlux),'yx')
+figure
+plot(std(Xin.fluxOriginal)./mean(Xin.fluxOriginal),'rx')
+hold on
+plot(std(Xin.flux)./mean(Xin.flux),'bx')
+hold on
+plot(std(Xout.relFlux)./mean(Xout.relFlux),'cs')
+hold on
+plot(mean(Xin.uncertainties) ./mean(Xin.flux),'ms')
+hold on
+plot(mean(Xout.relFluxUncert)./mean(Xout.relFlux),'yx')
+figure
+plot(mean(Xout.relFluxUncert)./mean(Xout.relFlux),'yx')
+hold on
+plot(mean(Xin.uncertainties) ./mean(Xin.flux),'ms')
+hold on
+plot(mean(Xout.relFluxUncert)./mean(Xout.relFlux),'bx')
+hold on
+plot(mean(Xout.relFluxUncert)./mean(Xin.flux),'go')
+figure
+plot(mean(Xin.uncertainties) ./mean(Xin.flux),'ms')
+hold on
+plot(mean(Xout.relFluxUncert)./mean(Xout.relFlux),'bx')
+hold on
+plot(mean(Xout.relFluxUncert)./mean(Xin.flux),'go')
+whos
+9
+whos
+plot(Xin.flux(:,1),'rx')
+plot(Xin.flux(:,1),'r.')
+hold on
+plot(Xin.fluxOriginal(:,1),'b.')
+hold on
+plot(Xout.relFlux(:,1),'c.')
+plot(Xin.flux(:,1),'rx')
+hold on
+plot(Xin.fluxOriginal(:,1),'bx')
+hold on
+plot(Xout.relFlux(:,1),'cx')
+figure
+plot(Xin.flux(:,2),'rx')
+hold on
+plot(Xin.fluxOriginal(:,2),'bx')
+hold on
+plot(Xout.relFlux(:,2),'cx')
+whos
+Xout
+clc
+clear
+clc
+whos
+ls
+help load_ens_input_struct
+[Xin,nStars] = load_ens_input_struct
+[Xout] = Aprilensemble_matlab_controller(Xin)
+whos
+ls
+whos
+nStars
+Xin
+size(Xin.targetInputStruct.flux)
+size(Xin.targetInputStruct(1).flux)
+%concatenate flux structures into array
+Xin.flux = cat(2, Xin.targetInputStruct.flux);
+%convert flux to units of electrons
+Xin.flux = Xin.flux .* Xin.gain;
+plot(Xin.flux(1,:))
+Xout
+Xout.targetOutputStruct
+Xin.flux = Xin.flux(1:4464, 1:1000);
+%concatenate flux uncertainties structures into array
+Xin.uncertainties = cat(2, Xin.targetInputStruct.uncertainties);
+%convert flux uncertainties to units of electrons
+Xin.uncertainties = Xin.uncertainties .* Xin.gain;
+%%%TMP
+Xin.uncertainties = Xin.uncertainties(1:4464, 1:1000);
+Xin.fluxOriginal = cat(2, Xin.targetInputStruct.fluxOriginal);
+Xin.fluxOriginal = Xin.fluxOriginal .* Xin.gain;
+Xin.fluxOriginal = Xin.fluxOriginal(1:4464, 1:1000);
+whos
+Xin
+Xout.relFlux = cat(2,Xout.targetOutputStruct.relFlux);
+Xout
+Xout.relFluxUncert = cat(2,Xout.targetOutputStruct.relFluxUncert);
+whos
+Xin
+Xout
+whos
+ans
+clear ans
+whos
+relFlux = Xout.relFlux;
+relFluxUncert = Xout.relFluxUncert;
+Xin
+rawFlux = Xin.fluxOriginal;
+rawFluxQE = Xin.flux;
+rawFluxUncert = Xin.uncertainties;
+whos
+nStars
+clear nStars
+clc
+whoc
+clc
+whos
+ls
+plot(std(relFlux)./mean(relFlux),'m+')
+ls
+whos
+rawFluxOrig = rawFlux;
+whos
+clear rawFlux
+clc
+whos
+plot(
+plot(rawFluxQE(:,1),'rx')
+plot(rawFluxOrig(:,1),'bx')
+plot(rawFluxQE(:,1),'rx')
+hold on
+plot(rawFluxOrig(:,1),'bx')
+hold on
+clc
+clf
+plot(rawFluxQE,'r.')
+plot(rawFluxQE(:,1),'r.')
+hold on
+plot(rawFluxOrig(:,1),'b.')
+hold on
+plot(relFlux(:,1),'m.')
+help movstd
+help movavg
+mstd1 = movstd(rawFluxOrig(:,1),100);
+mstd1 = movstd(rawFluxOrig(:,1),101);
+mavg1 = movavg(rawFluxOrig(:,1),101);
+figure
+plot(mstd1./mavg1,'co')
+mstd2 = movstd(rawFluxOrig(:,2),101);
+mavg2 = movavg(rawFluxOrig(:,2),101);
+figure
+plot(mstd2./mavg2,'go')
+mstd1qe = movstd(rawFluxQE(:,1),101);
+mavg1qe = movavg(rawFluxQE(:,1),101);
+mstd2qe = movstd(rawFluxQE(:,2),101);
+mavg2qe = movavg(rawFluxQE(:,2),101);
+hold on
+plot(mstd2qe./mavg2qe,'go')
+clf
+plot(mstd2./mavg2,'go')
+hold on
+plot(mstd2qe./mavg2qe,'b+')
+hold on
+mstd2rel = movstd(relFlux(:,2),101);
+mavg2rel = movavg(relFlux(:,2),101);
+plot(mstd2rel./mavg2rel,'mx')
+figure
+plot(rawFluxQE(:,2),'rx')
+hold on
+plot(rawFluxOrig(:,2),'bx')
+hold on
+plot(relFlux(:,2),'mx')
+figure
+plot(std(rawFluxOrig(:,2)./mean(rawFluxOrig(:,2)),'g+')
+plot(std(rawFluxOrig(:,2))./mean(rawFluxOrig(:,2)),'g+')
+hold on
+plot(std(relFlux(:,2))./mean(relFlux(:,2)),'bo')
+figure
+plot(mstd2rel ./ mavg1,'oo')
+plot(mstd2rel ./ mavg1,'bo')
+clf
+figure
+plot(std(rawFluxQE)./mean(rawFluxQE),'rx')
+semilogy(std(rawFluxQE)./mean(rawFluxQE),'rx')
+hold on
+semilogy(std(rawFluxOrig)./mean(rawFluxOrig),'b+')
+hold on
+semilogy(std(relFlux)./mean(relFlux),'mo')
+hold on
+semilogy(mean(relFluxUncert) ./ mean(relFlux),'go')
+hold on
+semilogy(mean(rawFluxUncert) ./ mean(rawFluxOrig),'yx')
+figure
+plot(std(rawFluxQE)./mean(rawFluxQE),'cx')
+hold on
+plot(std(rawFluxOrig)./mean(rawFluxOrig),'b+')
+hold on
+plot(std(relFlux)./mean(relFlux),'ms')
+hold on
+plot(mean(relFluxUncert) ./ mean(relFlux),'yo')
+hold on
+plot(mean(rawFluxUncert) ./ mean(rawFluxOrig),'go')
+figure
+plot(mean(rawFluxUncert),'go')
+hold on
+clf
+mean(rawFluxOrig(:,1))
+whos
+plot(mavg2rel,'ms')
+plot(mavg2rel,'m.')
+plot(relFlux(:,2),'y.')
+hold on
+plot(mavg2rel,'m.')
+clf
+plot(relFlux(:,2),'c.')
+hold on
+plot(mavg2rel,'m.')
+hold on
+plot(mavg2rel + mstd2rel,'g.')
+plot(mavg2rel - mstd2rel,'g.')
+figure
+hdlp ave
+help ave
+help avg
+plot(mean(relFlux(:,2)),'gx')
+figure
+plot(rawFluxOrig(:,2),'c.')
+hold on
+plot(mavg2,'m.')
+plot(mavg2 + mstd2,'g.')
+hold on
+plot(mavg2 - mstd2,'g.')
+hold on
+plot(rawFluxOrig(:,2),'b.')
+whos
+plot(mstd2,'m.')
+figure
+plot(mstd2,'m.')
+hold on
+plot(mstd2rel,'c.')
+plot(mstd2qe,'r.')
+mstd999 = mstd(relFlux(:,999));
+mstd999 = mstd(relFlux(:,999),101);
+mstd999 = movstd(relFlux(:,999),101);
+figure
+plot(mstd999,'g.')
+mstd999orig = movstd(rawFluxOrig(:,999),101);
+mstd999qe = movstd(rawFluxQE(:,999),101);
+hold on
+plot(mstd999orig,'b.')
+hold on
+plot(mstd999qe,'r.')
+hold off
+hist([mstd999qe./mstd999orig,mstd999./mstd999orig],51)
+[nn,xx]=hist([mstd999qe./mstd999orig,mstd999./mstd999orig],51);
+plot(xx,nn)
+mean([mstd999qe./mstd999orig,mstd999./mstd999orig])
+std([mstd999qe./mstd999orig,mstd999./mstd999orig])
+mean(detrendcols([mstd999qe./mstd999orig,mstd999./mstd999orig]).^3)
+mean([mstd999qe./mstd999orig-mean(mstd999eq./mstd999orig),mstd999./mstd999orig-mean(mstd999./mstd999orig)].^3)
+mean([mstd999qe./mstd999orig-mean(mstd999qe./mstd999orig),mstd999./mstd999orig-mean(mstd999./mstd999orig)].^3)
+help rms
+who
+size(rawFluxOrig)
+plot([mean(rawFluxOrig-relFlux).^2./mean(rawFluxOrig.^2)])
+figure(gcf)
+plot([mean(rawFluxOrig-relFlux).^2./mean(rawFluxOrig.^2),mean(rawFluxOrig-rawFluxQE).^2./mean(rawFluxOrig.^2])
+plot([mean((rawFluxOrig-relFlux).^2)./mean(rawFluxOrig.^2),mean((rawFluxOrig-rawFluxQE).^2)./mean(rawFluxOrig.^2)])
+plot([mean(((rawFluxOrig-relFlux).^2)./mean(rawFluxOrig.^2))',(mean((rawFluxOrig-rawFluxQE).^2)./mean(rawFluxOrig.^2))'])
+plot([(mean((rawFluxOrig-relFlux).^2)./mean(rawFluxOrig.^2))',(mean((rawFluxOrig-rawFluxQE).^2)./mean(rawFluxOrig.^2))'])
+figure
+plot([(mean((rawFluxOrig-relFlux).^2)./mean(rawFluxOrig.^2))',(mean((rawFluxOrig-rawFluxQE).^2)./mean(rawFluxOrig.^2))'])
+WHOS
+whos
+hold on
+plot(mean(rawFluxUncert./88)./mean(rawFlux),'bo')
+plot(mean(rawFluxUncert./88)./mean(rawFluxOrig),'bo')
+clf
+whos
+save May9.mat
+pwd
+a = (1:10)'
+unidrnd(10,5,1)
+unidrnd(10,5,3)
+whos
+save May9.mat
+clear
+clc
+whos
+load inputsStruct
+whos
+targetInputStruct
+ls
+pwd
+cd ..
+ls
+help generate_ensnorm_data
+pwd
+[targetInputStruct20400] = generate_ensnorm_data
+clc
+[targetInputStruct20400] = generate_ensnorm_data
+clc
+[targetInputStruct20400] = generate_ensnorm_data
+whos
+ls
+save inputsStruct20400.mat targetInputStruct20400
+save May9pm_newInputsStructs.mat
+ls
+ls NEW____________/
+!cp NEW____________/*.m .
+pwd
+ls
+whos
+clear
+clc
+whos
+[Xin,nStars] = load_ens_input_struct
+clc
+[Xin,nStars] = load_ens_input_struct
+whos
+Xin
+Xin.targetInputStruct20400
+size(Xin.targetInputStruct20400(1).flux)
+%concatenate flux structures into array
+Xin.flux = cat(2, Xin.targetInputStruct.flux);
+%convert flux to units of electrons
+Xin.flux = Xin.flux .* Xin.gain;
+Xin.flux = cat(2, Xin.targetInputStruct20400.flux);
+whos
+Xin
+plot(Xin.flux(1,:))
+whos
+nStars
+clear ans
+plot(Xin.flux(1,:))
+whos
+nStars
+[Xout] = Aprilensemble_matlab_controller(Xin)
+clc
+[Xout] = Aprilensemble_matlab_controller(Xin)
+pwd
+clc
+[Xout] = Aprilensemble_matlab_controller(Xin)
+ls
+ls -l
+whos
+clear ans
+whos
+nStars
+clear nStars
+whos
+Xin
+Xout
+Xin.targetInputStruct20400
+Xout
+Xout.targetOutputStruct
+%concatenate flux structures into array
+Xin.flux = cat(2, Xin.targetInputStruct20400.flux);
+%convert flux to units of electrons
+Xin.flux = Xin.flux .* Xin.gain;
+%%%TMP
+Xin.flux = Xin.flux(1:4464, 1:784);
+%concatenate flux uncertainties structures into array
+Xin.uncertainties = cat(2, Xin.targetInputStruct20400.uncertainties);
+%convert flux uncertainties to units of electrons
+%Xin.uncertainties = Xin.uncertainties .* Xin.gain;
+%%%TMP
+Xin.uncertainties = Xin.uncertainties(1:4464, 1:784);
+whos
+Xin
+Xout
+whos
+clear ans
+whos
+Xin
+Xout
+relFlux = Xout.targetOutputStruct.relFlux;
+relFluxUncert = Xout.targetOutputStruct.relFluxUncert;
+rawFlux = Xin.flux;
+Xin.fluxOriginal = cat(2, Xin.targetInputStruct20400.fluxOriginal);
+Xin.fluxOriginal = Xin.fluxOriginal .* Xin.gain;
+Xin.fluxOriginal = Xin.fluxOriginal(1:4464, 1:784);
+rawFluxOrig = rawFlux;
+rawFluxQE = Xin.fluxOriginal;
+whos
+semilogy(std(rawFluxQE),'r.')
+semilogy(std(rawFluxQE),'rx')
+clf
+semilogy(std(rawFluxQE),'rx')
+hold on
+semilogy(std(rawFluxOrig),'b+')
+hold on
+semilogy(std(relFlux),'cd')
+clf
+semilogy(std(rawFluxQE)./mean(rawFluxQE),'rx')
+hold on
+semilogy(std(rawFluxOrig),'b+')
+clf
+semilogy(std(rawFluxQE)./mean(rawFluxQE),'rx')
+hold on
+semilogy(std(rawFluxOrig)./mean(rawFluxOrig),'b+')
+hold on
+semilogy(std(relFlux)./mean(relFlux),'cd')
+hold non
+hold on
+whos
+rawFluxUncert = Xin.uncertainties;
+semilogy(std(rawFluxUncert)./mean(rawFluxOrig),'gs')
+whos
+Xin
+plot(Xin.uncertainties(1,:))
+clf
+semilogy(std(rawFluxQE)./mean(rawFluxQE),'rx')
+hold on
+semilogy(std(rawFluxOrig)./mean(rawFluxOrig),'b+')
+hold on
+semilogy(std(relFlux)./mean(relFlux),'cd')
+hold non
+hold on
+semilogy(mean(rawFluxUncert)./mean(rawFluxOrig),'gs')
+hold off
+clf
+semilogy(mean(rawFluxUncert)./mean(rawFluxOrig),'g.')
+hol on
+hold on
+semilogy(mean(relFluxUncert)./mean(relFlux),'c.')
+clf
+semilogy(mean(rawFluxUncert)./mean(rawFluxOrig),'c.')
+hold on
+semilogy(mean(relFluxUncert)./mean(relFlux),'m.')
+hold on
+semilogy(std(rawFluxQE)./mean(rawFluxQE),'rx')
+hold on
+semilogy(std(rawFluxOrig)./mean(rawFluxOrig),'b+')
+hold on
+semilogy(std(relFlux)./mean(relFlux),'cd')
+Xin
+Xout
+Xout.targetOutputStruct
+Xout
+Xout.ensembleListOutStruct
+Xin
+Xin.targetInputStruct20400
+Xin.targetInputStruct20400.starNumber
+Xin.targetInputStruct20400(1).starNumber
+Xin.targetInputStruct20400(99).starNumber
+StarNumber = cat(2,Xin.targetInputStruct20400.starNumber);
+plot(StarNumber)
+figure
+semilogy(std(relFlux)./mean(relFlux),StarNumber(1:784)'cd')
+semilogy(std(relFlux)./mean(relFlux),StarNumber(1:784),'cd')
+StarNumber(1)
+StarNumber(2)
+StarNumber(3)
+StarNumber(4)
+StarNumber(9)
+StarNumber(900)
+StarNumber(700)
+StarNumber(10)
+figure
+semilogy(mean(rawFluxUncert)./mean(rawFluxOrig),'c.')
+hold on
+semilogy(mean(relFluxUncert)./mean(relFlux),'m.')
+hold on
+semilogy(std(rawFluxQE)./mean(rawFluxQE),'rx')
+hold on
+semilogy(std(rawFluxOrig)./mean(rawFluxOrig),'b+')
+hold on
+semilogy(std(relFlux)./mean(relFlux),'cd')
+StarNumber(784)
+help detrendcol
+help detrendcols
+ls
+ls ~/Desktop/
+ls ~/Desktop/Utilities/
+ls ~/Desktop/Utilities/vector_operations/
+help detrendcols
+help rms
+help detrendcols
+help rms
+help skew
+a = magic(4)
+rms = norm(a)
+rms = norm(a)./sqrt(16)
+rms = norm(a,2)
+rms = norm(a,1)
+clear a
+figure
+plot([(mean((rawFluxOrig-relFlux).^2)./mean(rawFluxOrig.^2))',(mean((rawFluxOrig-rawFluxQE).^2)./mean(rawFluxOrig.^2))'])
+help rms2
+!more rms2.m
+y = rms2(x,dim)
+y = rms2(relFlux,2);
+help rms1.m
+!more rms1.m
+output = rms(relFlux, 2);
+whos
+output = rms(relFlux(:,1), 1);
+help size
+[M,N] = SIZE(X)
+for i=1:784
+a = norm(relFlux(:,i));
+b = sqrt(784);
+rms(i) = a/b;
+end
+whos
+figure
+plot(rms,'mo')
+plotsemilogy(rms,'mo')
+semilogy(rms,'mo')
+relFluxrms = rms;
+for i=1:784
+aa = norm(rawFluxOrig(:,i));
+bb = sqrt(784);
+rawFluxOrigrms(i) = aa/bb;
+end
+for i=1:784
+aaa = norm(rawFluxQE(:,i));
+bbb = sqrt(784);
+rawFluxQErms(i) = aaa/bbb;
+end
+clf
+plotsemilogy(relFluxrms./mean(relFlux),'mo')
+semilogy(relFluxrms./mean(relFlux),'mo')
+plot(relFluxrms./mean(relFlux),'mo')
+clf
+whos
+plot(rawFluxOrigrms,'b+')
+semilogy(rawFluxOrigrms,'b+')
+hold on
+semilogy(rawFluxQErms,'rx')
+hold on
+semilogy(relFluxrms,'co')
+figure
+semilogy(rawFluxOrigrms./mean(rawFluxOrig),'b+')
+plot(rawFluxOrigrms./mean(rawFluxOrig),'b+')
+hold on
+plot(rawFluxQErms./mean(rawFluxQE),'rx')
+hold on
+plot(relFluxrms./mean(relFluxrms),'co')
+clf
+plot(rawFluxOrigrms./mean(rawFluxOrig),'b+')
+hold on
+plot(rawFluxQErms./mean(rawFluxQE),'rx')
+hold on
+plot(relFluxrms./mean(relFlux),'co')
+rawFluxOrigrms
+format short g
+rawFluxOrigrms
+whos
+clear a aa aaa b bb bbb i
+whos
+clear rms rawFlux
+clc
+whos
+clear ans
+whos
+clc
+whos
+plot(relFluxrms,'gd')
+semilogy(relFluxrms,'gd')
+hold on
+semilogy(relFlux,'b+')
+clf
+semilogy(relFlux(1,:),'b+')
+semilogy(std(relFlux),'b+')
+hold on
+semilogy(relFluxrms,'gd')
+figure
+semilogy(relFluxrms,'gd')
+clf
+plot(rawFluxOrig(:,2),'b+')
+hold on
+plot(rawFluxQE(:,2),'rx')
+hold on
+plot(relFlux(:,2),'co')
+clf
+plot(rawFluxQE(:,999),'rx')
+find(StarNumber == 999)
+find(StarNumber == 2)
+whos
+StarNumber
+plot(rawFluxQE(:,555),'rx')
+hold on
+plot(rawFluxOrig(:,555),'b+')
+hold on
+plot(relFlux(:,555),'co')
+figure
+plot(rawFluxQE(:,55),'rx')
+hold on
+plot(rawFluxOrig(:,55),'b+')
+hold on
+plot(relFlux(:,55),'co')
+%-- 5/10/07  3:18 PM --%
+whos
+[targetInputStruct130100] = generate_ensnorm_data
+whos
+targetInputStruct130100
+ls
+ls ..
+save inputsStruct130100.mat targetInputStruct130100
+whos
+targetInputStruct130100
+targetInputStruct130100.starNumber
+size(targetInputStruct130100.starNumber)
+size(targetInputStruct130100(1).flux)
+whos
+plot(targetInputStruct130100(1).flux)
+%concatenate flux structures into array
+Xin.flux = cat(2, Xin.targetInputStruct130100.flux);
+%convert flux to units of electrons
+Xin.flux = Xin.flux .* Xin.gain;
+ls
+clear
+clc
+[Xin,nStars] = load_ens_input_struct
+%concatenate flux structures into array
+Xin.flux = cat(2, Xin.targetInputStruct130100.flux);
+%convert flux to units of electrons
+Xin.flux = Xin.flux .* Xin.gain;
+whos
+Xin
+plot(Xin.flux(1,:))
+plot(Xin.flux(1,:),'co'))
+plot(Xin.flux(1,:),'co')
+plot(Xin.flux(1,:),'c.')
+Xin.flux(1,783)
+Xin.flux(1,784)
+Xin.flux(1,785)
+[Xout] = Aprilensemble_matlab_controller(Xin)
+whos
+Xout
+Xout.targetOutputStruct
+plot(Xout.targetOutputStruct(1).relFlux)
+clf
+plot(Xout.targetOutputStruct(1).relFlux)
+clf
+whos
+clear ans
+who
+whos
+Xin
+Xout
+Xin
+%%%TMP
+Xin.nStars = 783;
+%concatenate flux structures into array
+Xin.flux = cat(2, Xin.targetInputStruct130100.flux);
+%convert flux to units of electrons
+Xin.flux = Xin.flux .* Xin.gain;
+%%%TMP
+Xin.flux = Xin.flux(1:4464, 1:783);
+%concatenate flux uncertainties structures into array
+Xin.uncertainties = cat(2, Xin.targetInputStruct130100.uncertainties);
+%convert flux uncertainties to units of electrons
+%Xin.uncertainties = Xin.uncertainties .* Xin.gain;
+%%%TMP
+Xin.uncertainties = Xin.uncertainties(1:4464, 1:783);
+whos
+Xin
+plot(Xin.flux(:,60),'c+')
+Xout
+Xout.targetOutputStruct
+hold on
+wos
+whos
+XIn
+Xin
+whos
+clear ans
+whos
+[Xout] = Aprilensemble_matlab_controller(Xin)
+pwd
+%-- 5/14/07  2:08 PM --%
+ls
+ls *mat
+ls -l *mat
+ls MODULE_130100/
+ls
+ls -l inputsStruct* May9pm_newInputsStructs.mat
+ls -l inputsStruct20400.mat ensemblerun.mat May9pm_newInputsStructs.mat
+load May9pm_newInputsStructs
+whos
+targetInputStruct
+targetInputStruct20400
+clear
+ls
+load ensemblerun
+whos
+clear
+ls *mat
+ls -l
+ls -l *m
+ls -l *mat
+ls
+ls -F
+ls NEW____________/
+ls -l NEW____________/*mat
+load NEW____________/ensemblerun.mat
+whos
+clear
+ls
+clc
+whos
+ls
+ls -l *mat
+load ensemblerun
+clear
+help load
+clc
+whos
+load ensemblerun.mat
+whos
+Xout
+Xout.targetOutputStruct
+plot(Xout.targetOutputStruct.relFlux(:,100),'co')
+plot(Xout.targetOutputStruct.relFlux(:,100),'c.')
+hold on
+plot(Xin.targetInputStruct20400.flux(:,100),'r.)
+plot(Xin.targetInputStruct20400.flux(:,100),'r.')
+plot(Xin.targetInputStruct20400(100).flux,'r.')
+clear
+clc
+clf
+whos
+ls *mat
+load ensemblerun.mat
+whos
+Xout
+Xout.targetOutputStruct
+plot(Xout.targetOutputStruct.relFlux(:,784),'r+')
+%concatenate flux structures into array
+Xin.flux = cat(2, Xin.targetInputStruct20400.flux);
+%convert flux to units of electrons
+Xin.flux = Xin.flux .* Xin.gain;
+whos
+Xin
+%%%TMP
+Xin.flux = Xin.flux(1:4464, 1:784);
+Xin.uncertainties = cat(2, Xin.targetInputStruct20400.uncertainties);
+%convert flux uncertainties to units of electrons
+%Xin.uncertainties = Xin.uncertainties .* Xin.gain;
+%%%TMP
+Xin.uncertainties = Xin.uncertainties(1:4464, 1:784);
+Xin.fluxOriginal = cat(2, Xin.targetInputStruct20400.fluxOriginal);
+Xin.fluxOriginal = Xin.fluxOriginal .* Xin.gain;
+Xin.fluxOriginal = Xin.fluxOriginal(1:4464, 1:784);
+whos
+rawFluxQE = Xin.flux;
+rawFluxOrig = Xin.fluxOriginal;
+rawFluxUncert = Xin.uncertainties;
+relFlux = Xout.targetOutputStruct.relFlux;
+relFluxUncert = Xout.targetOutputStruct.relFluxUncert;
+whos
+save May14.mat relFlux relFluxUncert rawFluxOrig rawFluxQE rawFluxUncert
+whos
+Xout
+Xout.targetOutputStruct
+Xin
+Xin.targetInputStruct20400
+starNumber = Xin.targetInputStruct20400.starNumber;
+save May14.mat relFlux relFluxUncert rawFluxOrig rawFluxQE rawFluxUncert starNumber
+clear
+clc
+load May14.mat
+whos
+starNumber
+clear
+load ensemblerun.mat
+starNumber = cat(2, Xin.targetInputStruct20400.starNumber);
+whos
+plot(starNumber)
+plot(starNumber,'*')
+save May14.mat relFlux relFluxUncert rawFluxOrig rawFluxQE rawFluxUncert starNumber
+whos
+save starNumber.mat starNumber
+whos
+clear
+clc
+load May14.mat
+whos
+load starNumber.mat
+whos
+save May14.mat
+whos
+plot(rawFluxQE(:,1)./mean(rawFluxQE(:,1),'r.')
+plot(rawFluxQE(:,1)./mean(rawFluxQE(:,1)),'r.')
+hold on
+plot(rawFluxOrig(:,1)./mean(rawFluxOrig(:,1)),'b.')
+hold on
+plot(relFlux(:,1)./mean(relFlux(:,1)),'c.')
+plot(rawFluxQE(:,99)./mean(rawFluxQE(:,99)),'r.')
+hold on
+plot(rawFluxOrig(:,99)./mean(rawFluxOrig(:,99)),'b.')
+hold on
+plot(relFlux(:,99)./mean(relFlux(:,99)),'c.')
+plot(rawFluxQE(:,200)./mean(rawFluxQE(:,200)),'r.')
+hold on
+plot(rawFluxOrig(:,200)./mean(rawFluxOrig(:,200)),'b.')
+hold on
+plot(relFlux(:,200)./mean(relFlux(:,200)),'c.')
+figure
+plot(rawFluxQE(:,200)./mean(rawFluxQE(:,200)),'rx')
+hold on
+plot(rawFluxOrig(:,200)./mean(rawFluxOrig(:,200)),'bx')
+hold on
+plot(relFlux(:,200)./mean(relFlux(:,200)),'cx')
+mstd = movstd(rawFluxOrig(:,200),10);
+mstd = movstd(rawFluxOrig(:,200),11);
+mstd_orig = movstd(rawFluxOrig(:,200),11);
+clear mstd
+mstd_200qe = movstd(rawFluxQE(:,200),11);
+mstd_200orig = movstd(rawFluxOrig(:,200),11);
+clear mstd_orig
+mstd_200rel = movstd(relFlux(:,200),11);
+mavg_200qe = movavg(rawFluxQE(:,200),11);
+mavg_200rel = movavg(relFlux(:,200),11);
+mavg_200orig = movavg(rawFluxOrig(:,200),11);
+figure
+plot(mstd_200qe./mavg_200qe,'r.')
+hold on
+plot(mstd_200orig./mavg_200orig,'b.')
+hold on
+plot(mstd_200rel./mavg_200rel,'c.')
+plot(rawFluxQE(:,500)./mean(rawFluxQE(:,500)),'r.')
+hold on
+plot(rawFluxOrig(:,500)./mean(rawFluxOrig(:,500)),'b.')
+hold on
+plot(relFlux(:,500)./mean(relFlux(:,500)),'c.')
+plot(rawFluxQE(:,500)./mean(rawFluxQE(:,650)),'r.')
+hold on
+plot(rawFluxOrig(:,650)./mean(rawFluxOrig(:,650)),'b.')
+clf
+plot(rawFluxQE(:,650)./mean(rawFluxQE(:,650)),'r.')
+hold on
+plot(rawFluxOrig(:,650)./mean(rawFluxOrig(:,650)),'b.')
+hold on
+plot(relFlux(:,650)./mean(relFlux(:,650)),'c.')
+ls
+starNumber(650)
+starNumber(350)
+figure
+plot(rawFluxQE(:,350)./mean(rawFluxQE(:,350)),'r.')
+hold on
+plot(rawFluxOrig(:,350)./mean(rawFluxOrig(:,350)),'b.')
+hold on
+plot(relFlux(:,350)./mean(relFlux(:,350)),'c.')
+starNumber(200)
+figure
+plot(rawFluxQE(:,200)./mean(rawFluxQE(:,200)),'r.')
+hold on
+plot(rawFluxOrig(:,200)./mean(rawFluxOrig(:,200)),'b.')
+hold on
+plot(relFlux(:,200)./mean(relFlux(:,200)),'c.')
+figure
+plot(mstd_200qe./mavg_200qe,'r.')
+hold on
+plot(mstd_200orig./mavg_200orig,'b.')
+hold on
+plot(mstd_200rel./mavg_200rel,'c.')
+mstd_650qe = movstd(rawFluxQE(:,650),11);
+mstd_650orig = movstd(rawFluxOrig(:,650),11);
+mstd_650rel = movstd(relFlux(:,650),11);
+mavg_650qe = movavg(rawFluxQE(:,650),11);
+mavg_650orig = movavg(rawFluxOrig(:,650),11);
+mavg_650rel = movavg(relFlux(:,650),11);
+figure
+plot(mstd_650qe./mavg_650qe,'r.')
+hold on
+plot(mstd_650orig./mavg_650orig,'b.')
+hold on
+plot(mstd_650rel./mavg_650rel,'c.')
+figure
+mstd_650qe = movstd(rawFluxQE(:,650),101);
+mstd_650orig = movstd(rawFluxOrig(:,650),101);
+mstd_650rel = movstd(relFlux(:,650),101);
+mavg_650qe = movavg(rawFluxQE(:,650),101);
+mavg_650orig = movavg(rawFluxOrig(:,650),101);
+mavg_650rel = movavg(relFlux(:,650),101);
+plot(mstd_650qe./mavg_650qe,'r.')
+hold on
+plot(mstd_650orig./mavg_650orig,'b.')
+hold on
+plot(mstd_650rel./mavg_650rel,'c.')
+ls
+plot(std(rawFluxQE)./mean(rawFluxQE),'r.')
+plot(std(rawFluxQE)./mean(rawFluxQE),'rx')
+hold on
+plot(std(rawFluxOrig)./mean(rawFluxOrig),'b+')
+hold on
+plot(std(relFlux)./mean(relFlux),'cd')
+figure
+plot(mean(relFlux)-mean(rawFluxOrig)./mean(rawFluxOrig),'cd')
+semilogy((mean(relFlux)-mean(rawFluxOrig))./mean(rawFluxOrig),'cd')
+semilogy((mean(relFlux)-mean(rawFluxOrig)),'cd')
+semilogy(mean(relFlux)-mean(rawFluxOrig),'cd')
+clf
+semilogy(mean(relFlux)-mean(rawFluxOrig),'g+')
+semilogy(mean(rawFluxQE)-mean(rawFluxOrig),'g+')
+clf
+clc
+plot(std(relFlux)./mean(relFlux) - std(rawFluxOrig)./mean(rawFluxOrig),'m.')
+hold on
+plot(std(rawFluxQE)./mean(rawFluxQE) - std(rawFluxOrig)./mean(rawFluxOrig),'c.')
+figure
+plot(std(rawFluxQE)./mean(rawFluxQE),'c.')
+hold on
+plot(std(rawFluxOrig)./mean(rawFluxOrig),'m.')
+help norm
+find(std(rawFluxQE)./mean(rawFluxQE) - std(rawFluxOrig)./mean(rawFluxOrig) ~= 0)
+tmp = find(std(rawFluxQE)./mean(rawFluxQE) - std(rawFluxOrig)./mean(rawFluxOrig) == 0);
+size(tmp)
+tmp = find(std(rawFluxQE)./mean(rawFluxQE) - std(rawFluxOrig)./mean(rawFluxOrig) == 0)
+plot(std(rawFluxQE)./mean(rawFluxQE) - std(rawFluxOrig)./mean(rawFluxOrig))
+hold on
+plot(std(relFlux)./mean(relFlux) - std(rawFluxOrig)./mean(rawFluxOrig),'m.')
+clf
+plot(std(relFlux)./mean(relFlux),'m.')
+figure
+plot(std(rawFluxOrig)./mean(rawFluxOrig),'m.')
+plot([std(relFlux)./mean(relFlux)] - [std(rawFluxOrig)./mean(rawFluxOrig)],'m.')
+clf
+plot([std(relFlux)./mean(relFlux)] - [std(rawFluxOrig)./mean(rawFluxOrig)],'m.')
+plot([std(relFlux)./mean(relFlux)] - [std(rawFluxOrig)./mean(rawFluxOrig)],'mx')
+help subplot
+figure
+subplot(2,1,1),plot([std(relFlux)./mean(relFlux)] - [std(rawFluxOrig)./mean(rawFluxOrig)],'m.')
+subplot(2,1,2),plot([std(rawFluxQE)./mean(rawFluxQE)] - [std(rawFluxOrig)./mean(rawFluxOrig)],'c.')
+figure
+subplot(2,1,1),plot([std(relFlux)./mean(relFlux)] ./ [std(rawFluxOrig)./mean(rawFluxOrig)],'m.')
+subplot(2,1,2),plot([std(rawFluxQE)./mean(rawFluxQE)] ./ [std(rawFluxOrig)./mean(rawFluxOrig)],'c.')
+figure
+plot([(mean((rawFluxOrig-relFlux).^2)./mean(rawFluxOrig.^2))',(mean((rawFluxOrig-rawFluxQE).^2)./mean(rawFluxOrig.^2))'])
+size(mean((rawFluxOrig-relFlux).^2)./mean(rawFluxOrig.^2))'
+(mean((rawFluxOrig-relFlux).^2)./mean(rawFluxOrig.^2))'
+ls
+ls *jpg
+ls
+whos
+help save
+save May14_variablesForAllFigures.mat
+clear
+clc
+ls
+help load_ens_input_struct
+[Xin,nStars] = load_ens_input_struct
+Xin
+Xout
+ls
+Xin
+plot(Xin.targetInputStruct20400(800).flux)
+plot(Xin.targetInputStruct20400(780).flux)
+ls
+Xin.variableStarThresh
+[Xout] = Aprilensemble_matlab_controller(Xin)
+varianceWeights = instrumentWeights;
+differentialLightCurveEns = newEnsemble;
+whos
+save testvariablestar.mat
+Xin
+Xin.targetInputStruct20400
+whos
+clear nStars
+ls
+whos
+clear ans
+whos
+Xin
+ls
+whos
+clear
+clc
+ls *mat
+[Xin,nStars] = load_ens_input_struct
+whos
+nStars
+[outputsStruct] = Aprilensemble_matlab_controller(inputsStruct)
+[outputsStruct] = Aprilensemble_matlab_controller(inputsStruct20400)
+whos
+inputsStruct20400 =
+ls *mat
+clc
+help load_ens_input_struct
+[inputsStruct, nStars] = load_ens_input_struct
+whos
+ls *mat
+ls -l *mat
+clear
+load ensemblerun.mat
+whos
+Xout
+Xout.targetOutputStruct
+ls
+whos
+Xin
+%concatenate flux structures into array
+Xin.flux = cat(2, Xin.targetInputStruct.flux);
+%convert flux to units of electrons
+Xin.flux = Xin.flux .* Xin.gain;
+whos
+Xin
+whos
+Xin
+Xout
+whos
+Xin
+whos
+plot(normalizedWeights ~= 0)
+plot(sum(normalizedWeights ~= 0))
+plot(normalizedWeights(:,1))
+plot(normalizedWeights(:,2))
+plot(normalizedWeights(:,3))
+plot(normalizedWeights(:,3)~=0)
+plot(normalizedWeights(:,3))
+plot(normalizedWeights(:,3)>1e-3)
+plot(sum(normalizedWeights(:,3)>1e-3))
+plot(sum(normalizedWeights(:,:)>1e-3))
+plot(sum(normalizedWeights(:,:)>1e-4))
+plot(sum(normalizedWeights(:,:)>1e-2))
+plot(sort(normalizedWeights(:,1))
+plot(sort(normalizedWeights(:,1)))
+plot(-sort(-normalizedWeights(:,1)))
+plot(-sort(-normalizedWeights(:,1)),'x')
+plot(-sort(-normalizedWeights(:,10)),'x')
+plot(-sort(-normalizedWeights(:,100)),'x')
+plot(-sort(-normalizedWeights(:,1000)),'x')
+plot(-sort(-normalizedWeights(:,500)),'x')
+imagesc(distanceWeights
+imagesc(distanceWeights)
+plot(sort(distanceWeights))
+plot(-sort(-distanceWeights))
+imagesc(-sort(-distanceWeights))
+plot(-sort(-distanceWeights(:,1)))
+plot(-sort(-distanceWeights(:,10)))
+plot(-sort(-distanceWeights(:,100)))
+plot(-sort(-distanceWeights(:,200)))
+plot(-sort(-distanceWeights(:,300)))
+plot(-sort(-distanceWeights(:,500)))
+who
+Xout
+Xin
+relFlux = cat(2,Xout.targetOutputStruct.relFlux);
+rawFlux = Xin.flux;
+rawFluxOrig = cat(2,Xin.targetInputStruct20400.fluxOriginal);
+rawFluxOrig = rawFluxOrig .* Xin.gain;
+madRelFlux = medabsdev(relFlux)';
+madRelFlux = median(abs(relFlux-repmat(median(relFlux),4464,1)))';
+madRawFlux = median(abs(rawFlux-repmat(median(rawFlux),4464,1)))';
+madRawFluxOrig = median(abs(rawFluxOrig-repmat(median(rawFluxOrig),4464,1)))';
+plot([madRawFluxOrig,madRawFlux,madRelFlux])
+size(madRawFlux)
+size(madRawFluxOrig)
+size(madRelFlux)
+plot([madRawFluxOrig(1:784),madRawFlux,madRelFlux])
+figure(gcf)
+plot([madRawFluxOrig(1:784),madRawFlux,madRelFlux],'x')
+plot([madRawFluxOrig(1:784)./median(rawFluxOrig(:,1:784))',madRawFlux./median(RawFlux)',madRelFlux./median(relFlux)'],'x')
+plot([madRawFluxOrig(1:784)./median(rawFluxOrig(:,1:784))',madRawFlux./median(rawFlux)',madRelFlux./median(relFlux)'],'x')
+plot([madRawFluxOrig(1:784).\,madRawFlux./median(rawFlux)',madRawFluxOrig.\madRelFlux],'x')
+plot([madRawFluxOrig(1:784).\,madRawFlux,madRawFluxOrig.\madRelFlux],'x')
+plot([madRawFluxOrig(1:784).\madRawFlux,madRawFluxOrig.\madRelFlux],'x')
+plot([madRawFluxOrig(1:784).\madRawFlux,madRawFluxOrig(1:784).\madRelFlux],'x')
+hist([madRawFluxOrig(1:784).\madRawFlux,madRawFluxOrig(1:784).\madRelFlux],'x')
+hist([madRawFluxOrig(1:784).\madRawFlux,madRawFluxOrig(1:784).\madRelFlux],21)
+plot([madRawFluxOrig(1:784).\madRawFlux,madRawFluxOrig(1:784).\madRelFlux],'x')
+plot([rawFluxOrig(:,6),relFlux(:,6),rawFlux(:,6)])
+who
+Xout
+help movstddev
+help movstd
+help detrendcols
+madRawFluxOrig = median(abs(detrendcols(rawFluxOrig,7)-repmat(median(rawFluxOrig),4464,1)))';
+madRawFlux = median(abs(detrendcols(rawFlux,7)))';
+plot(madRawFlux)
+madRawFluxOrig = median(abs(detrendcols(rawFluxOrig,7)))';
+madRelFlux = median(abs(detrendcols(relFlux,7)))';
+plot([madRawFluxOrig(1:784).\madRawFlux,madRawFluxOrig(1:784).\madRelFlux],'x')
+hist([madRawFluxOrig(1:784).\madRawFlux,madRawFluxOrig(1:784).\madRelFlux],10)
+hist([madRawFluxOrig(1:784).\madRawFlux,madRawFluxOrig(1:784).\madRelFlux],100)
+plot([madRawFluxOrig(1:784).\madRawFlux,madRawFluxOrig(1:784).\madRelFlux],'x')
+plot([rawFluxOrig(:,536),rawFlux(:,536),relFlux(:,536)])
+plot([madRawFluxOrig(1:784).\madRawFlux,madRawFluxOrig(1:784).\madRelFlux],'x')
+plot([madRawFlux.\madRelFlux],'x')
+plot([madRawFlux./madRelFlux],'x')
+plot([madRawFluxOrig(1:784).\madRawFlux,madRawFluxOrig(1:784).\madRelFlux],'x')
+plot([madRawFlux./madRelFlux],'x')

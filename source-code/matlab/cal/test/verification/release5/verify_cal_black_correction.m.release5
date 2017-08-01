@@ -1,0 +1,178 @@
+function verify_cal_black_correction(dataLocationStr)
+%function verify_cal_black_correction(dataLocationStr)
+%
+% function to verify the CAL CSCI black level correction for collateral and 
+% photometric pixel data using ETEM2-generated data
+%
+% verify_cal_black_correction('/path/to/matlab/cal/')    
+%
+%--------------------------------------------------------------------------
+%
+%  Requirement:     
+%                   CAL1        The SOC shall remove black on a per mod/out basis.
+%
+%                   CAL1.CAL.2  CAL shall remove the dynamic estimate of
+%                               black level fluctuations from each row of 
+%                               photometric and collateral data.
+%
+%  Test Data Sets:  
+%                   2D black-corrected and black-corrected pixel data from 
+%                   ETEM2 runs with all motion and noise sources turned off, and 
+%                       (1) 2Dblack, stars, smear, and dark on 
+%                       (2) 2Dblack off, stars on
+%                                             
+%  Test Data Sets ID:
+%                   
+%                   
+%                   
+%                   
+%
+%
+%  Verification Method: Manual Inspection
+%
+%
+%  Verification Process: 
+%                   Run verify_cal_black_correction.m:
+%                   (1) 
+%
+%--------------------------------------------------------------------------
+% 
+% Copyright 2017 United States Government as represented by the
+% Administrator of the National Aeronautics and Space Administration.
+% All Rights Reserved.
+% 
+% NASA acknowledges the SETI Institute's primary role in authoring and
+% producing the Kepler Data Processing Pipeline under Cooperative
+% Agreement Nos. NNA04CC63A, NNX07AD96A, NNX07AD98A, NNX11AI13A,
+% NNX11AI14A, NNX13AD01A & NNX13AD16A.
+% 
+% This file is available under the terms of the NASA Open Source Agreement
+% (NOSA). You should have received a copy of this agreement with the
+% Kepler source code; see the file NASA-OPEN-SOURCE-AGREEMENT.doc.
+% 
+% No Warranty: THE SUBJECT SOFTWARE IS PROVIDED "AS IS" WITHOUT ANY
+% WARRANTY OF ANY KIND, EITHER EXPRESSED, IMPLIED, OR STATUTORY,
+% INCLUDING, BUT NOT LIMITED TO, ANY WARRANTY THAT THE SUBJECT SOFTWARE
+% WILL CONFORM TO SPECIFICATIONS, ANY IMPLIED WARRANTIES OF
+% MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, OR FREEDOM FROM
+% INFRINGEMENT, ANY WARRANTY THAT THE SUBJECT SOFTWARE WILL BE ERROR
+% FREE, OR ANY WARRANTY THAT DOCUMENTATION, IF PROVIDED, WILL CONFORM
+% TO THE SUBJECT SOFTWARE. THIS AGREEMENT DOES NOT, IN ANY MANNER,
+% CONSTITUTE AN ENDORSEMENT BY GOVERNMENT AGENCY OR ANY PRIOR RECIPIENT
+% OF ANY RESULTS, RESULTING DESIGNS, HARDWARE, SOFTWARE PRODUCTS OR ANY
+% OTHER APPLICATIONS RESULTING FROM USE OF THE SUBJECT SOFTWARE.
+% FURTHER, GOVERNMENT AGENCY DISCLAIMS ALL WARRANTIES AND LIABILITIES
+% REGARDING THIRD-PARTY SOFTWARE, IF PRESENT IN THE ORIGINAL SOFTWARE,
+% AND DISTRIBUTES IT "AS IS."
+% 
+% Waiver and Indemnity: RECIPIENT AGREES TO WAIVE ANY AND ALL CLAIMS
+% AGAINST THE UNITED STATES GOVERNMENT, ITS CONTRACTORS AND
+% SUBCONTRACTORS, AS WELL AS ANY PRIOR RECIPIENT. IF RECIPIENT'S USE OF
+% THE SUBJECT SOFTWARE RESULTS IN ANY LIABILITIES, DEMANDS, DAMAGES,
+% EXPENSES OR LOSSES ARISING FROM SUCH USE, INCLUDING ANY DAMAGES FROM
+% PRODUCTS BASED ON, OR RESULTING FROM, RECIPIENT'S USE OF THE SUBJECT
+% SOFTWARE, RECIPIENT SHALL INDEMNIFY AND HOLD HARMLESS THE UNITED
+% STATES GOVERNMENT, ITS CONTRACTORS AND SUBCONTRACTORS, AS WELL AS ANY
+% PRIOR RECIPIENT, TO THE EXTENT PERMITTED BY LAW. RECIPIENT'S SOLE
+% REMEDY FOR ANY SUCH MATTER SHALL BE THE IMMEDIATE, UNILATERAL
+% TERMINATION OF THIS AGREEMENT.
+%
+
+
+cd(dataLocationStr);
+
+
+%--------------------------------------------------------------------------
+% Load and plot the 2D black-corrected and black fit-corrected collateral pixels
+%--------------------------------------------------------------------------
+load calIntermedStructs_2D_ST_SM_DC_nl_lu_ff_rn_qn_sn_rq_cr.mat
+
+
+mSmearPixels2DblackCorrected = calCollateralIntermediateStruct.mSmearPixels2DblackCorrected;
+mSmearPixelsBlackCorrected   =  calCollateralIntermediateStruct.mSmearPixelsBlackCorrected;
+
+
+vSmearPixels2DblackCorrected = calCollateralIntermediateStruct.vSmearPixels2DblackCorrected;
+vSmearPixelsBlackCorrected   =  calCollateralIntermediateStruct.vSmearPixelsBlackCorrected;
+
+
+
+%--------------------------------------------------------------------------
+% Load and plot the black correction that was saved to matfile during 
+% CAL run.  Load and plot the 2D black-corrected and black fit-corrected target pixels 
+%--------------------------------------------------------------------------
+
+
+
+
+
+
+
+
+
+
+return;
+
+
+
+load cal_black_levels_2D_ST_SM_DC_nl_lu_ff_rn_qn_sn_RQ_cr.mat calBlackOutputStruct
+
+blackCorrection = calBlackOutputStruct.blackCorrection;
+
+% plot the black level estimate computed by fitting a polynomial to the 2D
+% black-corrected black pixels
+figure; 
+plot(blackCorrection, 'b.')
+
+xlabel('Black pixel row idx');
+ylabel('Black level estimate (ADU)');
+title('CAL black level estimate  (2Dblack, stars, smear, dark on)');
+
+fileNameStr = [dataLocationStr 'CAL_verification_figures/cal_black_level_estimate_I'];
+paperOrientationFlag = false;
+includeTimeFlag      = false;
+printJpgFlag         = false;
+
+plot_to_file(fileNameStr, paperOrientationFlag, includeTimeFlag, printJpgFlag);
+
+
+%--------------------------------------------------------------------------
+% open black level metric figure created and saved during CAL run
+%--------------------------------------------------------------------------
+open cal_black_level_metric_2D_ST_SM_DC_nl_lu_ff_rn_qn_sn_RQ_cr.fig
+
+
+
+%--------------------------------------------------------------------------
+% load black level estimation that was computed during CAL run using ETEM2
+% inputs without 2D black level (only mean of 2D black)
+%--------------------------------------------------------------------------
+load cal_black_levels_2d_ST_sm_dc_nl_lu_ff_rn_qn_sn_RQ_cr.mat calBlackOutputStruct
+
+blackCorrection = calBlackOutputStruct.blackCorrection;
+
+% plot the black level estimate computed by fitting a polynomial to the 2D
+% black-corrected black pixels
+figure; 
+plot(blackCorrection, 'b.')
+
+xlabel('Black pixel row idx');
+ylabel('Black level estimate (ADU)');
+title('CAL black level estimate  (2Dblack off, mean 2Dblack injected, stars on)');
+
+fileNameStr = [dataLocationStr 'CAL_verification_figures/cal_black_level_estimate_II'];
+paperOrientationFlag = false;
+includeTimeFlag      = false;
+printJpgFlag         = false;
+
+plot_to_file(fileNameStr, paperOrientationFlag, includeTimeFlag, printJpgFlag);
+
+
+%--------------------------------------------------------------------------
+% open black level metric figure created and saved during CAL run
+%--------------------------------------------------------------------------
+open cal_black_level_metric_2d_ST_sm_dc_nl_lu_ff_rn_qn_sn_RQ_cr.fig
+
+
+return;
+

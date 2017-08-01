@@ -1,0 +1,60 @@
+<!--
+  Copyright 2017 United States Government as represented by the
+  Administrator of the National Aeronautics and Space Administration.
+  All Rights Reserved.
+  
+  This file is available under the terms of the NASA Open Source Agreement
+  (NOSA). You should have received a copy of this agreement with the
+  Kepler source code; see the file NASA-OPEN-SOURCE-AGREEMENT.doc.
+  
+  No Warranty: THE SUBJECT SOFTWARE IS PROVIDED "AS IS" WITHOUT ANY
+  WARRANTY OF ANY KIND, EITHER EXPRESSED, IMPLIED, OR STATUTORY,
+  INCLUDING, BUT NOT LIMITED TO, ANY WARRANTY THAT THE SUBJECT SOFTWARE
+  WILL CONFORM TO SPECIFICATIONS, ANY IMPLIED WARRANTIES OF
+  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, OR FREEDOM FROM
+  INFRINGEMENT, ANY WARRANTY THAT THE SUBJECT SOFTWARE WILL BE ERROR
+  FREE, OR ANY WARRANTY THAT DOCUMENTATION, IF PROVIDED, WILL CONFORM
+  TO THE SUBJECT SOFTWARE. THIS AGREEMENT DOES NOT, IN ANY MANNER,
+  CONSTITUTE AN ENDORSEMENT BY GOVERNMENT AGENCY OR ANY PRIOR RECIPIENT
+  OF ANY RESULTS, RESULTING DESIGNS, HARDWARE, SOFTWARE PRODUCTS OR ANY
+  OTHER APPLICATIONS RESULTING FROM USE OF THE SUBJECT SOFTWARE.
+  FURTHER, GOVERNMENT AGENCY DISCLAIMS ALL WARRANTIES AND LIABILITIES
+  REGARDING THIRD-PARTY SOFTWARE, IF PRESENT IN THE ORIGINAL SOFTWARE,
+  AND DISTRIBUTES IT "AS IS."
+
+  Waiver and Indemnity: RECIPIENT AGREES TO WAIVE ANY AND ALL CLAIMS
+  AGAINST THE UNITED STATES GOVERNMENT, ITS CONTRACTORS AND
+  SUBCONTRACTORS, AS WELL AS ANY PRIOR RECIPIENT. IF RECIPIENT'S USE OF
+  THE SUBJECT SOFTWARE RESULTS IN ANY LIABILITIES, DEMANDS, DAMAGES,
+  EXPENSES OR LOSSES ARISING FROM SUCH USE, INCLUDING ANY DAMAGES FROM
+  PRODUCTS BASED ON, OR RESULTING FROM, RECIPIENT'S USE OF THE SUBJECT
+  SOFTWARE, RECIPIENT SHALL INDEMNIFY AND HOLD HARMLESS THE UNITED
+  STATES GOVERNMENT, ITS CONTRACTORS AND SUBCONTRACTORS, AS WELL AS ANY
+  PRIOR RECIPIENT, TO THE EXTENT PERMITTED BY LAW. RECIPIENT'S SOLE
+  REMEDY FOR ANY SUCH MATTER SHALL BE THE IMMEDIATE, UNILATERAL
+  TERMINATION OF THIS AGREEMENT.
+-->
+
+   <form name="deleteform" method="post" xmlns:list="http://www.einnovation.com/xmlns/WebUI/List" xmlns:group="http://www.wspublisher.com/xmlns/Group" xmlns:user="http://www.wspublisher.com/xmlns/User" xmlns:html="http://www.w3.org/1999/xhtml" xmlns:tree="http://www.einnovation.com/xmlns/WebUI/Tree" xmlns:page="http://www.einnovation.com/xmlns/WSP/openedit/Content">
+  <table class="standard-table" width="100%" cellspacing="0">
+  <tr><td bgcolor="black">
+    <div class="oe-module-title">$context.getPageProperty('text.deletepageordir')</div></td><td bgcolor="black" align="right">
+    <table border="0" cellspacing="5" cellpadding="5">
+    <tr><td>
+      <input class="standard-button" type="button" name="NO" value="$context.getPageProperty('text.no')" onclick="history.go(-1)"></td><td>
+      <input class="standard-button" type="button" name="YES" value="$context.getPageProperty('text.yes')" onclick="gotoPage( 'deletepage-finish.html',null,document.deleteform )"></td></tr>
+
+    </table></td></tr>
+  <tr><td align="center" colspan="2">
+    <br>
+          #set ( $delete = $request.getParameter( "delete" ) )          
+
+                <div class="list-box">$context.getPageProperty('text.areyousure')<br>
+<b>$delete</b>
+    </div>
+    <input type="hidden" name="delete" value="$delete" width="40">
+    <input type="hidden" id="oe-action" name="oe-action" value="Page.deletePage" width="40">
+
+</td></tr>
+  </table>
+</form>

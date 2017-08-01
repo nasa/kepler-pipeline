@@ -1,0 +1,127 @@
+<!--
+  Copyright 2017 United States Government as represented by the
+  Administrator of the National Aeronautics and Space Administration.
+  All Rights Reserved.
+  
+  This file is available under the terms of the NASA Open Source Agreement
+  (NOSA). You should have received a copy of this agreement with the
+  Kepler source code; see the file NASA-OPEN-SOURCE-AGREEMENT.doc.
+  
+  No Warranty: THE SUBJECT SOFTWARE IS PROVIDED "AS IS" WITHOUT ANY
+  WARRANTY OF ANY KIND, EITHER EXPRESSED, IMPLIED, OR STATUTORY,
+  INCLUDING, BUT NOT LIMITED TO, ANY WARRANTY THAT THE SUBJECT SOFTWARE
+  WILL CONFORM TO SPECIFICATIONS, ANY IMPLIED WARRANTIES OF
+  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, OR FREEDOM FROM
+  INFRINGEMENT, ANY WARRANTY THAT THE SUBJECT SOFTWARE WILL BE ERROR
+  FREE, OR ANY WARRANTY THAT DOCUMENTATION, IF PROVIDED, WILL CONFORM
+  TO THE SUBJECT SOFTWARE. THIS AGREEMENT DOES NOT, IN ANY MANNER,
+  CONSTITUTE AN ENDORSEMENT BY GOVERNMENT AGENCY OR ANY PRIOR RECIPIENT
+  OF ANY RESULTS, RESULTING DESIGNS, HARDWARE, SOFTWARE PRODUCTS OR ANY
+  OTHER APPLICATIONS RESULTING FROM USE OF THE SUBJECT SOFTWARE.
+  FURTHER, GOVERNMENT AGENCY DISCLAIMS ALL WARRANTIES AND LIABILITIES
+  REGARDING THIRD-PARTY SOFTWARE, IF PRESENT IN THE ORIGINAL SOFTWARE,
+  AND DISTRIBUTES IT "AS IS."
+
+  Waiver and Indemnity: RECIPIENT AGREES TO WAIVE ANY AND ALL CLAIMS
+  AGAINST THE UNITED STATES GOVERNMENT, ITS CONTRACTORS AND
+  SUBCONTRACTORS, AS WELL AS ANY PRIOR RECIPIENT. IF RECIPIENT'S USE OF
+  THE SUBJECT SOFTWARE RESULTS IN ANY LIABILITIES, DEMANDS, DAMAGES,
+  EXPENSES OR LOSSES ARISING FROM SUCH USE, INCLUDING ANY DAMAGES FROM
+  PRODUCTS BASED ON, OR RESULTING FROM, RECIPIENT'S USE OF THE SUBJECT
+  SOFTWARE, RECIPIENT SHALL INDEMNIFY AND HOLD HARMLESS THE UNITED
+  STATES GOVERNMENT, ITS CONTRACTORS AND SUBCONTRACTORS, AS WELL AS ANY
+  PRIOR RECIPIENT, TO THE EXTENT PERMITTED BY LAW. RECIPIENT'S SOLE
+  REMEDY FOR ANY SUCH MATTER SHALL BE THE IMMEDIATE, UNILATERAL
+  TERMINATION OF THIS AGREEMENT.
+-->
+
+<html>
+  <head>
+    <link rel="stylesheet" type="text/css" href="$home/openedit/admin.css"/>
+    <link rel="Shortcut Icon" type="image/x-icon"
+          href="$home/layout/images/favicon.ico" />
+    <title>$content.title</title>
+    <meta HTTP-EQUIV="imagetoolbar" CONTENT="no">
+    <meta name="MSSmartTagsPreventParsing" content="TRUE">  
+
+    <style type="text/css" title="currentStyle" media="screen">
+      @import "$home/layout/_styles.css";
+    </style>
+
+    #if (!$path)
+    #set ($path = $request.getParameter("path" ))
+    #end
+    
+    <script type="text/javascript" lang="JavaScript"
+            src="$home/openedit/javascript/gotopage.js"></script>
+
+    <script type="text/javascript">
+      function upload(inForm) {
+          inForm.target = "_self";
+          inForm.submit();
+      }
+      function setAndClose() {
+          if (window.opener.SetUrl) {
+              window.opener.SetUrl('$home$path');
+          } else {
+              window.opener.SetPath('$path');
+          }
+          window.close();
+      }
+    </script>	
+    
+    <script type="text/javascript">
+      // <!--
+             function hideStatus() {
+             var theDiv = document.getElementById("status-div");
+             if (theDiv != undefined) {
+             theDiv.style.visibility = "hidden";
+             }
+             }
+             // -->
+    </script>
+
+  </head>
+
+  <body class="oebody" background="$home/openedit/images/bkgd.gif"
+        leftmargin="0" topmargin="0" rightmargin="0"  marginwidth="0"
+        marginheight="0" onload="hideStatus()">
+
+    <table width="100%"  cellpadding="0" cellspacing="0" border="0">
+      <tr>
+        <td bgcolor="black" colspan="2">
+          <div class="oe-module-title">KEPLER MISSION REPORTS: 
+            <span style="font-style: italic;">VIEW REPORTS</span></div>
+        </td>
+        <td align="right" bgcolor="black">
+        </td>
+
+      </tr>
+    </table>
+
+    <div style="float: right; margin-right: 30px; margin-top: 5px;">
+      <a href="/">Mission Reports Home</a>
+    </div>
+
+    <table width="100%" cellspacing="5" height="90%">
+      <tr>
+        <td valign="top" style="width: 25em">
+          $pages.stream("/openedit/display/whitearea-top.html")
+
+          <iframe id="tree-iframe" name="tree-iframe"
+                  src="tree.html?path=$!path"
+                  width="100%" height="100%">
+          </iframe>
+
+          $pages.stream("/openedit/display/whitearea-bottom.html")
+        </td>
+
+        <td valign="top" align="left">
+          $pages.stream("/openedit/display/whitearea-top.html")
+          $pages.stream($content)
+          $pages.stream("/openedit/display/whitearea-bottom.html")
+        </td>
+      </tr>
+    </table>
+  </body>
+</html>

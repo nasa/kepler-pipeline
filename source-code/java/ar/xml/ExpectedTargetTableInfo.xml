@@ -1,0 +1,212 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Copyright 2017 United States Government as represented by the
+  Administrator of the National Aeronautics and Space Administration.
+  All Rights Reserved.
+  
+  This file is available under the terms of the NASA Open Source Agreement
+  (NOSA). You should have received a copy of this agreement with the
+  Kepler source code; see the file NASA-OPEN-SOURCE-AGREEMENT.doc.
+  
+  No Warranty: THE SUBJECT SOFTWARE IS PROVIDED "AS IS" WITHOUT ANY
+  WARRANTY OF ANY KIND, EITHER EXPRESSED, IMPLIED, OR STATUTORY,
+  INCLUDING, BUT NOT LIMITED TO, ANY WARRANTY THAT THE SUBJECT SOFTWARE
+  WILL CONFORM TO SPECIFICATIONS, ANY IMPLIED WARRANTIES OF
+  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, OR FREEDOM FROM
+  INFRINGEMENT, ANY WARRANTY THAT THE SUBJECT SOFTWARE WILL BE ERROR
+  FREE, OR ANY WARRANTY THAT DOCUMENTATION, IF PROVIDED, WILL CONFORM
+  TO THE SUBJECT SOFTWARE. THIS AGREEMENT DOES NOT, IN ANY MANNER,
+  CONSTITUTE AN ENDORSEMENT BY GOVERNMENT AGENCY OR ANY PRIOR RECIPIENT
+  OF ANY RESULTS, RESULTING DESIGNS, HARDWARE, SOFTWARE PRODUCTS OR ANY
+  OTHER APPLICATIONS RESULTING FROM USE OF THE SUBJECT SOFTWARE.
+  FURTHER, GOVERNMENT AGENCY DISCLAIMS ALL WARRANTIES AND LIABILITIES
+  REGARDING THIRD-PARTY SOFTWARE, IF PRESENT IN THE ORIGINAL SOFTWARE,
+  AND DISTRIBUTES IT "AS IS."
+  
+  Waiver and Indemnity: RECIPIENT AGREES TO WAIVE ANY AND ALL CLAIMS
+  AGAINST THE UNITED STATES GOVERNMENT, ITS CONTRACTORS AND
+  SUBCONTRACTORS, AS WELL AS ANY PRIOR RECIPIENT. IF RECIPIENT'S USE OF
+  THE SUBJECT SOFTWARE RESULTS IN ANY LIABILITIES, DEMANDS, DAMAGES,
+  EXPENSES OR LOSSES ARISING FROM SUCH USE, INCLUDING ANY DAMAGES FROM
+  PRODUCTS BASED ON, OR RESULTING FROM, RECIPIENT'S USE OF THE SUBJECT
+  SOFTWARE, RECIPIENT SHALL INDEMNIFY AND HOLD HARMLESS THE UNITED
+  STATES GOVERNMENT, ITS CONTRACTORS AND SUBCONTRACTORS, AS WELL AS ANY
+  PRIOR RECIPIENT, TO THE EXTENT PERMITTED BY LAW. RECIPIENT'S SOLE
+  REMEDY FOR ANY SUCH MATTER SHALL BE THE IMMEDIATE, UNILATERAL
+  TERMINATION OF THIS AGREEMENT.
+-->
+
+<KtcVerifierInfo 
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns="http://kepler.nasa.gov/ar/xmlbean"
+  xsi:schemaLocation="http://kepler.nasa.gov/ar/xmlbean file:etc/KtcVerification.xsd"
+  >
+
+  <!--  TODO:  Need to add more target list files. -->
+  <expectedTargetTableInfo 
+     quarter="0" externalId="14" plannedStart="2009-04-30" plannedEnd="2009-05-11"
+     actualStartMjd="54953.02793548" actualEndMjd="54962.754328"
+     targetTableType="LC" startCadence="568" endCadence="1043" >
+     <targetList category="PLANETARY" 
+       fileName="flight/so/target_management/tad_runs/cdpp_v1/verification/planetary_cdpp_v1_verification.txt" />
+  </expectedTargetTableInfo>
+  
+   <expectedTargetTableInfo 
+    quarter="1" externalId="20" plannedStart="2009-04-29" plannedEnd="2009-06-17"
+    actualStartMjd="54962.754328" actualEndMjd="54997.4914417"
+    targetTableType="LC" startCadence="1105" endCadence="2743" >
+    <targetList category="PLANETARY" 
+      fileName="flight/so/target_management/tad_runs/quarter1_spring2009/ops/planetary_quarter1_spring2009_v2_trimmed_v2.txt" />
+  </expectedTargetTableInfo>
+  
+  <expectedTargetTableInfo 
+    quarter="2" externalId="21" plannedStart="2009-06-25" plannedEnd="2009-09-07"
+    actualStartMjd="55002.00725858" actualEndMjd="55090.9751373"
+    targetTableType="LC" startCadence="2965" endCadence="7318" >
+    <targetList category="PLANETARY" 
+      fileName="flight/so/target_management/tad_runs/quarter2_summer2009/ops/planetary_quarter2_summer2009.txt" />
+  </expectedTargetTableInfo>
+  
+  <expectedTargetTableInfo 
+    quarter="3" externalId="26" plannedStart="2009-09-24" plannedEnd="2009-12-10"
+    actualStartMjd="55092.71199294" actualEndMjd="55153.9514828"
+    targetTableType="LC" startCadence="7404" endCadence="11773" >
+    <targetList category="PLANETARY" 
+      fileName="flight/so/target_management/tad_runs/quarter3_fall2009/ops_v2/planetary_quarter3_fall2009_v2.txt" />
+  </expectedTargetTableInfo>
+  
+  <expectedTargetTableInfo
+    quarter="4" externalId="29" plannedStart="2009-12-18" plannedEnd="2010-03-18"
+    targetTableType="LC" startCadence="11891" endCadence="13437"
+    actualStartMjd="55184.39754604"  actualEndMjd="55216.0083228"
+    >
+    <targetList category="PLANETARY" 
+      fileName="flight/so/target_management/tad_runs/quarter4_winter2009/ops/planetary_quarter4_winter2009.txt" />
+  </expectedTargetTableInfo>
+  
+  <expectedTargetTableInfo
+    quarter="5" externalId="32" plannedStart="2010-03-20" plannedEnd="2010-06-22"
+    targetTableType="LC" >
+    <targetList category="PLANETARY" 
+      fileName="flight/so/target_management/tad_runs/quarter5_spring2010/ops_v2/planetary_quarter5_spring2010.txt" />
+  </expectedTargetTableInfo>
+  
+  <!--  Short cadence target tables. -->
+  <expectedTargetTableInfo quarter="0" month="1" externalId="14"
+    plannedStart="2009-04-30" plannedEnd="2009-05-11" targetTableType="SC"
+    actualStartMjd="54953.02793548" actualEndMjd="54962.754328"
+    startCadence="5500" endCadence="19779" >
+    <targetList category="ASTEROSEISMOLOGY_PRF_CDPP_SC" 
+      fileName="flight/so/target_management/tad_runs/cdpp_v1/verification/sc1_cdpp_v1_verification_trimmed_v1.txt" />
+  </expectedTargetTableInfo>
+  
+  <expectedTargetTableInfo quarter="1" month="1" externalId="20"
+    plannedStart="2009-04-29" plannedEnd="2009-06-17" targetTableType="SC"
+    actualStartMjd="54964.00077708" actualEndMjd="54997.4914417"
+    startCadence="21610" endCadence="70779"
+    >
+    <targetList category="ST_SC1"
+      fileName="flight/so/target_management/tad_runs/quarter1_spring2009/ops/st_sc1_quarter1_spring2009_v2_trimmed_v2.txt" />
+  </expectedTargetTableInfo>
+  
+  <expectedTargetTableInfo quarter="2" month="1" externalId="23"
+   plannedStart="2009-06-25" plannedEnd="2009-09-07" targetTableType="SC"
+   actualStartMjd="55002.00725858" actualEndMjd="55032.8006887"
+   startCadence="77410" endCadence="122619"
+  >
+    <targetList category="ST_SC1"
+      fileName="flight/so/target_management/tad_runs/quarter2_summer2009/ops/st_sc1_quarter2_summer2009.txt" />
+  </expectedTargetTableInfo>
+  
+  <expectedTargetTableInfo quarter="2" month="2" externalId="24"
+    plannedStart="2009-06-25" plannedEnd="2009-09-07" targetTableType="SC"
+    actualStartMjd="55032.82112228" actualEndMjd="55062.7972078"
+    startCadence="122650" endCadence="166659"
+    >
+    <targetList category="ST_SC2"
+      fileName="flight/so/target_management/tad_runs/quarter2_summer2009/ops/st_sc2_quarter2_summer2009.txt" />
+  </expectedTargetTableInfo>
+  
+  <expectedTargetTableInfo quarter="2" month="3" externalId="25"
+    plannedStart="2009-06-25" plannedEnd="2009-09-07" targetTableType="SC"
+    actualStartMjd="55063.85975488" actualEndMjd="55090.9751373"
+    startCadence="168220"  endCadence="208029"
+  >
+    <targetList category="ST_SC3"
+      fileName="flight/so/target_management/tad_runs/quarter2_summer2009/ops/st_sc3_quarter2_summer2009.txt" />
+  </expectedTargetTableInfo>
+  
+  <!-- This target table was used at the end of the quarter during safe mode
+       recovery so the end times are at the end of the quarter even though only
+       one month of data was collected.
+    -->
+  <expectedTargetTableInfo quarter="3" month="1" externalId="26"
+    plannedStart="2009-09-24" plannedEnd="2009-10-16" targetTableType="SC"
+    actualStartMjd="55092.71199298" actualEndMjd="55155.770065"
+    startCadence="210580" endCadence="303159"
+  >
+    <targetList category="ST_SC1"
+      fileName="flight/so/target_management/tad_runs/quarter3_fall2009/ops_v2/st_sc1_quarter3_fall2009_v2.txt" />
+  </expectedTargetTableInfo>
+  
+  <expectedTargetTableInfo quarter="3" month="2" externalId="27"
+    plannedStart="2009-10-18" plannedEnd="2009-11-15" targetTableType="SC"
+    actualStartMjd="55123.91409468" actualEndMjd="55153.9514828"
+    startCadence="256390" endCadence="300489"
+  >
+   <targetList category="ST_SC2"
+      fileName="flight/so/target_management/tad_runs/quarter3_fall2009/ops_v2/st_sc2_quarter3_fall2009_v2.txt" />
+  </expectedTargetTableInfo>
+  
+  <expectedTargetTableInfo quarter="3" month="3" externalId="28"
+    plannedStart="2009-11-17" plannedEnd="2009-12-10" targetTableType="SC"
+    actualStartMjd="55156.01527898" actualEndMjd="55182.006815"
+    startCadence="303520" endCadence="341679"
+  >
+  <targetList category="ST_SC3"
+      fileName="flight/so/target_management/tad_runs/quarter3_fall2009/ops_v2/st_sc3_quarter3_fall2009_v2.txt" />
+  </expectedTargetTableInfo>
+  
+  <expectedTargetTableInfo quarter="4" month="1" externalId="29"
+    plannedStart="2009-12-18" plannedEnd="2010-01-15" targetTableType="SC"
+  >
+     <targetList category="ST_SC1"
+       fileName="flight/so/target_management/tad_runs/quarter4_winter2009/ops/st_sc1_quarter4_winter2009.txt" />
+  </expectedTargetTableInfo>
+  
+  <expectedTargetTableInfo quarter="4" month="2" externalId="30"
+    plannedStart="2010-01-17" plannedEnd="2010-02-14" targetTableType="SC"
+  >
+    <targetList category="ST_SC2"
+       fileName="flight/so/target_management/tad_runs/quarter4_winter2009/ops/st_sc2_quarter4_winter2009.txt" />
+  </expectedTargetTableInfo>
+  
+  <expectedTargetTableInfo quarter="4" month="3" externalId="31"
+    plannedStart="2010-02-16" plannedEnd="2010-03-17" targetTableType="SC"
+  >
+    <targetList category="ST_SC3"
+       fileName="flight/so/target_management/tad_runs/quarter4_winter2009/ops/st_sc3_quarter4_winter2009.txt" />
+  </expectedTargetTableInfo>
+ 
+  <expectedTargetTableInfo quarter="5" month="1" externalId="32"
+    plannedStart="2010-03-20" plannedEnd="2010-04-17" targetTableType="SC"
+  >
+     <targetList category="ST_SC1"
+       fileName="flight/so/target_management/tad_runs/quarter5_spring2010/ops_v2/st_sc1_quarter5_spring2010.txt" />
+  </expectedTargetTableInfo>
+
+  <expectedTargetTableInfo quarter="5" month="2" externalId="33"
+    plannedStart="2010-04-19" plannedEnd="2010-05-17" targetTableType="SC"
+  >
+     <targetList category="ST_SC2"
+       fileName="flight/so/target_management/tad_runs/quarter5_spring2010/ops_v2/st_sc2_quarter5_spring2010.txt" />
+  </expectedTargetTableInfo>
+
+  <expectedTargetTableInfo quarter="5" month="3" externalId="34"
+    plannedStart="2010-05-19" plannedEnd="2010-06-22" targetTableType="SC"
+  >
+     <targetList category="ST_SC3"
+       fileName="flight/so/target_management/tad_runs/quarter5_spring2010/ops_v2/st_sc3_quarter5_spring2010.txt" />
+  </expectedTargetTableInfo>
+
+</KtcVerifierInfo>

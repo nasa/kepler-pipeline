@@ -1,0 +1,126 @@
+function self = testMatlabController( self )
+% function self = testMatlabController( self )
+% unit test for the bart_marlab_controller()
+% 
+% Copyright 2017 United States Government as represented by the
+% Administrator of the National Aeronautics and Space Administration.
+% All Rights Reserved.
+% 
+% NASA acknowledges the SETI Institute's primary role in authoring and
+% producing the Kepler Data Processing Pipeline under Cooperative
+% Agreement Nos. NNA04CC63A, NNX07AD96A, NNX07AD98A, NNX11AI13A,
+% NNX11AI14A, NNX13AD01A & NNX13AD16A.
+% 
+% This file is available under the terms of the NASA Open Source Agreement
+% (NOSA). You should have received a copy of this agreement with the
+% Kepler source code; see the file NASA-OPEN-SOURCE-AGREEMENT.doc.
+% 
+% No Warranty: THE SUBJECT SOFTWARE IS PROVIDED "AS IS" WITHOUT ANY
+% WARRANTY OF ANY KIND, EITHER EXPRESSED, IMPLIED, OR STATUTORY,
+% INCLUDING, BUT NOT LIMITED TO, ANY WARRANTY THAT THE SUBJECT SOFTWARE
+% WILL CONFORM TO SPECIFICATIONS, ANY IMPLIED WARRANTIES OF
+% MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, OR FREEDOM FROM
+% INFRINGEMENT, ANY WARRANTY THAT THE SUBJECT SOFTWARE WILL BE ERROR
+% FREE, OR ANY WARRANTY THAT DOCUMENTATION, IF PROVIDED, WILL CONFORM
+% TO THE SUBJECT SOFTWARE. THIS AGREEMENT DOES NOT, IN ANY MANNER,
+% CONSTITUTE AN ENDORSEMENT BY GOVERNMENT AGENCY OR ANY PRIOR RECIPIENT
+% OF ANY RESULTS, RESULTING DESIGNS, HARDWARE, SOFTWARE PRODUCTS OR ANY
+% OTHER APPLICATIONS RESULTING FROM USE OF THE SUBJECT SOFTWARE.
+% FURTHER, GOVERNMENT AGENCY DISCLAIMS ALL WARRANTIES AND LIABILITIES
+% REGARDING THIRD-PARTY SOFTWARE, IF PRESENT IN THE ORIGINAL SOFTWARE,
+% AND DISTRIBUTES IT "AS IS."
+% 
+% Waiver and Indemnity: RECIPIENT AGREES TO WAIVE ANY AND ALL CLAIMS
+% AGAINST THE UNITED STATES GOVERNMENT, ITS CONTRACTORS AND
+% SUBCONTRACTORS, AS WELL AS ANY PRIOR RECIPIENT. IF RECIPIENT'S USE OF
+% THE SUBJECT SOFTWARE RESULTS IN ANY LIABILITIES, DEMANDS, DAMAGES,
+% EXPENSES OR LOSSES ARISING FROM SUCH USE, INCLUDING ANY DAMAGES FROM
+% PRODUCTS BASED ON, OR RESULTING FROM, RECIPIENT'S USE OF THE SUBJECT
+% SOFTWARE, RECIPIENT SHALL INDEMNIFY AND HOLD HARMLESS THE UNITED
+% STATES GOVERNMENT, ITS CONTRACTORS AND SUBCONTRACTORS, AS WELL AS ANY
+% PRIOR RECIPIENT, TO THE EXTENT PERMITTED BY LAW. RECIPIENT'S SOLE
+% REMEDY FOR ANY SUCH MATTER SHALL BE THE IMMEDIATE, UNILATERAL
+% TERMINATION OF THIS AGREEMENT.
+%
+
+MsgID         = 'CT:BART:testMatlabController';
+MsgIDExpected = 'CT:BART:bart_matlab_controller';
+
+bartDataInStruct_0.inputFoldername        = '/path/to/matlab/bart/clean-ffi-test-data';
+bartDataInStruct_0.fitsFilenames          = { 'kplr2009071010000_ffi-orig.fits'; ...
+    'kplr2009071020000_ffi-orig.fits'; ...
+    'kplr2009071030000_ffi-orig.fits' };
+bartDataInStruct_0.selectedChannels       = 1;
+bartDataInStruct_0.temperatureMnemonics   = {'PEDDRV1T', 'PEDDRV1ST'};
+bartDataInStruct_0.referenceTemperature   = 25.0;
+bartDataInStruct_0.outputFoldername       = '/tmp';
+    
+% nominal case
+if isunix
+    try
+        bartDataOutStruct = bart_matlab_controller(bartDataInStruct_0);
+    catch
+        lastError = lasterror();
+        disp(['Error ID: ' lastError.identifier]);
+        disp(['Error Msg: ' lastError.message]);
+        error(MsgID, 'error with bart_matlab_controller()');
+    end
+    
+    load 'unit_test_data/matlab_controller_unit_test.mat';
+    
+    % remove the date string
+    bartDataOutStruct_1 = rmfield(bartDataOutStruct_0, 'dateString');
+    bartDataOutStruct = rmfield(bartDataOutStruct, 'dateString');
+    status = isequal(bartDataOutStruct_1, bartDataOutStruct);
+    mlunit_assert( status, 'Nominal case failed');
+end
+
+%% invliad input data structure
+% missing field
+bartDataInStruct = rmfield(bartDataInStruct_0, 'outputFoldername');
+try
+    bartDataOutStruct = bart_matlab_controller(bartDataInStruct);
+catch
+    lastError = lasterror();
+    status = strcmp(lastError.identifier, MsgIDExpected) && ...
+        ~isempty( strfind(lastError.message, 'Missing fields in input data struct') );
+    mlunit_assert( status, 'Input struct with missing fields test case failed');
+end
+
+% empty field
+bartDataInStruct = bartDataInStruct_0;
+bartDataInStruct.outputFoldername = [];
+try
+    bartDataOutStruct = bart_matlab_controller(bartDataInStruct);
+catch
+    lastError = lasterror();
+    status = strcmp(lastError.identifier, MsgIDExpected) && ...
+        ~isempty( strfind(lastError.message, 'Error with input field outputFoldername') );
+    mlunit_assert( status, 'Input struct with empty fields test case failed');
+end
+
+% few fits files 
+bartDataInStruct = bartDataInStruct_0;
+bartDataInStruct.fitsFilenames(2:3,:) = [];
+try
+    bartDataOutStruct = bart_matlab_controller(bartDataInStruct);
+catch
+    lastError = lasterror();
+    status = strcmp(lastError.identifier, MsgIDExpected) && ...
+        ~isempty( strfind(lastError.message, 'Not enough FITS files') );
+    mlunit_assert( status, 'Input struct with empty fields test case failed');
+end
+
+% few mnemonics 
+bartDataInStruct = bartDataInStruct_0;
+bartDataInStruct.temperatureMnemonics   = {'PEDDRV1T'};
+try
+    bartDataOutStruct = bart_matlab_controller(bartDataInStruct);
+catch
+    lastError = lasterror();
+    status = strcmp(lastError.identifier, MsgIDExpected) && ...
+        ~isempty( strfind(lastError.message, 'Not enough temperature mnemonics') );
+    mlunit_assert( status, 'Input struct with empty fields test case failed');
+end
+
+return

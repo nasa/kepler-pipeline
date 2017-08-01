@@ -1,0 +1,115 @@
+function [transitModelLightCurve, cadenceTimes]  = ...
+    generate_light_curve_with_geometric_model_test(transitModelObject)
+%
+% function [transitModelLightCurve, cadenceTimes]  =
+%    generate_light_curve_with_geometric_model_test(transitModelObject)
+%
+%
+% ** filler function for geometric model light curve generation **
+%
+%--------------------------------------------------------------------------
+% 
+% Copyright 2017 United States Government as represented by the
+% Administrator of the National Aeronautics and Space Administration.
+% All Rights Reserved.
+% 
+% NASA acknowledges the SETI Institute's primary role in authoring and
+% producing the Kepler Data Processing Pipeline under Cooperative
+% Agreement Nos. NNA04CC63A, NNX07AD96A, NNX07AD98A, NNX11AI13A,
+% NNX11AI14A, NNX13AD01A & NNX13AD16A.
+% 
+% This file is available under the terms of the NASA Open Source Agreement
+% (NOSA). You should have received a copy of this agreement with the
+% Kepler source code; see the file NASA-OPEN-SOURCE-AGREEMENT.doc.
+% 
+% No Warranty: THE SUBJECT SOFTWARE IS PROVIDED "AS IS" WITHOUT ANY
+% WARRANTY OF ANY KIND, EITHER EXPRESSED, IMPLIED, OR STATUTORY,
+% INCLUDING, BUT NOT LIMITED TO, ANY WARRANTY THAT THE SUBJECT SOFTWARE
+% WILL CONFORM TO SPECIFICATIONS, ANY IMPLIED WARRANTIES OF
+% MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, OR FREEDOM FROM
+% INFRINGEMENT, ANY WARRANTY THAT THE SUBJECT SOFTWARE WILL BE ERROR
+% FREE, OR ANY WARRANTY THAT DOCUMENTATION, IF PROVIDED, WILL CONFORM
+% TO THE SUBJECT SOFTWARE. THIS AGREEMENT DOES NOT, IN ANY MANNER,
+% CONSTITUTE AN ENDORSEMENT BY GOVERNMENT AGENCY OR ANY PRIOR RECIPIENT
+% OF ANY RESULTS, RESULTING DESIGNS, HARDWARE, SOFTWARE PRODUCTS OR ANY
+% OTHER APPLICATIONS RESULTING FROM USE OF THE SUBJECT SOFTWARE.
+% FURTHER, GOVERNMENT AGENCY DISCLAIMS ALL WARRANTIES AND LIABILITIES
+% REGARDING THIRD-PARTY SOFTWARE, IF PRESENT IN THE ORIGINAL SOFTWARE,
+% AND DISTRIBUTES IT "AS IS."
+% 
+% Waiver and Indemnity: RECIPIENT AGREES TO WAIVE ANY AND ALL CLAIMS
+% AGAINST THE UNITED STATES GOVERNMENT, ITS CONTRACTORS AND
+% SUBCONTRACTORS, AS WELL AS ANY PRIOR RECIPIENT. IF RECIPIENT'S USE OF
+% THE SUBJECT SOFTWARE RESULTS IN ANY LIABILITIES, DEMANDS, DAMAGES,
+% EXPENSES OR LOSSES ARISING FROM SUCH USE, INCLUDING ANY DAMAGES FROM
+% PRODUCTS BASED ON, OR RESULTING FROM, RECIPIENT'S USE OF THE SUBJECT
+% SOFTWARE, RECIPIENT SHALL INDEMNIFY AND HOLD HARMLESS THE UNITED
+% STATES GOVERNMENT, ITS CONTRACTORS AND SUBCONTRACTORS, AS WELL AS ANY
+% PRIOR RECIPIENT, TO THE EXTENT PERMITTED BY LAW. RECIPIENT'S SOLE
+% REMEDY FOR ANY SUCH MATTER SHALL BE THE IMMEDIATE, UNILATERAL
+% TERMINATION OF THIS AGREEMENT.
+%
+
+cadenceTimes                                            = transitModelObject.cadenceTimes;
+
+geometricTransitModel.transitEpochBkjd                  = transitModelObject.planetModel.transitEpochBkjd;
+geometricTransitModel.orbitalPeriodDays                 = transitModelObject.planetModel.orbitalPeriodDays;
+geometricTransitModel.minImpactParameter                = transitModelObject.planetModel.minImpactParameter;
+geometricTransitModel.ratioPlanetRadiusToStarRadius     = transitModelObject.planetModel.ratioPlanetRadiusToStarRadius;
+geometricTransitModel.ratioSemiMajorAxisToStarRadius    = transitModelObject.planetModel.ratioSemiMajorAxisToStarRadius;
+geometricTransitModel.limbDarkeningCoefficients         = transitModelObject.limbDarkeningCoefficients;
+
+transitModelLightCurve = compute_light_curve_with_geometric_model_test(cadenceTimes, geometricTransitModel);
+
+return;
+
+
+function transitModelLightCurve = compute_light_curve_with_geometric_model_test(cadenceTimes, geometricTransitModel)
+
+transitModelLightCurve  = zeros(length(cadenceTimes), 1);
+
+phi         = 2*pi*(cadenceTimes - geometricTransitModel.transitEpochBkjd)/geometricTransitModel.orbitalPeriodDays;
+sinPhi      = sin(phi);
+cosPhi      = cos(phi);
+
+z           = sqrt( geometricTransitModel.ratioSemiMajorAxisToStarRadius^2*sinPhi.*sinPhi + geometricTransitModel.minImpactParameter^2*cosPhi.*cosPhi );
+z(cosPhi<0) = -1;
+
+p           = geometricTransitModel.ratioPlanetRadiusToStarRadius;
+
+c1          = geometricTransitModel.limbDarkeningCoefficients(1); 
+c2          = geometricTransitModel.limbDarkeningCoefficients(2); 
+c3          = geometricTransitModel.limbDarkeningCoefficients(3); 
+c4          = geometricTransitModel.limbDarkeningCoefficients(4); 
+normValue   = pi*(1-c1/5-c2/3-3*c3/7-c4/2);
+
+% Case 1:   1-p < z <= 1+p
+
+index1     = z<=(1+p) & z>(1-p);
+z1         = z(index1);
+
+v1         = (z1-1)/p;
+v1(v1> 1)  = 1;
+v1(v1<-1)  = -1;
+area1      = p*p*acos(v1) - p*(z1-1).*sqrt(1-v1.*v1);
+
+zi1        = 0.5*(z1-p+1);
+zi1(zi1>1) = 1;
+sqrtMu1    = sqrt( sqrt(1-zi1.*zi1) );
+intensity1 = 1 - c1*(1-sqrtMu1) - c2*(1-sqrtMu1.^2) - c3*(1-sqrtMu1.^3) - c4*(1-sqrtMu1.^4);
+
+transitModelLightCurve(index1) = -area1.*intensity1/normValue;
+
+% Case 2:  0 <= z <= 1-p
+
+index2     = z<=(1-p) & z>=0;
+z2         = z(index2);
+area2      = pi*p*p;
+
+sqrtMu2    = sqrt( sqrt(1-z2.*z2) );
+intensity2 = 1 - c1*(1-sqrtMu2) - c2*(1-sqrtMu2.^2) - c3*(1-sqrtMu2.^3) - c4*(1-sqrtMu2.^4);
+
+transitModelLightCurve(index2) = -area2*intensity2/normValue;
+
+
+return

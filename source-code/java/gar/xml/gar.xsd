@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Copyright 2017 United States Government as represented by the
+  Administrator of the National Aeronautics and Space Administration.
+  All Rights Reserved.
+  
+  This file is available under the terms of the NASA Open Source Agreement
+  (NOSA). You should have received a copy of this agreement with the
+  Kepler source code; see the file NASA-OPEN-SOURCE-AGREEMENT.doc.
+  
+  No Warranty: THE SUBJECT SOFTWARE IS PROVIDED "AS IS" WITHOUT ANY
+  WARRANTY OF ANY KIND, EITHER EXPRESSED, IMPLIED, OR STATUTORY,
+  INCLUDING, BUT NOT LIMITED TO, ANY WARRANTY THAT THE SUBJECT SOFTWARE
+  WILL CONFORM TO SPECIFICATIONS, ANY IMPLIED WARRANTIES OF
+  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, OR FREEDOM FROM
+  INFRINGEMENT, ANY WARRANTY THAT THE SUBJECT SOFTWARE WILL BE ERROR
+  FREE, OR ANY WARRANTY THAT DOCUMENTATION, IF PROVIDED, WILL CONFORM
+  TO THE SUBJECT SOFTWARE. THIS AGREEMENT DOES NOT, IN ANY MANNER,
+  CONSTITUTE AN ENDORSEMENT BY GOVERNMENT AGENCY OR ANY PRIOR RECIPIENT
+  OF ANY RESULTS, RESULTING DESIGNS, HARDWARE, SOFTWARE PRODUCTS OR ANY
+  OTHER APPLICATIONS RESULTING FROM USE OF THE SUBJECT SOFTWARE.
+  FURTHER, GOVERNMENT AGENCY DISCLAIMS ALL WARRANTIES AND LIABILITIES
+  REGARDING THIRD-PARTY SOFTWARE, IF PRESENT IN THE ORIGINAL SOFTWARE,
+  AND DISTRIBUTES IT "AS IS."
+
+  Waiver and Indemnity: RECIPIENT AGREES TO WAIVE ANY AND ALL CLAIMS
+  AGAINST THE UNITED STATES GOVERNMENT, ITS CONTRACTORS AND
+  SUBCONTRACTORS, AS WELL AS ANY PRIOR RECIPIENT. IF RECIPIENT'S USE OF
+  THE SUBJECT SOFTWARE RESULTS IN ANY LIABILITIES, DEMANDS, DAMAGES,
+  EXPENSES OR LOSSES ARISING FROM SUCH USE, INCLUDING ANY DAMAGES FROM
+  PRODUCTS BASED ON, OR RESULTING FROM, RECIPIENT'S USE OF THE SUBJECT
+  SOFTWARE, RECIPIENT SHALL INDEMNIFY AND HOLD HARMLESS THE UNITED
+  STATES GOVERNMENT, ITS CONTRACTORS AND SUBCONTRACTORS, AS WELL AS ANY
+  PRIOR RECIPIENT, TO THE EXTENT PERMITTED BY LAW. RECIPIENT'S SOLE
+  REMEDY FOR ANY SUCH MATTER SHALL BE THE IMMEDIATE, UNILATERAL
+  TERMINATION OF THIS AGREEMENT.
+-->
+
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+	   targetNamespace="http://kepler.nasa.gov/gar/xmlbean"
+	   xmlns="http://kepler.nasa.gov/gar/xmlbean">
+
+  <xs:simpleType name="TableIdXB">
+    <xs:restriction base="xs:int">
+      <xs:minInclusive value="0"/>
+      <xs:maxInclusive value="255"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="bitstring">
+    <xs:restriction base="xs:string">
+      <xs:maxLength value="24"/>
+      <xs:pattern value="[01]*"/>
+    </xs:restriction>
+  </xs:simpleType>
+  
+  <xs:complexType name="HuffmanEntryXB">
+    <xs:attribute name="value" type="xs:int"/>
+    <xs:attribute name="bitstring" type="bitstring"/>
+  </xs:complexType>
+  
+  <xs:complexType name="HuffmanTableXB">
+    <xs:sequence minOccurs="131071" maxOccurs="131071">
+      <xs:element name="entry" type="HuffmanEntryXB"/>
+    </xs:sequence>
+    <xs:attribute name="tableId" type="TableIdXB" use="required"/>
+    <xs:attribute name="plannedStartTime" type="xs:dateTime" use="required"/>
+    <xs:attribute name="totalEntryCount" type="xs:int" use="required"/>
+  </xs:complexType>
+  
+  <xs:simpleType name="requantFlux">
+    <xs:restriction base="xs:int">
+      <xs:minInclusive value="0"/>
+      <xs:maxInclusive value="8388608"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:complexType name="RequantEntryXB">
+    <xs:attribute name="requantflux" type="requantFlux"/>
+  </xs:complexType>
+  
+  <xs:complexType name="RequantEntriesXB">
+    <xs:sequence minOccurs="65536" maxOccurs="65536">
+      <xs:element name="entry" type="RequantEntryXB"/>
+    </xs:sequence>
+    <xs:attribute name="totalEntryCount" type="xs:int" use="required"/>
+  </xs:complexType>
+
+  <xs:simpleType name="meanBlack">
+    <xs:restriction base="xs:int">
+      <xs:minInclusive value="0"/>
+      <xs:maxInclusive value="1000"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="ccdModule">
+    <xs:restriction base="xs:int">
+      <xs:minInclusive value="2"/>
+      <xs:maxInclusive value="24"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="ccdOutput">
+    <xs:restriction base="xs:int">
+      <xs:minInclusive value="1"/>
+      <xs:maxInclusive value="4"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:complexType name="MeanBlackEntryXB">
+    <xs:attribute name="ccdModule" type="ccdModule"/>
+    <xs:attribute name="ccdOutput" type="ccdOutput"/>
+    <xs:attribute name="meanBlack" type="meanBlack"/>
+  </xs:complexType>
+  
+  <xs:complexType name="MeanBlackEntriesXB">
+    <xs:sequence minOccurs="84" maxOccurs="84">
+      <xs:element name="entry" type="MeanBlackEntryXB"/>
+    </xs:sequence>
+    <xs:attribute name="totalEntryCount" type="xs:int" use="required"/>
+  </xs:complexType>
+
+  <xs:complexType name="RequantTableXB">
+    <xs:sequence minOccurs="1" maxOccurs="1">
+      <xs:element name="requantEntries" type="RequantEntriesXB"/>
+      <xs:element name="meanBlackEntries" type="MeanBlackEntriesXB"/>
+    </xs:sequence>
+    <xs:attribute name="tableId" type="TableIdXB" use="required"/>
+    <xs:attribute name="plannedStartTime" type="xs:dateTime" use="required"/>
+  </xs:complexType>
+  
+  <xs:complexType name="ManifestFileXB">
+    <xs:attribute name="filename" type="xs:string"/>
+    <xs:attribute name="size" type="xs:long"/>
+    <xs:attribute name="checksum" type="xs:string"/>
+    <xs:attribute name="status" type="xs:string"/>
+  </xs:complexType>
+  
+  <xs:complexType name="ManifestXB">
+    <xs:sequence minOccurs="0" maxOccurs="unbounded">
+      <xs:element name="file" type="ManifestFileXB"/>
+    </xs:sequence>
+    <xs:attribute name="identifier" type="xs:string"/>
+    <xs:attribute name="utc_time_sent" type="xs:dateTime"/>
+  </xs:complexType>
+
+  <xs:element name="huffman-table" type="HuffmanTableXB"/>
+  
+  <xs:element name="requant-table" type="RequantTableXB"/>
+
+  <xs:element name="activity_request_manifest" type="ManifestXB"/>
+
+</xs:schema>

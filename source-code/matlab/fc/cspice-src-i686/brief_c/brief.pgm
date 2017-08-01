@@ -1,0 +1,1615 @@
+/* brief.f -- translated by f2c (version 19980913).
+   You must link the resulting object file with the libraries:
+	-lf2c -lm   (in that order)
+*/
+
+#include "f2c.h"
+
+/* Table of constant values */
+
+static integer c__6 = 6;
+static integer c__100 = 100;
+static integer c__1 = 1;
+static integer c__8 = 8;
+static integer c__0 = 0;
+static integer c__20000 = 20000;
+static integer c_b143 = 400000;
+static integer c__1000 = 1000;
+static integer c__2 = 2;
+
+/* $Program     BRIEF ( BRIEF SPK summary ) */
+/* Main program */ MAIN__(void)
+{
+    /* System generated locals */
+    address a__1[2];
+    integer i__1, i__2[2];
+
+    /* Builtin functions */
+    /* Subroutine */ int s_copy(char *, char *, ftnlen, ftnlen);
+    integer s_cmp(char *, char *, ftnlen, ftnlen), i_len(char *, ftnlen);
+    /* Subroutine */ int s_stop(char *, ftnlen);
+    integer s_rnge(char *, integer, char *, integer);
+    /* Subroutine */ int s_cat(char *, char **, integer *, integer *, ftnlen);
+    logical l_le(char *, char *, ftnlen, ftnlen);
+
+    /* Local variables */
+    static char fall[8], fsec[8];
+    static integer objg[2], nbod;
+    static char fday[8];
+    static logical keep;
+    static char line[80];
+    static logical help;
+    static char fmin[8];
+    static integer cent, nobj;
+    static logical gdsp;
+    static integer body[6], item;
+    static doublereal when, from;
+    static integer last;
+    static logical cntr, tdsp;
+    static integer size, frst;
+    static char text[80*67];
+    static logical vrsn;
+    static char pass1[4000], pass2[4000];
+    static integer b, c__, e, i__, j;
+    extern integer cardd_(doublereal *);
+    static integer n, o;
+    extern logical idmch_();
+    static integer t;
+    extern /* Subroutine */ int dafgs_(doublereal *);
+    static integer frame;
+    static logical obnam;
+    static char fhelp[8];
+    static integer fcent;
+    extern logical beint_(char *, ftnlen);
+    static logical sfile;
+    static integer objct[3];
+    extern /* Subroutine */ int rdnbl_(char *, char *, logical *, ftnlen, 
+	    ftnlen);
+    static char objnm[64];
+    static integer class__;
+    extern /* Subroutine */ int dafus_(doublereal *, integer *, integer *, 
+	    doublereal *, integer *);
+    extern logical idset_(integer *, integer *);
+    static char ffrom[8], frmat[32*2*2*2*2];
+    static logical found;
+    static char fcntr[8];
+    static integer value;
+    static logical timat;
+    static char ftdsp[8];
+    static logical havto;
+    static char fhour[8];
+    extern /* Subroutine */ int rndem_(logical *, integer *, integer *, 
+	    doublereal *, doublereal *, char *, integer *, doublereal *, 
+	    ftnlen);
+    static logical round, first;
+    static char error[80];
+    static integer start;
+    static char fvrsn[8];
+    static logical nonly, ulist;
+    extern /* Subroutine */ int objcf1_(I_fp, integer *, integer *, integer *)
+	    , objcf2_(I_fp, integer *, integer *, integer *, integer *), 
+	    bodn2c_(char *, integer *, logical *, ftnlen);
+    static doublereal dc[2];
+    static integer ic[6], id;
+    extern /* Subroutine */ int daffna_(logical *);
+    static integer hi, jg;
+    extern /* Subroutine */ int objadd_(integer *, integer *, integer *);
+    static logical at;
+    extern /* Subroutine */ int dafbfs_(integer *);
+    static logical ok;
+    static integer handle;
+    extern /* Subroutine */ int dafcls_(integer *), lx4uns_(char *, integer *,
+	     integer *, integer *, ftnlen);
+    extern integer bigger_();
+    static char fsbbod[8], fsbcen[8];
+    extern integer objact_(integer *);
+    static char fobnam[8];
+    static doublereal to;
+    static char objnam[64];
+    static integer object[3];
+    static char fsfile[8];
+    static logical havfil;
+    static integer objctg[3];
+    static char objnmg[64];
+    extern /* Subroutine */ int getcml_(char *, ftnlen), objinl_(integer *, 
+	    integer *, integer *), fndnwd_(char *, integer *, integer *, 
+	    integer *, ftnlen);
+    static integer clssid;
+    extern logical wnincd_(doublereal *, doublereal *, doublereal *);
+    static logical havfrm;
+    static char fmtpic[32];
+    static integer objlis[80006];
+    static char srcfil[255];
+    static integer bodlst[706];
+    static doublereal filwin[1006];
+    extern /* Subroutine */ int replch_(char *, char *, char *, char *, 
+	    ftnlen, ftnlen, ftnlen, ftnlen);
+    static doublereal segwin[8], intval;
+    extern integer intmin_(void), intmax_(void);
+    static integer objsiz;
+    static char fgroup[8], fnonly[8];
+    static logical fromto;
+    static char string[80];
+    static doublereal winval[400006], tmpwin[1006], segsum[6];
+    extern /* Subroutine */ int writit_(char *, ftnlen);
+    static integer winptr[20006];
+    extern /* Subroutine */ int suffix_(char *, integer *, char *, ftnlen, 
+	    ftnlen);
+    static char winsym[64*20006];
+    extern /* Subroutine */ int tparse_(char *, doublereal *, char *, ftnlen, 
+	    ftnlen), nparsi_(char *, integer *, char *, integer *, ftnlen, 
+	    ftnlen), tkvrsn_(char *, char *, ftnlen, ftnlen), ssizec_(integer 
+	    *, char *, ftnlen), ssizei_(integer *, integer *), ssized_(
+	    integer *, doublereal *), dafopr_(char *, integer *, ftnlen), 
+	    scardd_(integer *, doublereal *), objsbf_(L_fp, integer *, 
+	    integer *, integer *, logical *), wninsd_(doublereal *, 
+	    doublereal *, doublereal *), frinfo_(integer *, integer *, 
+	    integer *, integer *, logical *), objfnd_(integer *, integer *, 
+	    integer *, integer *, logical *), maknam_(integer *, integer *, 
+	    logical *, char *, ftnlen), sygetd_(char *, char *, integer *, 
+	    doublereal *, integer *, doublereal *, logical *, ftnlen, ftnlen),
+	     wnunid_(doublereal *, doublereal *, doublereal *), syputd_(char *
+	    , doublereal *, integer *, char *, integer *, doublereal *, 
+	    ftnlen, ftnlen), filtem_(logical *, integer *, doublereal *, 
+	    doublereal *, doublereal *, doublereal *, char *, integer *, 
+	    doublereal *, ftnlen), objnth_(integer *, integer *, integer *, 
+	    logical *), objget_(integer *, integer *, integer *), objcmp_(
+	    integer *), objset_(integer *, integer *, integer *), disply_(
+	    char *, logical *, logical *, logical *, integer *, char *, 
+	    integer *, doublereal *, ftnlen, ftnlen), scardc_(integer *, char 
+	    *, ftnlen);
+    static integer beg;
+    extern /* Subroutine */ int scardi_(integer *, integer *), objmod_(
+	    integer *, integer *, integer *, integer *);
+    static integer bod[2], end, gap;
+    static logical all;
+    extern integer inc_();
+    static char fat[8];
+    static integer obj[2], ref;
+    static logical fnd, eof;
+    static char fto[8];
+    static integer num;
+    extern integer pos_(char *, char *, integer *, ftnlen, ftnlen);
+    static integer low;
+    static char tkv[64];
+    static integer ptr;
+    extern /* Subroutine */ int nicepr_1__(char *, char *, S_fp, ftnlen, 
+	    ftnlen);
+
+/* $ Abstract */
+
+/*     This is a utility program that provides brief summaries of the */
+/*     contents of one or more SPK files. */
+
+/* $ Disclaimer */
+
+/*     THIS SOFTWARE AND ANY RELATED MATERIALS WERE CREATED BY THE */
+/*     CALIFORNIA INSTITUTE OF TECHNOLOGY (CALTECH) UNDER A U.S. */
+/*     GOVERNMENT CONTRACT WITH THE NATIONAL AERONAUTICS AND SPACE */
+/*     ADMINISTRATION (NASA). THE SOFTWARE IS TECHNOLOGY AND SOFTWARE */
+/*     PUBLICLY AVAILABLE UNDER U.S. EXPORT LAWS AND IS PROVIDED "AS-IS" */
+/*     TO THE RECIPIENT WITHOUT WARRANTY OF ANY KIND, INCLUDING ANY */
+/*     WARRANTIES OF PERFORMANCE OR MERCHANTABILITY OR FITNESS FOR A */
+/*     PARTICULAR USE OR PURPOSE (AS SET FORTH IN UNITED STATES UCC */
+/*     SECTIONS 2312-2313) OR FOR ANY PURPOSE WHATSOEVER, FOR THE */
+/*     SOFTWARE AND RELATED MATERIALS, HOWEVER USED. */
+
+/*     IN NO EVENT SHALL CALTECH, ITS JET PROPULSION LABORATORY, OR NASA */
+/*     BE LIABLE FOR ANY DAMAGES AND/OR COSTS, INCLUDING, BUT NOT */
+/*     LIMITED TO, INCIDENTAL OR CONSEQUENTIAL DAMAGES OF ANY KIND, */
+/*     INCLUDING ECONOMIC DAMAGE OR INJURY TO PROPERTY AND LOST PROFITS, */
+/*     REGARDLESS OF WHETHER CALTECH, JPL, OR NASA BE ADVISED, HAVE */
+/*     REASON TO KNOW, OR, IN FACT, SHALL KNOW OF THE POSSIBILITY. */
+
+/*     RECIPIENT BEARS ALL RISK RELATING TO QUALITY AND PERFORMANCE OF */
+/*     THE SOFTWARE AND ANY RELATED MATERIALS, AND AGREES TO INDEMNIFY */
+/*     CALTECH AND NASA FOR ALL THIRD-PARTY CLAIMS RESULTING FROM THE */
+/*     ACTIONS OF RECIPIENT IN THE USE OF THE SOFTWARE. */
+
+/* $ Required_Reading */
+
+/*     None. */
+
+/* $ Keywords */
+
+/*     FILES */
+/*     UTILITY */
+
+/* $ Parameters */
+
+/*     None. */
+
+/* $ Exceptions */
+
+/*     None. */
+
+/* $ Files */
+
+/*     1) All summary tasks performed require at least one filename. */
+
+/* $ Particulars */
+
+
+/*  Usage: */
+
+/*     brief [-option] file [file ...] */
+
+/*  Description */
+
+/*     Brief is a program that allows you to summarize one or */
+/*     more SPK files based upon a number of user specified selection */
+/*     criteria.  At least one file must be specified.  Any of the */
+/*     following options may be specified. */
+
+/*  -n            display bodies using only numeric id-codes. */
+
+/*  -o            order objects by name */
+
+/*  -t            display results in a tabular format. */
+
+/*  -g            arrange objects in a tabular display so that objects */
+/*                with the same coverage are grouped together.  This */
+/*                option has no effect if the -t option is not supplied. */
+
+/*  -c            treat bodies and centers of motion as a single */
+/*                entity when determining coverage */
+
+/*  -h            display help text */
+
+/*  -v            display the current version of the program */
+
+/*  -a            treat all files as a combined ephemeris for the */
+/*                purpose of summarizing coverage. */
+
+/*  -f            provide a file containing full path names of files */
+/*                to summarize. This flag is used as shown below */
+
+/*                 -f list_of_sources.file */
+
+/*  -sb[bod]      create a summary for the specified body (multiple */
+/*                bodies may be specified by listing a numeric range */
+/*                of id-codes or using this option repeatedly. Numeric */
+/*                ranges must be given as a single word and should */
+/*                be specified as [lower:upper]. */
+
+/*  -sc[bod]      create a summary for bodies whose trajectories are */
+/*                relative to the specied body or bodies.  This option */
+/*                may be used with a range or may be used repeatedly. */
+/*                Numeric ranges are may be used here and are specified */
+/*                in the same manner as for the -sb option. */
+
+/*  -[bod]        create a summary for the specified body.  Note that */
+/*                this can be confused with one of the previous two */
+/*                options if the name of the object begins with sc or */
+/*                sb (admittedly this is an unlikely event, but can */
+/*                possibly lead to misinterpretation by the program). */
+
+
+/*  -sec          display times "rounded inward" to either the nearest */
+/*  -min          second, minute, hour or day respectively. */
+/*  -hour */
+/*  -day */
+
+/*  -at epoch     summarize only for objects that have coverage at */
+/*                the specified epoch.  The epoch must be a single word. */
+
+/*  -from epoch1   summarize only for object that have coverage during */
+/*  -to   epoch2   the entire interval from epoch1 to epoch2.  Both */
+/*                 epochs must be expressed as a single word. */
+
+
+/* $ Examples */
+
+/*     None. */
+
+/* $ Restrictions */
+
+/*     None. */
+
+/* $ Literature_References */
+
+/*     None. */
+
+/* $ Author_and_Institution */
+
+/*     N.J. Nachman   (JPL) */
+/*     B.V. Semenov   (JPL) */
+/*     W.L. Taber     (JPL) */
+
+/* $ Version */
+
+/* -    BRIEF Version 2.4.0, 11-NOV-2005 (BVS) */
+
+/*        Removed copyright note from usage display for old */
+/*        MAC environments. */
+
+/* -    BRIEF Version 2.3.1, 28-OCT-2005 (EDW) */
+
+/*        Edited the DISPLY and OBJFND subroutine to */
+/*        remove a duplicate argument (used as both input */
+/*        and output) from an OBJNXT call. Optimized versions */
+/*        of such calls can fail on some platforms. */
+
+/* -    BRIEF Version 2.3.0, 13-MAY-2004 (NJB) */
+
+/*        Added subroutine-scope SAVE statement to support use of CSPICE */
+/*        under cygwin.  Also added SAVE statement to subroutine DISPLY. */
+
+/* -    BRIEF Version 2.2.0, 25-JUN-2002 (BVS) */
+
+/*        Increased the number of bodies (MAXBOD) to 20,000. */
+/*        Cleaned up version strings in this section. */
+
+/* -    BRIEF Version 2.1.5, 08-OCT-1999 (WLT) */
+
+/*        The environment lines were expanded so that the supported */
+/*        environments are now explicitely given.  New */
+/*        environments are WIN-NT */
+
+/* -    BRIEF Version 2.1.4, 21-SEP-1999 (NJB) */
+
+/*        A bogus environment line was deleted.  Some */
+/*        typos were corrected. */
+
+/* -    BRIEF Version 2.1.3, 28-JUL-1999 (WLT) */
+
+/*        The environment lines were expanded so that the supported */
+/*        environments are now explicitly given.  New */
+/*        environments are PC-DIGITAL, SGI-O32 and SGI-N32. */
+
+/* -    BRIEF Version 2.1.2, 18-MAR-1999 (WLT) */
+
+/*        The environment lines were expanded so that the supported */
+/*        environments are now explicitly given.  Previously, */
+/*        environments such as SUN-SUNOS and SUN-SOLARIS were implied */
+/*        by the environment label SUN. */
+
+/* -    BRIEF Version 2.1.1, 03-APR-1998 (NJB) */
+
+/*        Added type declarations for the functions BIGGER and INC. */
+/*        This was done to enable porting to the PC/Linux/Fort77 */
+/*        environment. */
+
+/* -    BRIEF Version 2.1.0, 21-JUL-1997 (WLT) */
+
+/*        Added a header and modified the program so that it will */
+/*        print out the version of SPICELIB it was linked against. */
+
+/* -    BRIEF Version 2.0.0, 14-MAR-1996 (WLT) */
+
+/*        The program was completely re-written from Mike Spencer's */
+/*        original version.  Only the name is the same. */
+
+/* -& */
+
+/*     User adjustable parameters. */
+
+
+/*     Passed Functions */
+
+/* $ Disclaimer */
+
+/*     THIS SOFTWARE AND ANY RELATED MATERIALS WERE CREATED BY THE */
+/*     CALIFORNIA INSTITUTE OF TECHNOLOGY (CALTECH) UNDER A U.S. */
+/*     GOVERNMENT CONTRACT WITH THE NATIONAL AERONAUTICS AND SPACE */
+/*     ADMINISTRATION (NASA). THE SOFTWARE IS TECHNOLOGY AND SOFTWARE */
+/*     PUBLICLY AVAILABLE UNDER U.S. EXPORT LAWS AND IS PROVIDED "AS-IS" */
+/*     TO THE RECIPIENT WITHOUT WARRANTY OF ANY KIND, INCLUDING ANY */
+/*     WARRANTIES OF PERFORMANCE OR MERCHANTABILITY OR FITNESS FOR A */
+/*     PARTICULAR USE OR PURPOSE (AS SET FORTH IN UNITED STATES UCC */
+/*     SECTIONS 2312-2313) OR FOR ANY PURPOSE WHATSOEVER, FOR THE */
+/*     SOFTWARE AND RELATED MATERIALS, HOWEVER USED. */
+
+/*     IN NO EVENT SHALL CALTECH, ITS JET PROPULSION LABORATORY, OR NASA */
+/*     BE LIABLE FOR ANY DAMAGES AND/OR COSTS, INCLUDING, BUT NOT */
+/*     LIMITED TO, INCIDENTAL OR CONSEQUENTIAL DAMAGES OF ANY KIND, */
+/*     INCLUDING ECONOMIC DAMAGE OR INJURY TO PROPERTY AND LOST PROFITS, */
+/*     REGARDLESS OF WHETHER CALTECH, JPL, OR NASA BE ADVISED, HAVE */
+/*     REASON TO KNOW, OR, IN FACT, SHALL KNOW OF THE POSSIBILITY. */
+
+/*     RECIPIENT BEARS ALL RISK RELATING TO QUALITY AND PERFORMANCE OF */
+/*     THE SOFTWARE AND ANY RELATED MATERIALS, AND AGREES TO INDEMNIFY */
+/*     CALTECH AND NASA FOR ALL THIRD-PARTY CLAIMS RESULTING FROM THE */
+/*     ACTIONS OF RECIPIENT IN THE USE OF THE SOFTWARE. */
+
+/*     The Version is stored as a string. */
+
+
+/*     MAXUSE is the maximum number of bodies that can be explicitely */
+/*     specified on the command line for brief summaries. */
+
+
+/*     The longest command line that can be accomodated is */
+/*     given by CMDSIZ */
+
+
+/*     The maximum number of bodies that can be summarized is stored */
+/*     in the parameter MAXBOD */
+
+
+/*     The average number of intervals per body */
+
+
+/*     The largest expected window */
+
+
+/*     Spicelib Functions */
+
+
+/*     Standard Parameters */
+
+
+/*     Command line and parsing variables. */
+
+
+/*     Control Flags */
+
+
+/*     The block of character strings declared below are */
+/*     for the recognized options the user can supply */
+/*     on the command line. */
+
+
+/*     FNONLY is the string used for the number onlys */
+/*             command line flag. */
+
+/*     FOBNAM is the string used for the order by */
+/*             body name command line flag. */
+
+/*     FTDSP  is the string used for the tabular display */
+/*             command line flag. */
+
+/*     FCNTR  is the string used for the include centers */
+/*             command line flag. */
+
+/*     FHELP  is the string used for the help command line flag. */
+
+/*     FVRSN  is the string used for the version command line flag. */
+
+/*     FALL   is the string used for the combine all files */
+/*             command line flag. */
+
+/*     FSBBOD is the select by body id flag. */
+
+/*     FSBCEN is the select by center id flag. */
+
+/*     FSEC   is the flag used to indicate that covarages should */
+/*            be rounded inwward to the nearest second. */
+
+/*     FMIN   is the flag used to indicate that covarages should */
+/*            be rounded inwward to the nearest minute. */
+
+/*     FHOUR  is the flag used to indicate that covarages should */
+/*            be rounded inwward to the nearest hour. */
+
+/*     FDAY   is the flag used to indicate that covarages should */
+/*            be rounded inwward to the nearest day. */
+
+/*     FAT    is the flag to restrict the summary to only those */
+/*            objects that have coverage at a specific epoch. */
+
+/*     FFROM  is the flag to indicate the lower bound of an interval */
+/*            that the coverage for an object must contain */
+
+/*     FTO    is the flag to indicate the upper bound of an interval */
+/*            that the coverage for an object must contain */
+
+/*     FSFILE is the flag to indicate that a file of SPK's to read */
+/*            is available. */
+
+
+/*     Parsed Control Values. */
+
+
+/*     The next block of variables are used to determine how */
+/*     objects will be represented in the output.  This is */
+/*     discussed in more detail below when the format strings */
+/*     are defined. */
+
+
+/*     The items below are used for the explicitly specified */
+/*     list of bodies to summarize.  The enumeration IDCODE */
+/*     through MATCHS are the components associated with */
+/*     each item of the explicit list. */
+
+
+/*     IDCODE */
+/*     BEGNAM */
+/*     ENDNAM */
+/*     MATCHS */
+
+
+/*     The next two parameters are simply utility parameters */
+/*     and shouldn't be messed with. */
+
+
+/*     The actual object variables are below. */
+
+
+/*     The objects encountered in reading through the files. */
+
+
+/*     Help Text Variables */
+
+
+/*     Window and Window Table Variables. */
+
+
+/*     DAF Variables */
+
+
+/*     Segment summary components */
+
+
+/*     Utility Variables */
+
+
+/*     Saved variables */
+
+/*     The SAVE statement that appears here causes f2c to create */
+/*     local variables with static duration.  This enables the CSPICE */
+/*     version of brief to run under cygwin. */
+
+
+/*     Initializations: */
+
+/*     SPICELIB error handling. */
+
+/*      CALL TRCOFF */
+/*      CALL ERRACT ('SET', 'ABORT') */
+
+/*     There are several "patterns" that can be used to display */
+/*     names of objects.  Here they are */
+
+/*     Pattern 1 (p1)    Name (xxxx) */
+/*     Pattern 2 (p2)    xxxx */
+/*     Pattern 3 (p3)    xxxx Name */
+
+/*     Where xxxx stands for the numeric code for the object. */
+/*     Note: if a name cannot be found for an object pattern 2 */
+/*     is automatically used. */
+
+/*     The "names" of objects are made by a combination of one or */
+/*     possibly two body names.  The format used to create the */
+/*     name of the object is driven by the options that are */
+/*     in force from the command line. */
+
+/*     Heres where the various format parameters go and the */
+/*     corresponding formats.  These formats will be passed */
+/*     to the display module along with the values of */
+/*     n, c, o, and t. The display module has the responsibility */
+/*     of taking apart the the format and constucting appropriate */
+/*     names. */
+
+/*             n  c  o  t */
+
+    s_copy(frmat, "p1", (ftnlen)32, (ftnlen)2);
+    s_copy(frmat + 32, "p2", (ftnlen)32, (ftnlen)2);
+    s_copy(frmat + 64, "p1 w.r.t. p1", (ftnlen)32, (ftnlen)12);
+    s_copy(frmat + 96, "p2 w.r.t. p2", (ftnlen)32, (ftnlen)12);
+    s_copy(frmat + 128, "p1", (ftnlen)32, (ftnlen)2);
+    s_copy(frmat + 160, "p2", (ftnlen)32, (ftnlen)2);
+    s_copy(frmat + 192, "p1 w.r.t. p1", (ftnlen)32, (ftnlen)12);
+    s_copy(frmat + 224, "p2 w.r.t. p2", (ftnlen)32, (ftnlen)12);
+    s_copy(frmat + 256, "p3", (ftnlen)32, (ftnlen)2);
+    s_copy(frmat + 288, "p2", (ftnlen)32, (ftnlen)2);
+    s_copy(frmat + 320, "p3 w.r.t. p3", (ftnlen)32, (ftnlen)12);
+    s_copy(frmat + 352, "p2 w.r.t. p2", (ftnlen)32, (ftnlen)12);
+    s_copy(frmat + 384, "p1", (ftnlen)32, (ftnlen)2);
+    s_copy(frmat + 416, "p2", (ftnlen)32, (ftnlen)2);
+    s_copy(frmat + 448, "p1 w.r.t. p1", (ftnlen)32, (ftnlen)12);
+    s_copy(frmat + 480, "p2 w.r.t. p2", (ftnlen)32, (ftnlen)12);
+
+/*     Set up the help text. */
+
+    s_copy(text, "Usage:", (ftnlen)80, (ftnlen)6);
+    s_copy(text + 80, " ", (ftnlen)80, (ftnlen)1);
+    s_copy(text + 160, "   brief [-option] file [file ...]", (ftnlen)80, (
+	    ftnlen)34);
+    s_copy(text + 240, " ", (ftnlen)80, (ftnlen)1);
+    s_copy(text + 320, "Description", (ftnlen)80, (ftnlen)11);
+    s_copy(text + 400, " ", (ftnlen)80, (ftnlen)1);
+    s_copy(text + 480, " Brief is a program that allows you to summarize one"
+	    " or", (ftnlen)80, (ftnlen)55);
+    s_copy(text + 560, " more SPK files based upon a number of user specifie"
+	    "d selection", (ftnlen)80, (ftnlen)63);
+    s_copy(text + 640, " criteria.  At least one file must be specified.  An"
+	    "y of the", (ftnlen)80, (ftnlen)60);
+    s_copy(text + 720, " following options may be specified.", (ftnlen)80, (
+	    ftnlen)36);
+    s_copy(text + 800, " ", (ftnlen)80, (ftnlen)1);
+    s_copy(text + 880, " -n            display bodies using only numeric id-"
+	    "codes.", (ftnlen)80, (ftnlen)58);
+    s_copy(text + 960, " ", (ftnlen)80, (ftnlen)1);
+    s_copy(text + 1040, " -o            order objects by name", (ftnlen)80, (
+	    ftnlen)36);
+    s_copy(text + 1120, " ", (ftnlen)80, (ftnlen)1);
+    s_copy(text + 1200, " -t            display results in a tabular format.",
+	     (ftnlen)80, (ftnlen)51);
+    s_copy(text + 1280, " ", (ftnlen)80, (ftnlen)1);
+    s_copy(text + 1360, " -g            arrange objects in a tabular display"
+	    " so that objects", (ftnlen)80, (ftnlen)67);
+    s_copy(text + 1440, "               with the same coverage are grouped t"
+	    "ogether.  This", (ftnlen)80, (ftnlen)65);
+    s_copy(text + 1520, "               option has no effect if the -t optio"
+	    "n is not supplied.", (ftnlen)80, (ftnlen)69);
+    s_copy(text + 1600, " ", (ftnlen)80, (ftnlen)1);
+    s_copy(text + 1680, " -c            treat bodies and centers of motion a"
+	    "s a single", (ftnlen)80, (ftnlen)61);
+    s_copy(text + 1760, "               entity when determining coverage", (
+	    ftnlen)80, (ftnlen)47);
+    s_copy(text + 1840, " ", (ftnlen)80, (ftnlen)1);
+    s_copy(text + 1920, " -h            display help text", (ftnlen)80, (
+	    ftnlen)32);
+    s_copy(text + 2000, " ", (ftnlen)80, (ftnlen)1);
+    s_copy(text + 2080, " -v            display the current version of the p"
+	    "rogram", (ftnlen)80, (ftnlen)57);
+    s_copy(text + 2160, " ", (ftnlen)80, (ftnlen)1);
+    s_copy(text + 2240, " -a            treat all files as a combined epheme"
+	    "ris for the", (ftnlen)80, (ftnlen)62);
+    s_copy(text + 2320, "               purpose of summarizing coverage.", (
+	    ftnlen)80, (ftnlen)47);
+    s_copy(text + 2400, " ", (ftnlen)80, (ftnlen)1);
+    s_copy(text + 2480, " -f            provide a file containing full path "
+	    "names of files", (ftnlen)80, (ftnlen)65);
+    s_copy(text + 2560, "               to summarize. This flag is used as s"
+	    "hown below", (ftnlen)80, (ftnlen)61);
+    s_copy(text + 2640, " ", (ftnlen)80, (ftnlen)1);
+    s_copy(text + 2720, "                  -f list_of_sources.file", (ftnlen)
+	    80, (ftnlen)41);
+    s_copy(text + 2800, " ", (ftnlen)80, (ftnlen)1);
+    s_copy(text + 2880, " -sb[bod]      create a summary for the specified b"
+	    "ody (multiple", (ftnlen)80, (ftnlen)64);
+    s_copy(text + 2960, "               bodies may be specified by listing a"
+	    " numeric range", (ftnlen)80, (ftnlen)65);
+    s_copy(text + 3040, "               of id-codes or using this option rep"
+	    "eatedly. Numeric", (ftnlen)80, (ftnlen)67);
+    s_copy(text + 3120, "               ranges must be given as a single wor"
+	    "d and should", (ftnlen)80, (ftnlen)63);
+    s_copy(text + 3200, "               be specified as [lower:upper].", (
+	    ftnlen)80, (ftnlen)45);
+    s_copy(text + 3280, " ", (ftnlen)80, (ftnlen)1);
+    s_copy(text + 3360, " -sc[bod]      create a summary for bodies whose tr"
+	    "ajectories are", (ftnlen)80, (ftnlen)65);
+    s_copy(text + 3440, "               relative to the specied body or bodi"
+	    "es.  This option", (ftnlen)80, (ftnlen)67);
+    s_copy(text + 3520, "               may be used with a range or may be u"
+	    "sed repeatedly.", (ftnlen)80, (ftnlen)66);
+    s_copy(text + 3600, "               Numeric ranges are may be used here "
+	    "and are specified", (ftnlen)80, (ftnlen)68);
+    s_copy(text + 3680, "               in the same manner as for the -sb op"
+	    "tion.", (ftnlen)80, (ftnlen)56);
+    s_copy(text + 3760, " ", (ftnlen)80, (ftnlen)1);
+    s_copy(text + 3840, " -[bod]        create a summary for the specified b"
+	    "ody.  Note that", (ftnlen)80, (ftnlen)66);
+    s_copy(text + 3920, "               this can be confused with one of the"
+	    " previous two", (ftnlen)80, (ftnlen)64);
+    s_copy(text + 4000, "               options if the name of the object be"
+	    "gins with sc or", (ftnlen)80, (ftnlen)66);
+    s_copy(text + 4080, "               sb (admittedly this is an unlikely e"
+	    "vent, but can", (ftnlen)80, (ftnlen)64);
+    s_copy(text + 4160, "               possibly lead to misinterpretation b"
+	    "y the program).", (ftnlen)80, (ftnlen)66);
+    s_copy(text + 4240, " ", (ftnlen)80, (ftnlen)1);
+    s_copy(text + 4320, " ", (ftnlen)80, (ftnlen)1);
+    s_copy(text + 4400, " -sec          display times \"rounded inward\" to "
+	    "either the nearest", (ftnlen)80, (ftnlen)67);
+    s_copy(text + 4480, " -min          second, minute, hour or day respecti"
+	    "vely.", (ftnlen)80, (ftnlen)56);
+    s_copy(text + 4560, " -hour", (ftnlen)80, (ftnlen)6);
+    s_copy(text + 4640, " -day", (ftnlen)80, (ftnlen)5);
+    s_copy(text + 4720, " ", (ftnlen)80, (ftnlen)1);
+    s_copy(text + 4800, " -at epoch     summarize only for objects that have"
+	    " coverage at", (ftnlen)80, (ftnlen)63);
+    s_copy(text + 4880, "               the specified epoch.  The epoch must"
+	    " be a single word.", (ftnlen)80, (ftnlen)69);
+    s_copy(text + 4960, " ", (ftnlen)80, (ftnlen)1);
+    s_copy(text + 5040, " -from epoch1   summarize only for object that have"
+	    " coverage during", (ftnlen)80, (ftnlen)67);
+    s_copy(text + 5120, " -to   epoch2   the entire interval from epoch1 to "
+	    "epoch2.  Both", (ftnlen)80, (ftnlen)64);
+    s_copy(text + 5200, "                epochs must be expressed as a singl"
+	    "e word.", (ftnlen)80, (ftnlen)58);
+    s_copy(text + 5280, " ", (ftnlen)80, (ftnlen)1);
+
+/*     Next step is to parse the command line.  This is done in */
+/*     two passes.  The first pass determines the options */
+/*     specified.  The second pass gets the files.  This is handled */
+/*     a bit later. */
+
+/*     Here are the flags we recognize. */
+
+    s_copy(fnonly, "-n", (ftnlen)8, (ftnlen)2);
+    s_copy(fobnam, "-o", (ftnlen)8, (ftnlen)2);
+    s_copy(ftdsp, "-t", (ftnlen)8, (ftnlen)2);
+    s_copy(fcntr, "-c", (ftnlen)8, (ftnlen)2);
+    s_copy(fhelp, "-h", (ftnlen)8, (ftnlen)2);
+    s_copy(fvrsn, "-v", (ftnlen)8, (ftnlen)2);
+    s_copy(fall, "-a", (ftnlen)8, (ftnlen)2);
+    s_copy(fsbbod, "-sb", (ftnlen)8, (ftnlen)3);
+    s_copy(fsbcen, "-sc", (ftnlen)8, (ftnlen)3);
+    s_copy(fsec, "-sec", (ftnlen)8, (ftnlen)4);
+    s_copy(fmin, "-min", (ftnlen)8, (ftnlen)4);
+    s_copy(fhour, "-hour", (ftnlen)8, (ftnlen)5);
+    s_copy(fday, "-day", (ftnlen)8, (ftnlen)4);
+    s_copy(fat, "-at", (ftnlen)8, (ftnlen)3);
+    s_copy(ffrom, "-from", (ftnlen)8, (ftnlen)5);
+    s_copy(fto, "-to", (ftnlen)8, (ftnlen)3);
+    s_copy(fgroup, "-g", (ftnlen)8, (ftnlen)2);
+    s_copy(fsfile, "-f", (ftnlen)8, (ftnlen)2);
+
+/*     Pass one.  The defaults are: */
+
+    nonly = FALSE_;
+    obnam = FALSE_;
+    tdsp = FALSE_;
+    gdsp = FALSE_;
+    cntr = FALSE_;
+    help = TRUE_;
+    vrsn = FALSE_;
+    havfil = FALSE_;
+    all = FALSE_;
+    ulist = FALSE_;
+    round = FALSE_;
+    timat = FALSE_;
+    havfrm = FALSE_;
+    havto = FALSE_;
+    fromto = FALSE_;
+    at = FALSE_;
+    sfile = FALSE_;
+    objsiz = 2;
+    intval = 86400.;
+    s_copy(pass2, " ", (ftnlen)4000, (ftnlen)1);
+    s_copy(pass1, " ", (ftnlen)4000, (ftnlen)1);
+    getcml_(pass1, (ftnlen)4000);
+
+/*     Initialize the list of objects that we will search for. */
+
+    objinl_(&c__6, &c__100, bodlst);
+
+/*     Now locate the first word in the command line. */
+
+    start = 1;
+    fndnwd_(pass1, &start, &beg, &end, (ftnlen)4000);
+    while(beg > 0) {
+
+/*        All options begin with a '-'.  If this item doesn't */
+/*        it is presumed to be a file. */
+
+	if (*(unsigned char *)&pass1[beg - 1] != '-') {
+	    suffix_(pass1 + (beg - 1), &c__1, pass2, end - (beg - 1), (ftnlen)
+		    4000);
+	    havfil = TRUE_;
+	    help = FALSE_;
+	} else if (s_cmp(pass1 + (beg - 1), fnonly, end - (beg - 1), (ftnlen)
+		8) == 0) {
+
+/*           Display numbers only. */
+
+	    nonly = TRUE_;
+	    obnam = FALSE_;
+	    help = FALSE_;
+	} else if (s_cmp(pass1 + (beg - 1), fsfile, end - (beg - 1), (ftnlen)
+		8) == 0) {
+	    start = end + 1;
+	    fndnwd_(pass1, &start, &beg, &end, (ftnlen)4000);
+	    if (beg > 0) {
+		sfile = TRUE_;
+		s_copy(srcfil, pass1 + (beg - 1), (ftnlen)255, end - (beg - 1)
+			);
+		help = FALSE_;
+	    }
+	} else if (s_cmp(pass1 + (beg - 1), fobnam, end - (beg - 1), (ftnlen)
+		8) == 0) {
+
+/*           Sort by the name of the object. */
+
+	    obnam = ! nonly;
+	    help = FALSE_;
+	} else if (s_cmp(pass1 + (beg - 1), ftdsp, end - (beg - 1), (ftnlen)8)
+		 == 0) {
+
+/*           Present output with a tabular display */
+
+	    tdsp = TRUE_;
+	    help = FALSE_;
+	} else if (s_cmp(pass1 + (beg - 1), fgroup, end - (beg - 1), (ftnlen)
+		8) == 0) {
+
+/*           Present output with a tabular display */
+
+	    gdsp = TRUE_;
+	    help = FALSE_;
+	} else if (s_cmp(pass1 + (beg - 1), fcntr, end - (beg - 1), (ftnlen)8)
+		 == 0) {
+
+/*           Combine bodies and centers to make a single object. */
+
+	    cntr = TRUE_;
+	    help = FALSE_;
+	    objsiz = 3;
+	} else if (s_cmp(pass1 + (beg - 1), fhelp, end - (beg - 1), (ftnlen)8)
+		 == 0) {
+
+/*           Prin the help. */
+
+	    help = TRUE_;
+	} else if (s_cmp(pass1 + (beg - 1), fvrsn, end - (beg - 1), (ftnlen)8)
+		 == 0) {
+
+/*           Show the version. */
+
+	    vrsn = TRUE_;
+	    help = FALSE_;
+	} else if (s_cmp(pass1 + (beg - 1), fall, end - (beg - 1), (ftnlen)8) 
+		== 0) {
+
+/*           Combine files. */
+
+	    all = TRUE_;
+	    help = FALSE_;
+	} else if (s_cmp(pass1 + (beg - 1), ffrom, end - (beg - 1), (ftnlen)8)
+		 == 0) {
+
+/*           Filter by coverage over interval FROM:TO */
+
+	    start = end + 1;
+	    fndnwd_(pass1, &start, &beg, &end, (ftnlen)4000);
+	    tparse_(pass1 + (beg - 1), &from, error, end - (beg - 1), (ftnlen)
+		    80);
+	    if (s_cmp(error, " ", (ftnlen)80, (ftnlen)1) == 0) {
+		havfrm = TRUE_;
+	    }
+	} else if (s_cmp(pass1 + (beg - 1), fto, end - (beg - 1), (ftnlen)8) 
+		== 0) {
+
+/*           Filter by coverage over interval FROM:TO */
+
+	    start = end + 1;
+	    fndnwd_(pass1, &start, &beg, &end, (ftnlen)4000);
+	    tparse_(pass1 + (beg - 1), &to, error, end - (beg - 1), (ftnlen)
+		    80);
+	    if (s_cmp(error, " ", (ftnlen)80, (ftnlen)1) == 0) {
+		havto = TRUE_;
+	    }
+	} else if (s_cmp(pass1 + (beg - 1), fat, end - (beg - 1), (ftnlen)8) 
+		== 0) {
+	    start = end + 1;
+
+/*           Filter by coverage over a specific epoch. */
+
+	    fndnwd_(pass1, &start, &beg, &end, (ftnlen)4000);
+	    tparse_(pass1 + (beg - 1), &when, error, end - (beg - 1), (ftnlen)
+		    80);
+	    if (s_cmp(error, " ", (ftnlen)80, (ftnlen)1) == 0) {
+		at = TRUE_;
+	    }
+	} else if (s_cmp(pass1 + (beg - 1), fsec, end - (beg - 1), (ftnlen)8) 
+		== 0) {
+
+/*           Round inward to the nearest second. */
+
+	    round = TRUE_;
+	    intval = min(intval,1.);
+	} else if (s_cmp(pass1 + (beg - 1), fmin, end - (beg - 1), (ftnlen)8) 
+		== 0) {
+
+/*           Round inward to the nearest minute. */
+
+	    round = TRUE_;
+	    intval = min(intval,60.);
+	} else if (s_cmp(pass1 + (beg - 1), fhour, end - (beg - 1), (ftnlen)8)
+		 == 0) {
+
+/*           Round inward to the nearest hour */
+
+	    round = TRUE_;
+	    intval = min(intval,3600.);
+	} else if (s_cmp(pass1 + (beg - 1), fday, end - (beg - 1), (ftnlen)8) 
+		== 0) {
+
+/*           Round inward to the nearest day. */
+
+	    round = TRUE_;
+	    intval = min(intval,86400.);
+	} else if (beg == end) {
+
+/*           Unrecognized option specified. */
+
+	    writit_("\"-\" by itself is not a recognized option.", (ftnlen)41)
+		    ;
+	    writit_(" ", (ftnlen)1);
+	    help = TRUE_;
+	    beg = i_len(pass1, (ftnlen)4000);
+	} else {
+
+/*           This is a restriction flag.  Find out the object that */
+/*           we want to restrict relative to. */
+
+	    if (s_cmp(pass1 + (beg - 1), fsbcen, (ftnlen)3, (ftnlen)8) == 0 &&
+		     beg + 2 < end) {
+		ref = 2;
+		beg += 3;
+	    } else if (s_cmp(pass1 + (beg - 1), fsbbod, (ftnlen)3, (ftnlen)8) 
+		    == 0 && beg + 2 < end) {
+		ref = 1;
+		beg += 3;
+	    } else {
+		ref = 1;
+		++beg;
+	    }
+
+/*           Items that begin with '-' that are not one of */
+/*           the previous items are regarded as a request */
+/*           to summarize only for particular items.  However, */
+/*           we need to recognize this item.  If we don't recognize */
+/*           it we say so. */
+
+	    if (beint_(pass1 + (beg - 1), end - (beg - 1))) {
+		nparsi_(pass1 + (beg - 1), &value, error, &ptr, end - (beg - 
+			1), (ftnlen)80);
+		ulist = TRUE_;
+		body[0] = value;
+		body[1] = value;
+		body[2] = beg;
+		body[3] = end;
+		body[4] = ref;
+		body[5] = 0;
+		objadd_(body, bodlst, bod);
+	    } else if (*(unsigned char *)&pass1[beg - 1] == '[' && *(unsigned 
+		    char *)&pass1[end - 1] == ']' && pos_(pass1, ":", &beg, 
+		    end, (ftnlen)1) > 0 && end - beg >= 4) {
+
+/*              Here's the deal, the integer range should be specified */
+/*              as [low:hi].  We allow either end to be left out */
+/*              to indicate no resriction on that end of the interval. */
+
+		low = intmin_();
+		hi = intmax_();
+		b = beg + 1;
+		ok = FALSE_;
+		lx4uns_(pass1, &b, &e, &size, (ftnlen)4000);
+		if (size > 0) {
+		    nparsi_(pass1 + (b - 1), &low, error, &ptr, e - (b - 1), (
+			    ftnlen)80);
+		    b = e + 2;
+		    if (b == end) {
+			ok = TRUE_;
+		    } else {
+			e = end - 1;
+			if (beint_(pass1 + (b - 1), e - (b - 1))) {
+			    nparsi_(pass1 + (b - 1), &hi, error, &ptr, e - (b 
+				    - 1), (ftnlen)80);
+			    ok = TRUE_;
+			}
+		    }
+
+/*              There was not an initial integer for a lower */
+/*              bound of the numeric range.  See if there's an uppper */
+/*              bound.. */
+
+		} else {
+		    b = beg + 2;
+		    e = end - 1;
+		    if (beint_(pass1 + (b - 1), e - (b - 1))) {
+			nparsi_(pass1 + (b - 1), &hi, error, &ptr, e - (b - 1)
+				, (ftnlen)80);
+			ok = TRUE_;
+		    }
+		}
+		if (! ok) {
+		    writit_(" ", (ftnlen)1);
+		    writit_(pass1 + (beg - 1), end - (beg - 1));
+		    writit_("is not recognized.", (ftnlen)18);
+		} else {
+		    ulist = TRUE_;
+		    body[0] = low;
+		    body[1] = hi;
+		    body[2] = beg;
+		    body[3] = end;
+		    body[5] = 0;
+		    body[4] = ref;
+		    objadd_(body, bodlst, bod);
+		}
+	    } else {
+		replch_(pass1 + (beg - 1), "_", " ", pass1 + (beg - 1), end - 
+			(beg - 1), (ftnlen)1, (ftnlen)1, end - (beg - 1));
+		bodn2c_(pass1 + (beg - 1), &value, &fnd, end - (beg - 1));
+		if (fnd) {
+		    ulist = TRUE_;
+		    body[0] = value;
+		    body[1] = value;
+		    body[2] = beg;
+		    body[3] = end;
+		    body[5] = 0;
+		    body[4] = ref;
+		    objadd_(body, bodlst, bod);
+		} else {
+		    writit_(" ", (ftnlen)1);
+		    writit_(pass1 + (beg - 1), end - (beg - 1));
+		    writit_("is not recognized.", (ftnlen)18);
+		}
+	    }
+	    help = FALSE_;
+	}
+
+/*        Locate the next word. */
+
+	start = end + 1;
+	fndnwd_(pass1, &start, &beg, &end, (ftnlen)4000);
+    }
+
+/*     Handle any exceptions that might have been occurred. */
+
+    tkvrsn_("TOOLKIT", tkv, (ftnlen)7, (ftnlen)64);
+    s_copy(line, "Brief.  Version: ", (ftnlen)80, (ftnlen)17);
+    suffix_("2.3.1", &c__1, line, (ftnlen)5, (ftnlen)80);
+    suffix_("(SPICE Toolkit", &c__8, line, (ftnlen)14, (ftnlen)80);
+    suffix_(tkv, &c__1, line, (ftnlen)64, (ftnlen)80);
+    suffix_(")", &c__0, line, (ftnlen)1, (ftnlen)80);
+    writit_(line, (ftnlen)80);
+    if (vrsn && ! havfil && ! sfile && ! help) {
+
+/*        display the version of the program and stop */
+
+	writit_("-------------------------------------------------", (ftnlen)
+		49);
+	writit_(" ", (ftnlen)1);
+	s_stop("", (ftnlen)0);
+    }
+    writit_(" ", (ftnlen)1);
+    help = help || ! (havfil || sfile);
+    if (help) {
+
+/*        display the help text and stop */
+
+	for (i__ = 1; i__ <= 67; ++i__) {
+	    writit_(text + ((i__1 = i__ - 1) < 67 && 0 <= i__1 ? i__1 : 
+		    s_rnge("text", i__1, "brief_", (ftnlen)1122)) * 80, (
+		    ftnlen)80);
+	}
+	writit_(" ", (ftnlen)1);
+	s_stop("", (ftnlen)0);
+    }
+
+/*     Now finish up determining what the user wants */
+/*     us to do. */
+
+    fromto = havfrm && havto && from <= to;
+    if (at) {
+	from = when;
+	to = when;
+	fromto = TRUE_;
+    }
+
+/*     The following are used as indexes into the 4-dimensional */
+/*     array used to hold the "formats" for the names of objects. */
+
+    num = 1;
+    o = 1;
+    t = 1;
+    c__ = 1;
+    if (nonly) {
+	num = 2;
+    }
+    if (obnam) {
+	o = 2;
+    }
+    if (tdsp) {
+	t = 2;
+    }
+    if (cntr) {
+	c__ = 2;
+    }
+    s_copy(fmtpic, frmat + (((i__1 = num + (c__ + (o + (t << 1) << 1) << 1) - 
+	    15) < 16 && 0 <= i__1 ? i__1 : s_rnge("frmat", i__1, "brief_", (
+	    ftnlen)1169)) << 5), (ftnlen)32, (ftnlen)32);
+
+/*     Now go through the files one at a time collecting */
+/*     the windows for each "object" */
+
+
+/*     Initialize the cells. */
+
+    ssizec_(&c__20000, winsym, (ftnlen)64);
+    ssizei_(&c__20000, winptr);
+    ssized_(&c_b143, winval);
+    ssized_(&c__1000, filwin);
+    ssized_(&c__2, segwin);
+    ssized_(&c__1000, tmpwin);
+    objinl_(&objsiz, &c__20000, objlis);
+
+/*     Now run through the files specified and collect summary */
+/*     information. */
+
+    start = 1;
+    fndnwd_(pass2, &start, &beg, &end, (ftnlen)4000);
+
+/*     If we didn't have anything in the PASS2 string, we must */
+/*     have a list of files in a file of SPK names.  Read */
+/*     the first line of that file. */
+
+    if (beg == 0) {
+	s_copy(pass2, " ", (ftnlen)4000, (ftnlen)1);
+	rdnbl_(srcfil, pass2, &eof, (ftnlen)255, (ftnlen)4000);
+	if (! eof) {
+	    fndnwd_(pass2, &c__1, &beg, &end, (ftnlen)4000);
+	}
+    }
+    while(beg != 0) {
+
+/*        Open the next file. */
+
+	dafopr_(pass2 + (beg - 1), &handle, end - (beg - 1));
+	dafbfs_(&handle);
+	daffna_(&fnd);
+	while(fnd) {
+	    scardd_(&c__0, segwin);
+	    dafgs_(segsum);
+	    dafus_(segsum, &c__2, &c__6, dc, ic);
+	    id = ic[0];
+	    cent = ic[1];
+	    frame = ic[2];
+	    object[0] = id;
+	    object[1] = cent;
+
+/*           If we are summarizing from a list of input bodies, */
+/*           find out if this body is in the list to summarize. */
+
+	    if (ulist) {
+
+/*              Use the "object search by function" to see if */
+/*              we've got the current ID in the list of bodies */
+/*              to restrict the summary to. */
+
+		keep = idset_(&id, &cent);
+		objsbf_((L_fp)idmch_, &c__1, bodlst, bod, &keep);
+
+/*              We will need the object BOD in a bit to update */
+/*              the number of times we've encountered this */
+/*              body-center pair. */
+
+	    } else {
+		keep = TRUE_;
+	    }
+
+/*           If this segment is a keeper, construct the window */
+/*           for the segment. */
+
+	    if (keep) {
+		wninsd_(dc, &dc[1], segwin);
+
+/*              Determine the class of the reference frame */
+/*              attached to this body.  We report only 2, */
+/*              inertial (1) and non-inertial (2).  If at any */
+/*              time the reference frame for this object is */
+/*              non-inertial we never go back to inertial. */
+
+		class__ = 0;
+		frinfo_(&frame, &fcent, &class__, &clssid, &found);
+		if (class__ != 1) {
+		    class__ = 2;
+		}
+		object[(i__1 = objsiz - 1) < 3 && 0 <= i__1 ? i__1 : s_rnge(
+			"object", i__1, "brief_", (ftnlen)1280)] = class__;
+
+/*              See if we already have this "object".  If not */
+/*              add it to the list of objects and increment the */
+/*              count of objects. */
+
+		objfnd_(object, &c__1, objlis, obj, &found);
+		if (! found) {
+		    objadd_(object, objlis, obj);
+		} else {
+
+/*                 Update the reference frame information. */
+
+		    objcf2_((I_fp)bigger_, &class__, obj, &objsiz, objlis);
+		}
+
+/*              Construct the "name" we will use to represent */
+/*              this "object" in the symbol table of windows. */
+
+		maknam_(object, &objsiz, &obnam, objnam, (ftnlen)64);
+
+/*              Look up the window of coverage already stored for */
+/*              this object. */
+
+		sygetd_(objnam, winsym, winptr, winval, &n, &filwin[6], &fnd, 
+			(ftnlen)64, (ftnlen)64);
+		if (! fnd) {
+		    n = 0;
+		}
+		scardd_(&n, filwin);
+
+/*              Union the current segment interval with the current */
+/*              window for this object, put the result back into */
+/*              the table of windows. */
+
+		wnunid_(segwin, filwin, tmpwin);
+		n = cardd_(tmpwin);
+		syputd_(objnam, &tmpwin[6], &n, winsym, winptr, winval, (
+			ftnlen)64, (ftnlen)64);
+
+/*              Update the BODLST if we are using a list to */
+/*              filter the summary. */
+
+		if (ulist) {
+		    if (fromto) {
+			if (wnincd_(&from, &to, tmpwin)) {
+			    objcf1_((I_fp)inc_, bod, &c__6, bodlst);
+			}
+		    } else {
+			objcf1_((I_fp)inc_, bod, &c__6, bodlst);
+		    }
+		}
+	    }
+
+/*           Find the next segment in the kernel. */
+
+	    daffna_(&fnd);
+	}
+	dafcls_(&handle);
+	if (! all) {
+
+/*           If the use specified time restrictions, we filter */
+/*           the collected objects so that we limit them */
+/*           to those that have coverage during the times specified. */
+
+	    if (at || fromto) {
+		if (at) {
+		    from = when;
+		    to = when;
+		}
+		filtem_(&obnam, objlis, &from, &to, filwin, tmpwin, winsym, 
+			winptr, winval, (ftnlen)64);
+	    }
+
+/*           If the intervals are supposed to be rounded inward, */
+/*           now is the time to do it. */
+
+	    if (round) {
+		rndem_(&obnam, objlis, &objsiz, &intval, filwin, winsym, 
+			winptr, winval, (ftnlen)64);
+	    }
+
+/*           That's the end of the filtering.  Now display */
+/*           what we've got. */
+
+	    writit_(" ", (ftnlen)1);
+	    nicepr_1__(pass2 + (beg - 1), "FLAG Summary$for: HARDSPACE $ LEF"
+		    "T 1 RIGHT 78 ", (S_fp)writit_, end - (beg - 1), (ftnlen)
+		    46);
+	    writit_(" ", (ftnlen)1);
+	    if (ulist) {
+
+/*              If any objects are not represented in this */
+/*              file say so. */
+
+		nbod = objact_(bodlst);
+		first = TRUE_;
+		i__1 = nbod;
+		for (i__ = 1; i__ <= i__1; ++i__) {
+		    objnth_(bodlst, &i__, bod, &fnd);
+		    objget_(bod, bodlst, body);
+		    if (body[5] == 0) {
+			b = body[2];
+			e = body[3];
+			frst = body[0];
+			last = body[1];
+			item = body[4];
+
+/*                    See if we had a range. */
+
+			if (frst == last) {
+			    if (item == 1) {
+/* Writing concatenation */
+				i__2[0] = 2, a__1[0] = "  ";
+				i__2[1] = e - (b - 1), a__1[1] = pass1 + (b - 
+					1);
+				s_cat(string, a__1, i__2, &c__2, (ftnlen)80);
+			    } else {
+/* Writing concatenation */
+				i__2[0] = 23, a__1[0] = "  bodies with cente"
+					"r : ";
+				i__2[1] = e - (b - 1), a__1[1] = pass1 + (b - 
+					1);
+				s_cat(string, a__1, i__2, &c__2, (ftnlen)80);
+			    }
+			} else {
+			    if (item == 1) {
+/* Writing concatenation */
+				i__2[0] = 11, a__1[0] = "  bodies : ";
+				i__2[1] = e - (b - 1), a__1[1] = pass1 + (b - 
+					1);
+				s_cat(string, a__1, i__2, &c__2, (ftnlen)80);
+			    } else {
+/* Writing concatenation */
+				i__2[0] = 27, a__1[0] = "  bodies with cente"
+					"rs in : ";
+				i__2[1] = e - (b - 1), a__1[1] = pass1 + (b - 
+					1);
+				s_cat(string, a__1, i__2, &c__2, (ftnlen)80);
+			    }
+			}
+			if (first) {
+			    first = FALSE_;
+			    writit_(" ", (ftnlen)1);
+			    writit_("There is no data for: ", (ftnlen)22);
+			}
+			writit_(string, (ftnlen)80);
+		    }
+		}
+		if (! first) {
+		    writit_(" ", (ftnlen)1);
+		}
+	    }
+
+/*           We are going to sort the object list.  We just rip off */
+/*           the Shell sort algorithm to accomplish this. */
+
+	    objcmp_(objlis);
+	    nobj = objact_(objlis);
+	    gap = nobj / 2;
+	    while(gap > 0) {
+		i__1 = nobj;
+		for (i__ = gap + 1; i__ <= i__1; ++i__) {
+		    j = i__ - gap;
+		    while(j > 0) {
+			jg = j + gap;
+			objnth_(objlis, &j, obj, &found);
+			objnth_(objlis, &jg, objg, &found);
+			objget_(obj, objlis, objct);
+			objget_(objg, objlis, objctg);
+			maknam_(objct, &objsiz, &obnam, objnm, (ftnlen)64);
+			maknam_(objctg, &objsiz, &obnam, objnmg, (ftnlen)64);
+			if (l_le(objnm, objnmg, (ftnlen)64, (ftnlen)64)) {
+			    j = 0;
+			} else {
+			    objset_(objg, objct, objlis);
+			    objset_(obj, objctg, objlis);
+			}
+			j -= gap;
+		    }
+		}
+		gap /= 2;
+	    }
+
+/*           display what we have so far and re-initialize */
+/*           the window table. */
+
+	    disply_(fmtpic, &tdsp, &gdsp, &obnam, objlis, winsym, winptr, 
+		    winval, (ftnlen)32, (ftnlen)64);
+	    scardc_(&c__0, winsym, (ftnlen)64);
+	    scardi_(&c__0, winptr);
+	    scardd_(&c__0, winval);
+	    scardd_(&c__0, filwin);
+	    scardd_(&c__0, segwin);
+	    scardd_(&c__0, tmpwin);
+	    objinl_(&objsiz, &c__20000, objlis);
+	    nbod = objact_(bodlst);
+	    i__1 = nbod;
+	    for (i__ = 1; i__ <= i__1; ++i__) {
+		objnth_(bodlst, &i__, bod, &found);
+		objmod_(bod, &c__6, &c__0, bodlst);
+	    }
+	}
+
+/*        Get the next file. */
+
+	start = end + 1;
+	fndnwd_(pass2, &start, &beg, &end, (ftnlen)4000);
+
+/*        If we ran out of file names in the PASS2 list, we */
+/*        look in the source file for the next file (if there */
+/*        is such a file). */
+
+	if (beg == 0 && sfile) {
+	    s_copy(pass2, " ", (ftnlen)4000, (ftnlen)1);
+	    rdnbl_(srcfil, pass2, &eof, (ftnlen)255, (ftnlen)4000);
+	    if (! eof) {
+		fndnwd_(pass2, &c__1, &beg, &end, (ftnlen)4000);
+	    } else {
+		sfile = FALSE_;
+	    }
+	}
+    }
+    if (all) {
+	writit_("Summary for all files.", (ftnlen)22);
+	writit_(" ", (ftnlen)1);
+
+/*        If the use specified time restrictions, we filter */
+/*        the collected objects so that we limit them */
+/*        to those that have coverage during the times specified. */
+
+	if (at || fromto) {
+	    if (at) {
+		from = when;
+		to = when;
+	    }
+	    filtem_(&obnam, objlis, &from, &to, filwin, tmpwin, winsym, 
+		    winptr, winval, (ftnlen)64);
+	}
+	if (round) {
+
+/*           Round all of the intervals of all windows. */
+
+	    rndem_(&obnam, objlis, &objsiz, &intval, filwin, winsym, winptr, 
+		    winval, (ftnlen)64);
+	}
+
+/*        That's the end of the filtering.  Now display */
+/*        what we've got. */
+
+	if (ulist) {
+
+/*           If any objects are not represented in this */
+/*           file say so. */
+
+	    first = TRUE_;
+	    nbod = objact_(bodlst);
+	    i__1 = nbod;
+	    for (i__ = 1; i__ <= i__1; ++i__) {
+		objnth_(bodlst, &i__, bod, &fnd);
+		objget_(bod, bodlst, body);
+		if (body[5] == 0) {
+		    b = body[2];
+		    e = body[3];
+		    frst = body[0];
+		    last = body[1];
+		    item = body[4];
+
+/*                 See if we had a range. */
+
+		    if (frst == last) {
+			if (item == 1) {
+/* Writing concatenation */
+			    i__2[0] = 2, a__1[0] = "  ";
+			    i__2[1] = e - (b - 1), a__1[1] = pass1 + (b - 1);
+			    s_cat(string, a__1, i__2, &c__2, (ftnlen)80);
+			} else {
+/* Writing concatenation */
+			    i__2[0] = 23, a__1[0] = "  bodies with center : ";
+			    i__2[1] = e - (b - 1), a__1[1] = pass1 + (b - 1);
+			    s_cat(string, a__1, i__2, &c__2, (ftnlen)80);
+			}
+		    } else {
+			if (item == 1) {
+/* Writing concatenation */
+			    i__2[0] = 11, a__1[0] = "  bodies : ";
+			    i__2[1] = e - (b - 1), a__1[1] = pass1 + (b - 1);
+			    s_cat(string, a__1, i__2, &c__2, (ftnlen)80);
+			} else {
+/* Writing concatenation */
+			    i__2[0] = 27, a__1[0] = "  bodies with centers i"
+				    "n : ";
+			    i__2[1] = e - (b - 1), a__1[1] = pass1 + (b - 1);
+			    s_cat(string, a__1, i__2, &c__2, (ftnlen)80);
+			}
+		    }
+		    if (first) {
+			first = FALSE_;
+			writit_(" ", (ftnlen)1);
+			writit_("There is no data for: ", (ftnlen)22);
+			writit_(" ", (ftnlen)1);
+		    }
+		    writit_(string, (ftnlen)80);
+		}
+	    }
+	    if (! first) {
+		writit_(" ", (ftnlen)1);
+	    }
+	}
+
+/*        We are going to sort the object list.  We just rip off */
+/*        the Shell sort algorithm to accomplish this. */
+
+	objcmp_(objlis);
+	nobj = objact_(objlis);
+	gap = nobj / 2;
+	while(gap > 0) {
+	    i__1 = nobj;
+	    for (i__ = gap + 1; i__ <= i__1; ++i__) {
+		j = i__ - gap;
+		while(j > 0) {
+		    jg = j + gap;
+		    objnth_(objlis, &j, obj, &found);
+		    objnth_(objlis, &jg, objg, &found);
+		    objget_(obj, objlis, objct);
+		    objget_(objg, objlis, objctg);
+		    maknam_(objct, &objsiz, &obnam, objnm, (ftnlen)64);
+		    maknam_(objctg, &objsiz, &obnam, objnmg, (ftnlen)64);
+		    if (l_le(objnm, objnmg, (ftnlen)64, (ftnlen)64)) {
+			j = 0;
+		    } else {
+			objset_(objg, objct, objlis);
+			objset_(obj, objctg, objlis);
+		    }
+		    j -= gap;
+		}
+	    }
+	    gap /= 2;
+	}
+
+/*        display what we have. */
+
+	disply_(fmtpic, &tdsp, &gdsp, &obnam, objlis, winsym, winptr, winval, 
+		(ftnlen)32, (ftnlen)64);
+    }
+    return 0;
+} /* MAIN__ */
+
+integer inc_(integer *a)
+{
+    /* System generated locals */
+    integer ret_val;
+
+    ret_val = *a + 1;
+    return ret_val;
+} /* inc_ */
+
+integer bigger_(integer *a, integer *b)
+{
+    /* System generated locals */
+    integer ret_val;
+
+    ret_val = max(*a,*b);
+    return ret_val;
+} /* bigger_ */
+
+logical mchboc_0_(int n__, integer *object, integer *size, integer *id, 
+	integer *cent)
+{
+    /* System generated locals */
+    integer i__1, i__2;
+    logical ret_val;
+
+    /* Builtin functions */
+    integer s_rnge(char *, integer, char *, integer);
+
+    /* Local variables */
+    static integer ref[2];
+
+    /* Parameter adjustments */
+    if (object) {
+	}
+
+    /* Function Body */
+    switch(n__) {
+	case 1: goto L_idmch;
+	case 2: goto L_idset;
+	}
+
+    ret_val = FALSE_;
+    return ret_val;
+
+L_idmch:
+    ret_val = object[0] <= ref[(i__1 = object[4] - 1) < 2 && 0 <= i__1 ? i__1 
+	    : s_rnge("ref", i__1, "mchboc_", (ftnlen)1737)] && object[1] >= 
+	    ref[(i__2 = object[4] - 1) < 2 && 0 <= i__2 ? i__2 : s_rnge("ref",
+	     i__2, "mchboc_", (ftnlen)1737)];
+    return ret_val;
+
+L_idset:
+    ref[0] = *id;
+    ref[1] = *cent;
+    ret_val = TRUE_;
+    return ret_val;
+} /* mchboc_ */
+
+logical mchboc_(integer *object, integer *size, integer *id, integer *cent)
+{
+    return mchboc_0_(0, object, size, id, cent);
+    }
+
+logical idmch_(integer *object, integer *size)
+{
+    return mchboc_0_(1, object, size, (integer *)0, (integer *)0);
+    }
+
+logical idset_(integer *id, integer *cent)
+{
+    return mchboc_0_(2, (integer *)0, (integer *)0, id, cent);
+    }
+
+/* Main program alias */ int brief_ () { MAIN__ (); return 0; }

@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Copyright 2017 United States Government as represented by the
+  Administrator of the National Aeronautics and Space Administration.
+  All Rights Reserved.
+  
+  This file is available under the terms of the NASA Open Source Agreement
+  (NOSA). You should have received a copy of this agreement with the
+  Kepler source code; see the file NASA-OPEN-SOURCE-AGREEMENT.doc.
+  
+  No Warranty: THE SUBJECT SOFTWARE IS PROVIDED "AS IS" WITHOUT ANY
+  WARRANTY OF ANY KIND, EITHER EXPRESSED, IMPLIED, OR STATUTORY,
+  INCLUDING, BUT NOT LIMITED TO, ANY WARRANTY THAT THE SUBJECT SOFTWARE
+  WILL CONFORM TO SPECIFICATIONS, ANY IMPLIED WARRANTIES OF
+  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, OR FREEDOM FROM
+  INFRINGEMENT, ANY WARRANTY THAT THE SUBJECT SOFTWARE WILL BE ERROR
+  FREE, OR ANY WARRANTY THAT DOCUMENTATION, IF PROVIDED, WILL CONFORM
+  TO THE SUBJECT SOFTWARE. THIS AGREEMENT DOES NOT, IN ANY MANNER,
+  CONSTITUTE AN ENDORSEMENT BY GOVERNMENT AGENCY OR ANY PRIOR RECIPIENT
+  OF ANY RESULTS, RESULTING DESIGNS, HARDWARE, SOFTWARE PRODUCTS OR ANY
+  OTHER APPLICATIONS RESULTING FROM USE OF THE SUBJECT SOFTWARE.
+  FURTHER, GOVERNMENT AGENCY DISCLAIMS ALL WARRANTIES AND LIABILITIES
+  REGARDING THIRD-PARTY SOFTWARE, IF PRESENT IN THE ORIGINAL SOFTWARE,
+  AND DISTRIBUTES IT "AS IS."
+
+  Waiver and Indemnity: RECIPIENT AGREES TO WAIVE ANY AND ALL CLAIMS
+  AGAINST THE UNITED STATES GOVERNMENT, ITS CONTRACTORS AND
+  SUBCONTRACTORS, AS WELL AS ANY PRIOR RECIPIENT. IF RECIPIENT'S USE OF
+  THE SUBJECT SOFTWARE RESULTS IN ANY LIABILITIES, DEMANDS, DAMAGES,
+  EXPENSES OR LOSSES ARISING FROM SUCH USE, INCLUDING ANY DAMAGES FROM
+  PRODUCTS BASED ON, OR RESULTING FROM, RECIPIENT'S USE OF THE SUBJECT
+  SOFTWARE, RECIPIENT SHALL INDEMNIFY AND HOLD HARMLESS THE UNITED
+  STATES GOVERNMENT, ITS CONTRACTORS AND SUBCONTRACTORS, AS WELL AS ANY
+  PRIOR RECIPIENT, TO THE EXTENT PERMITTED BY LAW. RECIPIENT'S SOLE
+  REMEDY FOR ANY SUCH MATTER SHALL BE THE IMMEDIATE, UNILATERAL
+  TERMINATION OF THIS AGREEMENT.
+-->
+
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" 
+    targetNamespace="http://kepler.nasa.gov/dr/data-anomaly" 
+    xmlns="http://kepler.nasa.gov/dr/data-anomaly">
+    
+    <xs:simpleType name="DataAnomalyTypeXB">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="ATTITUDE_TWEAK"/>
+            <xs:enumeration value="SAFE_MODE"/>
+            <xs:enumeration value="COARSE_POINT"/>
+            <xs:enumeration value="ARGABRIGHTENING"/>
+            <xs:enumeration value="EXCLUDE"/>
+            <xs:enumeration value="EARTH_POINT"/>
+            <xs:enumeration value="PLANET_SEARCH_EXCLUDE"/>
+        </xs:restriction>
+    </xs:simpleType>
+    
+    <xs:simpleType name="CadenceTypeXB">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="LONG"/>
+            <xs:enumeration value="SHORT"/>
+        </xs:restriction>
+    </xs:simpleType>
+    
+    <xs:complexType name="DataAnomalyXB">
+        <xs:attribute name="type" type="DataAnomalyTypeXB" use="required"/>
+        <xs:attribute name="startCadence" type="xs:int" use="required"/>
+        <xs:attribute name="endCadence" type="xs:int" use="required"/>
+        <xs:attribute name="cadenceType" type="CadenceTypeXB" use="required"/>
+        <xs:attribute name="revision" type="xs:int" use="optional"/>
+    </xs:complexType>
+    
+    <xs:complexType name="DataAnomalyListXB">
+        <xs:sequence minOccurs="0" maxOccurs="unbounded">
+            <xs:element name="dataAnomaly" type="DataAnomalyXB"/>
+        </xs:sequence>
+        <xs:attribute name="exportTime" type="xs:dateTime" use="optional"></xs:attribute>
+        <xs:attribute name="version" type="xs:string" use="optional"></xs:attribute>
+        <xs:attribute name="database-url" type="xs:anyURI" use="optional"></xs:attribute>
+        <xs:attribute name="database-user" type="xs:string" use="optional"></xs:attribute>
+    </xs:complexType>
+    
+    <xs:element name="dataAnomalyList" type="DataAnomalyListXB"/>
+
+</xs:schema>
