@@ -35,7 +35,10 @@ radii, masses and densities of short-period giant planets;
 * Determine the properties of those stars that harbor planetary systems.
 
 This repository contains the source code of the Science Data
-Processing Pipeline.
+Processing Pipeline. Please note that it is not expected that the
+reader will be able to build or run this this software due to
+third-party licensing restrictions and dependencies and other
+complications.
 
 The top-level directory contains the following files:
 
